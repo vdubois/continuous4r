@@ -1,10 +1,12 @@
 = continuous4r
 
-* FIX (url)
+* http://continuous4r.rubyforge.org
+* http://github.com/vdubois/continuous4r/tree/master
+* http://collaborateurvdu.wordpress.com
 
 == DESCRIPTION:
 
-FIX (describe your package)
+Continuous integration tool which regroups in one place tests, quality and analysis tools in a Maven-like website.
 
 == FEATURES/PROBLEMS:
 
@@ -12,21 +14,27 @@ FIX (describe your package)
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+  cd /path/to/rails/app
+  edit continuous4r-project.xml for your convenience
+  rake continuous4r:build
+  then open continuous4r_build/index.html in your browser
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* RubyGems
+* rails (erb)
+* hpricot
+* XmlElements
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* sudo gem install continuous4r
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 FIXME full name
+Copyright (c) 2009 Vincent Dubois
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
