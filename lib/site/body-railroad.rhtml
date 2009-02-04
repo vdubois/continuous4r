@@ -1,0 +1,29 @@
+<%
+  require 'rubygems'
+  require 'XmlElements'
+  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section"><a name="httperf"></a>
+            <% project.tasks.each('task') do |task|
+              if task['name'] == "railroad"
+                if task.params.generate['value'] == 'all' or task.params.generate['value'] == 'controllers'
+            %>
+            <h2>Railroad controllers graph</h2>
+            <object type="image/svg+xml" data="railroad/controllers.svg" width="100%" height="470">
+                <img src="railroad/controllers.svg" alt="controllers">
+            </object>
+            <%  end %>
+            <%  if task.params.generate['value'] == 'all' or task.params.generate['value'] == 'models' %>
+            <h2>Railroad models graph</h2>
+            <object type="image/svg+xml" data="railroad/models.svg" width="100%" height="470">
+                <img src="railroad/models.svg" alt="controllers">
+            </object>
+            <% end
+              end
+            end
+            %>
+        </div>
+    </div>
+</div>

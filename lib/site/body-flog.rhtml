@@ -1,0 +1,15 @@
+<%
+    require 'rubygems'
+    require 'XmlElements'
+    require "#{File.dirname(__FILE__)}/../flog_formatter.rb"
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section"><a name="rcov"></a>
+            <h2>Flog Results</h2>
+            <p>Flog shows you the most torturous code you wrote. The more painful the code, the higher the score.</p>
+            <p>Flog essentially scores an ABC metric: Assignments, Branches, Calls, with particular attention placed on calls.</p>
+            <%= FlogFormatter.new(File.read("flog.log")).to_html %>
+        </div>
+    </div>
+</div>

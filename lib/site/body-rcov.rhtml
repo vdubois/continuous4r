@@ -1,0 +1,23 @@
+<%
+    require 'rubygems'
+    require 'hpricot'
+    require 'XmlElements'
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section"><a name="rcov"></a>
+            <%
+                # chargement/modification du rapport rcov
+                doc = Hpricot(File.read("continuous4r_build/rcov/coverage/index.html"))
+                doc.search('//a') do |link|
+                  if link.inner_text.index('rcov').nil?
+                    link.swap("<a target='_blank' href='rcov/coverage/#{link.attributes['href']}'>#{link.inner_text}</a>")
+                  end
+                end
+            %>
+            <h2>Rcov Results</h2>
+            <%= doc.search("style")[1].to_html %>
+            <%= (doc/"body").inner_html %>
+        </div>
+    </div>
+</div>

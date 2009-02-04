@@ -1,0 +1,3 @@
+
+For more information on continuous4r, see http://continuous4r.rubyforge.org
+

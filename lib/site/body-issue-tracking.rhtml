@@ -1,0 +1,38 @@
+<%
+  require 'rubygems'
+  require 'XmlElements'
+  require 'date'
+  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section"><a name="Issue_tracking"></a>
+            <h2>Issue tracking</h2>
+            <p>
+              <%= project['name'] %> uses <a href="<%= project.bugtracker.tracker_url.text %>" target="_blank" class="externalLink" title="External Link"><%= project.bugtracker.tracker_type.text %></a> for tracking issues.
+              See the <a target="_blank" href="<%= project.bugtracker.url.text %>" class="externalLink" title="External Link"><%= project['name'] %> project page</a>.
+            </p>
+            <p>
+              To use <%= project.bugtracker.tracker_type.text %> you may need to <a target="_blank" href="<%= project.bugtracker.tracker_account_create.text %>" class="externalLink" title="External Link">create an account</a>.
+            </p>
+            <p>
+              If you would like to report a bug, or raise an enhancement request with
+              <%= project['name'] %> please do the following:
+              <ol>
+              <li><a target="_blank" href="<%= project.bugtracker.search.text %>" class="externalLink" title="External Link">Search existing open bugs</a>.
+              If you find your issue listed then please add a comment with your details.</li>
+              <li>Decide if your issue is a bug or an enhancement.</li>
+              <li>Submit either a <a target="_blank" href="<%= project.bugtracker.add.text %>" class="externalLink" title="External Link">bug report</a>
+              or <a target="_blank" href="<%= project.bugtracker.add.text %>" class="externalLink" title="External Link">enhancement request</a>.</li>
+              </ol>
+            </p>
+            <p>
+              Please also remember these points:
+              <ul>
+              <li>the more information you provide, the better we can help you</li>
+              <li>test cases are vital, particularly for any proposed enhancements</li>
+              </ul>
+            </p>
+        </div>
+    </div>
+</div>

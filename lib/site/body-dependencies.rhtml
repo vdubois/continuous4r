@@ -1,0 +1,52 @@
+<%
+  require 'rubygems'
+  require 'XmlElements'
+  require 'date'
+  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section">
+            <a name="Dependencies"></a>
+            <h2>Dependencies</h2>
+            <p>
+                The following is a list of dependencies for this project. These dependencies are required to compile and run the application:
+            </p>
+            <table class="bodyTable">
+                <thead>
+                    <tr class="b">
+                        <th>
+                            Artifact ID
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Version
+                        </th>
+                        <th>
+                            Comment
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                <%  i = 0
+                    project.gems.each('gem') do |gem|
+                      i = i + 1
+                      gem_raw_details = `gem query -d|grep #{gem['name']}`
+                      gem_details = gem_raw_details.split(/$/)
+                      gem_comment = gem_details[1] if gem_details.length > 1
+                      gem_comment ||= ''
+                %>
+                    <tr class="<% if i % 2 == 0 %>a<% else %>b<% end %>">
+                        <td><%= gem['name'] %></td>
+                        <td>gem</td>
+                        <td><%= gem['version'] %></td>
+                        <td><%= gem_comment %></td>
+                    </tr>
+                <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
