@@ -15,6 +15,8 @@ Continuous integration tool which regroups in one place tests, quality and analy
 == SYNOPSIS:
 
   cd /path/to/rails/app
+  add : require 'continuous4r' to your Rakefile
+  'rake continuous4r:init' to create your continuous4r-project.xml file
   edit continuous4r-project.xml for your convenience
   rake continuous4r:build
   then open continuous4r_build/index.html in your browser

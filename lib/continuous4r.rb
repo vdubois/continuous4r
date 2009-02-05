@@ -1,5 +1,6 @@
 $:.unshift(File.dirname(__FILE__)) unless
 $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+require File.join(File.dirname(__FILE__), 'tasks', 'continuous4r')
 
 require 'rubygems'
 require 'XmlElements'
@@ -82,12 +83,12 @@ module Continuous4r
     end
     Dir.mkdir WORK_DIR
 
-    auto_install = project.tasks['autoinstall']
+    auto_install = project['auto-install-tools']
     auto_install ||= "false"
 
     # Construction des taches
     begin
-      project.tasks.each('task') do |task|
+      ['dcov','rcov','rdoc'].each do |task|
         self.build_task task, project['name'], project.scm, auto_install, proxy_option
         puts "\n---------------------------------------------------------------------"
       end
@@ -133,7 +134,7 @@ module Continuous4r
 
   # Methode qui permet de construire une tache de nom donne
   def self.build_task task, project_name, scm, auto_install, proxy_option
-    case task['name']
+    case task
     # ==========================================================================
     #  Construction de la tache dcov (couverture rdoc)
     # ==========================================================================
@@ -153,9 +154,9 @@ module Continuous4r
       end
       # On lance la generation
       puts " Building dcov rdoc coverage report..."
-      dcov_pass = system("dcov -p #{task.params.pattern['value']}")
-      if !dcov_pass and !File.exist?(task.params.report['path'])
-        raise " Execution of dcov failed with command 'dcov -p #{task.params.pattern['value']}'.\n BUILD FAILED."
+      dcov_pass = system("dcov -p app/**/*.rb")
+      if !dcov_pass and !File.exist?("./coverage.html")
+        raise " Execution of dcov failed with command 'dcov -p app/**/*.rb'.\n BUILD FAILED."
       end
     # ==========================================================================
     #  Construction de la tache rcov (couverture des tests sur le code)
@@ -176,9 +177,9 @@ module Continuous4r
       end
       # On lance la generation
       puts " Building rcov code coverage report..."
-      rcov_pass = run_command("rcov --rails --exclude rcov,rubyforge #{task.params.file['path']}")
+      rcov_pass = run_command("rcov --rails --exclude rcov,rubyforge test/rcov*.rb")
       if rcov_pass.index("Finished in").nil?
-        raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge #{task.params.file['path']}'.\n BUILD FAILED."
+        raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge test/rcov*.rb'.\n BUILD FAILED."
       end
       # On recupere le rapport genere
       Dir.mkdir "#{WORK_DIR}/rcov"
@@ -196,8 +197,8 @@ module Continuous4r
       end
       # On recupere la documentation et le fichier de log generes
       Dir.mkdir "#{WORK_DIR}/rdoc"
-      `cp -R doc/app/ #{WORK_DIR}/rdoc`
-      `cp rdoc.log #{WORK_DIR}/rdoc`
+      FileUtils.mv("doc/app/", "#{WORK_DIR}/rdoc/")
+      FileUtils.mv("rdoc.log", "#{WORK_DIR}/rdoc/")
     # ==========================================================================
     #  Construction de la tache flog (complexite du code ruby)
     # ==========================================================================

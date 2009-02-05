@@ -4,10 +4,10 @@ require File.dirname(__FILE__) + '/lib/continuous4r'
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 $hoe = Hoe.new('continuous4r', Continuous4r::VERSION) do |p|
-  p.developer('FIXME full name', 'FIXME email')
+  p.developer('Vincent Dubois', 'duboisv@hotmail.com')
   p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-  p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
-  p.rubyforge_name       = p.name # TODO this is default value
+  p.post_install_message = 'PostInstall.txt' 
+  p.rubyforge_name       = p.name 
   # p.extra_deps         = [
   #   ['activesupport','>= 2.0.2'],
   # ]
