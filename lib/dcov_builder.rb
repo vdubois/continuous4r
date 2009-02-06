@@ -1,11 +1,21 @@
+require 'utils.rb'
+
+# ==========================================================================
+#  Construction de la tache dcov (couverture rdoc)
+#  author: Vincent Dubois
+#  date: 06 fevrier 2009
+# ==========================================================================
 class DcovBuilder
+  include Utils
+
+  # Implementation de la construction de la tache
   def build(project_name, scm, auto_install, proxy_option)
     # On verifie la presence de dcov
-    dcov_version = run_command("gem list dcov")
+    dcov_version = Utils.run_command("gem list dcov")
     if dcov_version.blank?
       if auto_install == "true"
         puts " Installing dcov..."
-        dcov_installed = run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install dcov#{proxy_option}")
+        dcov_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install dcov#{proxy_option}")
         if dcov_installed.index("1 gem installed").nil?
           raise " Install for dcov failed with command '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install dcov#{proxy_option}'\n BUILD FAILED."
         end

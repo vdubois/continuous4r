@@ -1,7 +1,5 @@
 <%
-  require 'rubygems'
-  require 'XmlElements'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  tasks = Continuous4r::TASKS
 %>
 <div id="leftColumn">
     <div id="navcolumn">
@@ -11,17 +9,9 @@
                 <li class="collapsed"><a href="index.html">Project Info</a></li>
                 <li class="expanded"><strong><a href="continuous4r-reports.html">Project Reports</a></strong>
                     <ul>
-                        <% 
-                        begin
-                          project.tasks.each('task') do |task| %>
-                        <li class="none"><a href="<%= task['name'] %>.html"><%= task['name'] %></a></li>
-                        <%
-                          end
-                        rescue Exception => e
-                          unless e.to_s == "no childs named 'task' found!"
-                            raise e
-                          end
-                        end %>
+                        <% tasks.each do |task| %>
+                        <li class="none"><a href="<%= task %>.html"><%= task %></a></li>
+                        <% end %>
                     </ul>
                 </li>
             </ul>

@@ -1,7 +1,5 @@
 <%
-  require 'rubygems'
-  require 'XmlElements'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  tasks = Continuous4r::TASKS
 %>
 <div id="leftColumn">
     <div id="navcolumn">
@@ -11,8 +9,8 @@
                 <li class="collapsed"><a href="index.html">Project Info</a></li>
                 <li class="expanded"><a href="continuous4r-reports.html">Project Reports</a>
                     <ul>
-                        <% project.tasks.each('task') do |task| %>
-                        <li class="none"><% if task['name'] == "flog" %><strong><% end %><a href="<%= task['name'] %>.html"><%= task['name'] %></a><% if task['name'] == "flog" %></strong><% end %></li>
+                        <% tasks.each do |task| %>
+                        <li class="none"><% if task == "flog" %><strong><% end %><a href="<%= task %>.html"><%= task %></a><% if task == "flog" %></strong><% end %></li>
                         <% end %>
                     </ul>
                 </li>

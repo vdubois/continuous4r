@@ -77,3 +77,8 @@ lib/tasks/continuous4r.rake
 lib/tasks/continuous4r.rb
 lib/tasks/continuous4r-project.xml
 lib/dcov_builder.rb
+lib/rcov_builder.rb
+lib/rdoc_builder.rb
+lib/stats_builder.rb
+lib/flog_builder.rb
+lib/utils.rb

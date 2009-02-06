@@ -1,15 +1,18 @@
 <%
     require 'rubygems'
-    require 'XmlElements'
-    require "#{File.dirname(__FILE__)}/../flog_formatter.rb"
+    require 'hpricot'
 %>
 <div id="bodyColumn">
     <div class="contentBox">
-        <div class="section"><a name="rcov"></a>
-            <h2>Flog Results</h2>
-            <p>Flog shows you the most torturous code you wrote. The more painful the code, the higher the score.</p>
-            <p>Flog essentially scores an ABC metric: Assignments, Branches, Calls, with particular attention placed on calls.</p>
-            <%= FlogFormatter.new(File.read("flog.log")).to_html %>
+        <div class="section"><a name="flog"></a>
+            <%
+                # chargement/modification du rapport flog
+                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flog/index.html"))
+                doc.search('//a') do |link|
+                  link.swap("<a target='_blank' href='#{link.attributes['href']}'>#{link.inner_text}</a>")
+                end
+            %>
+            <%= (doc/"body").inner_html %>
         </div>
     </div>
 </div>

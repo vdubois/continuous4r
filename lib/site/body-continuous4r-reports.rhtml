@@ -1,7 +1,5 @@
 <%
-  require 'rubygems'
-  require 'XmlElements'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  tasks = Continuous4r::TASKS
 %>
 <div id="bodyColumn">
     <div class="contentBox">
@@ -25,57 +23,42 @@
                     </tr>
                     <%
                         i = 0
-                        begin
-                          project.tasks.each('task') do |task|
+                        tasks.each do |task|
                     %>
                     <tr class="<% if i % 2 == 0 %>a<% else %>b<% end %>">
                         <td>
-                            <a href="<%= task['name'] %>.html">
-                                <%= task['name'] %>
+                            <a href="<%= task %>.html">
+                                <%= task %>
                             </a>
                         </td>
-                        <td><% 
-                            begin 
-                              puts task.description.text 
-                            rescue 
-                              case task['name']
-                              when "changelog"
-                                puts "Displays changes in the SCM repository."
-                              when "stats"
-                                puts "Provides statistics for your Rails code."
-                              when "dcov"
-                                puts "Provides statistics on the coverage of your documentation (rdoc)."
-                              when "rcov"
-                                puts "Provides general and detailed statistics on the coverage of your unit tests."
-                              when "rdoc"
-                                puts "Report for the generation of the apidoc for #{project['name']}"
-                              when "heckle"
-                                puts "Provides results for the attempts of breaking your tests with heckle."
-                              when "flog"
-                                puts "Provides statistics on the complexity of your class methods with flog."
-                              when "zentest"
-                                puts "Provides generated code for units tests which are missing in your project."
-                              when "capistrano"
-                                puts "Report for deployments of your application with Capistrano."
-                              when "httperf"
-                                puts "Provides data on the stressing of your application with httperf."
-                              when "kwala"
-                                puts "Provides various reports on quality and metrics for your Ruby code."
-                              when "railroad"
-                                puts "Provides graphs for you controllers and/or models."
-                              when "tests"
-                                puts "Report on the execution of you unit tests."
-                              end
-                            end %></td>
+                        <td><%=
+                            case task
+                            when "changelog"
+                              "Displays changes in the SCM repository."
+                            when "stats"
+                              "Provides statistics for your Rails code."
+                            when "dcov"
+                              "Provides statistics on the coverage of your documentation (rdoc)."
+                            when "rcov"
+                              "Provides general and detailed statistics on the coverage of your unit tests."
+                            when "rdoc"
+                              "Report for the generation of the apidoc for #{project['name']}"
+                            when "heckle"
+                              "Provides results for the attempts of breaking your tests with heckle."
+                            when "flog"
+                              "Provides statistics on the complexity of your class methods with flog."
+                            when "zentest"
+                              "Provides generated code for units tests which are missing in your project."
+                            when "kwala"
+                              "Provides various reports on quality and metrics for your Ruby code."
+                            when "tests"
+                              puts "Report on the execution of you unit tests."
+                            end
+                          %></td>
                     </tr>
-                    <%    i = i + 1
+                    <%  i = i + 1
                         end
-                      rescue Exception => e
-                        unless e.to_s == "no childs named 'task' found!"
-                          raise e
-                        end
-                        puts "<tr class='a'><td colspan='2'>No reports</td></tr>"
-                      end %>
+                    %>
                 </table>
             </div>
         </div>

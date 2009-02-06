@@ -1,20 +1,13 @@
 <%
     require 'rubygems'
     require 'hpricot'
-    require 'XmlElements'
-    project = XmlElements.fromString(File.read("continuous4r-project.xml"))
 %>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="dcov"></a>
             <%
                 # chargement/modification du rapport dcov
-                path = ""
-                project.tasks.each('task') do |task|
-                  if task['name'] == "dcov"
-                    path = task.params.report['path']
-                  end
-                end
+                path = "./coverage.html"
                 doc = Hpricot(File.read(path))
                 doc.at("h1").swap("<h2>Dcov Results</h2>")
                 doc.search('//font') do |font|
