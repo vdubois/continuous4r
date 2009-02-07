@@ -27,4 +27,4 @@ pre .attribute { color: #5bb; }
 pre .global { color: #7FB; }
 pre .expr { color: #227; }
 pre .escape { color: #277; }
-
+pre .numline { color: #000; font-weight: bold; }

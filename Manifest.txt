@@ -25,6 +25,7 @@ lib/site/body-scm-usage.rhtml
 lib/site/body-stats.rhtml
 lib/site/body-team-list.rhtml
 lib/site/body-tests.rhtml
+lib/site/body-xdoc.rhtml
 lib/site/body-zentest.rhtml
 lib/site/header.rhtml
 lib/site/menu-changelog.rhtml
@@ -42,6 +43,7 @@ lib/site/menu-scm-usage.rhtml
 lib/site/menu-stats.rhtml
 lib/site/menu-team-list.rhtml
 lib/site/menu-tests.rhtml
+lib/site/menu-xdoc.rhtml
 lib/site/menu-zentest.rhtml
 lib/site/images/continuous4r-logo.png
 lib/site/images/external.png

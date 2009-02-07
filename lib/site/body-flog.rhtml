@@ -10,7 +10,7 @@
                 doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flog/index.html"))
                 doc.at("h1").swap("<h2>Flog Results</h2>")
                 doc.search('//a') do |link|
-                  link.swap("<a target='_blank' href='flog/#{link.attributes['href']}'>#{link.inner_text}</a>")
+                  link.swap("<a target='_blank' href='flog/#{link.attributes['href']}'>#{link.inner_text}</a>") if link.attributes['href'].index("http://").nil?
                 end
                 doc.search('table') do |table|
                   table.swap("<table class='bodyTable'>#{table.html}</table>")
