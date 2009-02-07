@@ -12,8 +12,18 @@ class RdocBuilder
   def build(project_name, scm, auto_install, proxy_option)
     # On lance la generation
     puts " Building rdoc api and rdoc generation report..."
+    if !File.exist?("#{RAILS_ROOT}/doc")
+      FileUtils.mkdir("#{RAILS_ROOT}/doc")
+    end
+    if !File.exist?("#{RAILS_ROOT}/doc/README_FOR_APP")
+      if File.exist?("#{RAILS_ROOT}/README")
+        FileUtils.copy_file("#{RAILS_ROOT}/README", "#{RAILS_ROOT}/doc/README_FOR_APP")
+      else
+        FileUtils.touch("#{RAILS_ROOT}/doc/README_FOR_APP")
+      end
+    end
     File.delete("rdoc.log") if File.exist?("rdoc.log")
-    rdoc_pass = system("rake doc:reapp > rdoc.log")
+    rdoc_pass = system("rake doc:app > rdoc.log")
     if !rdoc_pass
       raise " Execution of rdoc failed with command 'rake doc:reapp'.\n BUILD FAILED."
     end

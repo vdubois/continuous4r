@@ -52,6 +52,7 @@ lib/site/style/commons-maven.css
 lib/site/style/maven-base.css
 lib/site/style/maven-theme.css
 lib/site/style/project.css
+lib/site/syntax_highlighting.css
 script/console
 script/console.cmd
 script/destroy
@@ -73,4 +74,5 @@ lib/rcov_builder.rb
 lib/rdoc_builder.rb
 lib/stats_builder.rb
 lib/flog_builder.rb
+lib/xdoc_builder.rb
 lib/utils.rb
