@@ -11,7 +11,7 @@
                 doc = Hpricot(File.read(path))
                 doc.at("h1").swap("<h2>Dcov Results</h2>")
                 doc.search('//font') do |font|
-                  font.swap("<span style='color: red;'>" + font.inner_html + "</span>")
+                  font.swap("<span style='color: red;'>#{font.inner_html}</span>")
                 end
             %>
             <%= (doc/"body").inner_html %>

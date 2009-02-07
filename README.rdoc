@@ -15,7 +15,7 @@ Continuous integration tool which regroups in one place tests, quality and analy
 == SYNOPSIS:
 
   cd /path/to/rails/app
-  add : require 'continuous4r' to your Rakefile
+  add : require 'continuous4r' and require 'metric_fu' to your Rakefile
   'rake continuous4r:init' to create your continuous4r-project.xml file
   edit continuous4r-project.xml for your convenience
   rake continuous4r:build
@@ -27,6 +27,7 @@ Continuous integration tool which regroups in one place tests, quality and analy
 * rails (erb)
 * hpricot
 * XmlElements
+* jscruggs-metric_fu
 
 == INSTALL:
 

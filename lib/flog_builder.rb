@@ -36,10 +36,9 @@ class FlogBuilder
         raise " You don't seem to have metric_fu installed. You can install it with '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install jscruggs-metric_fu#{proxy_option} -s http://gems.github.com/'.\n BUILD FAILED."
       end
     end
-    require 'metric_fu'
     # On lance la generation (produite dans tmp/metric_fu/flog)
     puts " Building flog report..."
-    MetricFu.generate_flog_report
+    system("rake metrics:flog:all")
     if !File.exist?("tmp/metric_fu/flog/index.html")
       raise " Execution of flog with the metric_fu gem failed.\n BUILD FAILED."
     end

@@ -6,9 +6,7 @@ require 'rubygems'
 require 'XmlElements'
 require 'date'
 require 'erb'
-require 'capistrano_formatter.rb'
 require 'heckle_formatter.rb'
-require 'httperf_formatter.rb'
 require 'stats_formatter.rb'
 require 'tests_formatter.rb'
 require 'zen_test_formatter.rb'
@@ -129,32 +127,6 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, scm, auto_install, proxy_option)
-#    # ==========================================================================
-#    #  Construction de la tache flog (complexite du code ruby)
-#    # ==========================================================================
-#    when 'flog'
-#      # On verifie la presence de flog
-#      flog_version = `gem list|grep flog`
-#      if flog_version.empty?
-#        if auto_install == "true"
-#          puts " Installing flog..."
-#          flog_installed = system("sudo gem install flog")
-#          if !flog_installed
-#            raise " Install for flog failed with command 'sudo gem install flog'\n BUILD FAILED."
-#          end
-#        else
-#          raise " You don't seem to have flog installed. You can install it with 'gem install flog'.\n BUILD FAILED."
-#        end
-#      end
-#      # On lance la generation
-#      puts " Building flog code complexity analysis report..."
-#      flog_pass = system("find app -name \\*.rb | xargs flog > flog.log")
-#      if !flog_pass
-#        raise " Execution of flog failed with command 'find app -name \\*.rb | xargs flog > flog.log'.\n BUILD FAILED."
-#      end
-#      # On recupere le fichier de log genere
-#      Dir.mkdir "#{WORK_DIR}/flog"
-#      `cp flog.log #{WORK_DIR}/flog`
 #    # ==========================================================================
 #    #  Construction de la tache kwala (métriques et rapports de qualite ruby)
 #    # ==========================================================================
