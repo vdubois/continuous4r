@@ -6,7 +6,7 @@
     <div class="contentBox">
         <div class="section"><a name="flay"></a>
             <%
-                # chargement/modification du rapport flog
+                # chargement/modification du rapport flay
                 doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flay/index.html"))
                 doc.at("h1").swap("<h2>Flay Results</h2>")
                 doc.search('//a') do |link|

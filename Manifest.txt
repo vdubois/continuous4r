@@ -22,6 +22,7 @@ lib/site/body-kwala.rhtml
 lib/site/body-index.rhtml
 lib/site/body-rcov.rhtml
 lib/site/body-rdoc.rhtml
+lib/site/body-reek.rhtml
 lib/site/body-scm-usage.rhtml
 lib/site/body-stats.rhtml
 lib/site/body-team-list.rhtml
@@ -41,6 +42,7 @@ lib/site/menu-kwala.rhtml
 lib/site/menu-index.rhtml
 lib/site/menu-rcov.rhtml
 lib/site/menu-rdoc.rhtml
+lib/site/menu-reek.rhtml
 lib/site/menu-scm-usage.rhtml
 lib/site/menu-stats.rhtml
 lib/site/menu-team-list.rhtml
@@ -74,10 +76,11 @@ lib/tasks/continuous4r.rake
 lib/tasks/continuous4r.rb
 lib/tasks/continuous4r-project.xml
 lib/dcov_builder.rb
+lib/flay_builder.rb
+lib/flog_builder.rb
 lib/rcov_builder.rb
 lib/rdoc_builder.rb
+lib/reek_builder.rb
 lib/stats_builder.rb
-lib/flog_builder.rb
-lib/flay_builder.rb
 lib/xdoc_builder.rb
 lib/utils.rb
