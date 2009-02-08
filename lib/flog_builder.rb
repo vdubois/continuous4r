@@ -9,18 +9,7 @@ class FlogBuilder
   # Implementation de la construction de la tache
   def build(project_name, scm, auto_install, proxy_option)
     # On verifie la presence de flog
-    flog_version = Utils.run_command("gem list flog")
-    if flog_version.blank?
-      if auto_install == "true"
-        puts " Installing flog..."
-        flog_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install flog#{proxy_option}")
-        if flog_installed.index("1 gem installed").nil?
-          raise " Install for flog failed with command '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install flog#{proxy_option}'\n BUILD FAILED."
-        end
-      else
-        raise " You don't seem to have flog installed. You can install it with '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install flog#{proxy_option}'.\n BUILD FAILED."
-      end
-    end
+    Utils.verify_gem_presence("flog", auto_install, proxy_option)
     # On verifie la presence de metric_fu
     metric_fu_version = Utils.run_command("gem list jscruggs-metric_fu")
     if metric_fu_version.blank?

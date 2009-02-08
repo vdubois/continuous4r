@@ -25,10 +25,9 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek']
+  TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  #TASKS = ['flay']
-  TASKS = ['xdoc','reek']
+  #TASKS = ['saikuro']
 
   # Methode de generation du site au complet
   def self.generate_site
@@ -104,20 +103,20 @@ module Continuous4r
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/images/", "#{WORK_DIR}/")
     FileUtils.copy_file("#{File.dirname(__FILE__)}/site/images/continuous4r-logo.png", "#{WORK_DIR}/continuous4r-logo.png")
     puts " Building project information page..."
-    Utils.erb_run "index"
+    Utils.erb_run "index", false
     puts " Building team list page..."
-    Utils.erb_run "team-list"
+    Utils.erb_run "team-list", false
     puts " Building project dependencies page..."
-    Utils.erb_run "dependencies"
+    Utils.erb_run "dependencies", false
     puts " Building source control management page..."
-    Utils.erb_run "scm-usage"
+    Utils.erb_run "scm-usage", false
     puts " Building issue tracking page..."
-    Utils.erb_run "issue-tracking"
+    Utils.erb_run "issue-tracking", false
     puts " Building project reports page..."
-    Utils.erb_run "continuous4r-reports"
+    Utils.erb_run "continuous4r-reports", false
     tasks.each do |task|
       puts " Building #{task} page..."
-      Utils.erb_run task
+      Utils.erb_run task, true
     end
     puts "\n BUILD SUCCESSFUL."
     puts "====================================================================="

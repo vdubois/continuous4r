@@ -11,18 +11,7 @@ class RcovBuilder
   # Implementation de la construction de la tache
   def build(project_name, scm, auto_install, proxy_option)
       # On verifie la presence de rcov
-      rcov_version = Utils.run_command("gem list rcov")
-      if rcov_version.blank?
-        if auto_install == "true"
-          puts " Installing rcov..."
-          rcov_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install rcov#{proxy_option}")
-          if rcov_installed.index("1 gem installed").nil?
-            raise " Install for rcov failed with command '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install rcov#{proxy_option}'\n BUILD FAILED."
-          end
-        else
-          raise " You don't seem to have rcov installed. You can install it with '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install rcov#{proxy_option}'.\n BUILD FAILED."
-        end
-      end
+      Utils.verify_gem_presence("rcov", auto_install, proxy_option)
       # On lance la generation
       puts " Building rcov code coverage report..."
       rcov_pass = Utils.run_command("rcov --rails --exclude rcov,rubyforge test/rcov*.rb")

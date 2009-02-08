@@ -9,18 +9,7 @@ class XdocBuilder
   # Implementation de la construction de la tache
   def build(project_name, scm, auto_install, proxy_option)
     # Vérification de la présence du gem syntax
-    syntax_version = Utils.run_command("gem list syntax")
-    if syntax_version.blank?
-      if auto_install == "true"
-        puts " Installing syntax..."
-        syntax_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install syntax#{proxy_option}")
-        if syntax_installed.index("1 gem installed").nil?
-          raise " Install for syntax failed with command '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install syntax#{proxy_option}'\n BUILD FAILED."
-        end
-      else
-        raise " You don't seem to have syntax installed. You can install it with '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install syntax#{proxy_option}'.\n BUILD FAILED."
-      end
-    end
+    Utils.verify_gem_presence("syntax", auto_install, proxy_option)
     # Génération du rapport pour chaque fichier source ruby
     puts " Building xdoc source report..."
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/xdoc")
@@ -32,7 +21,7 @@ class XdocBuilder
     convertor = Syntax::Convertors::HTML.for_syntax("ruby")
 
     files.each do |file|
-      print "\nComputing file #{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'')}..."
+      print "\nProcessing #{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'')}..."
       ruby_code = File.read(file)
       html_code = convertor.convert(ruby_code)
       # Ajout des numéros de lignes
