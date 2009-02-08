@@ -25,9 +25,9 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi']
+  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  #TASKS = ['saikuro']
+  TASKS = ['saikuro']
 
   # Methode de generation du site au complet
   def self.generate_site

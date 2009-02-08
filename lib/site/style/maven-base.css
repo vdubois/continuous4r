@@ -146,6 +146,9 @@ div.clear hr{
 .error {
   background-color: #f00;
 }
+.warning {
+  background-color: yellow;
+}
 .ok {
   background-color: #00f000;
 }

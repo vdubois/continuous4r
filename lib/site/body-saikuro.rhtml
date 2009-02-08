@@ -1,0 +1,32 @@
+<%
+    require 'rubygems'
+    require 'hpricot'
+%>
+<div id="bodyColumn">
+    <div class="contentBox">
+        <div class="section"><a name="saikuro"></a>
+            <%
+                # chargement/modification du rapport roodi
+                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/saikuro/index.html"))
+                doc.search("h2") do |h2|
+                  h2.swap("<h3>#{h2.inner_text}</h3>")
+                end
+                description = "Saikuro is a Ruby cyclomatic complexity analyzer. When given Ruby source code Saikuro will generate a report listing the cyclomatic complexity of each method found. In addition, Saikuro counts the number of lines per method and can generate a listing of the number of tokens on each line of code."
+                doc.at("h1").swap("<h2>Index for cyclomatic complexity</h2>\n<p>#{description}</p>")
+                doc.search('//a') do |link|
+                  link.swap("<a target='_blank' href='saikuro/#{link.attributes['href']}'>#{link.inner_text}</a>") if link.attributes['href'].index("http://").nil?
+                end
+                doc.search('table') do |table|
+                  table.swap("<table class='bodyTable'>#{table.html}</table>")
+                end
+                doc.search(".light") do |tr|
+                  tr.swap("<tr class='a'>#{tr.inner_html}</tr>")
+                end
+                doc.search(".dark") do |tr|
+                  tr.swap("<tr class='b'>#{tr.inner_html}</tr>")
+                end
+            %>
+            <%= (doc/"body").html %>
+        </div>
+    </div>
+</div>

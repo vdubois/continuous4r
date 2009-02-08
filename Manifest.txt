@@ -24,6 +24,7 @@ lib/site/body-rcov.rhtml
 lib/site/body-rdoc.rhtml
 lib/site/body-reek.rhtml
 lib/site/body-roodi.rhtml
+lib/site/body-saikuro.rhtml
 lib/site/body-scm-usage.rhtml
 lib/site/body-stats.rhtml
 lib/site/body-team-list.rhtml
@@ -71,6 +72,7 @@ lib/rcov_builder.rb
 lib/rdoc_builder.rb
 lib/reek_builder.rb
 lib/roodi_builder.rb
+lib/saikuro_builder.rb
 lib/stats_builder.rb
 lib/xdoc_builder.rb
 lib/utils.rb
