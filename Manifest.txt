@@ -15,6 +15,7 @@ lib/site/body-continuous4r-reports.rhtml
 lib/site/body-dcov.rhtml
 lib/site/body-dependencies.rhtml
 lib/site/body-flog.rhtml
+lib/site/body-flay.rhtml
 lib/site/body-heckle.rhtml
 lib/site/body-issue-tracking.rhtml
 lib/site/body-kwala.rhtml
@@ -33,6 +34,7 @@ lib/site/menu-continuous4r-reports.rhtml
 lib/site/menu-dcov.rhtml
 lib/site/menu-dependencies.rhtml
 lib/site/menu-flog.rhtml
+lib/site/menu-flay.rhtml
 lib/site/menu-heckle.rhtml
 lib/site/menu-issue-tracking.rhtml
 lib/site/menu-kwala.rhtml
@@ -76,5 +78,6 @@ lib/rcov_builder.rb
 lib/rdoc_builder.rb
 lib/stats_builder.rb
 lib/flog_builder.rb
+lib/flay_builder.rb
 lib/xdoc_builder.rb
 lib/utils.rb

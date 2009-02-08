@@ -1,7 +1,7 @@
 # ==========================================================================
 #  Construction de la tache xdoc (transformation du code Ruby en HMTL)
 #  author: Vincent Dubois
-#  date: 06 fevrier 2009
+#  date: 07 fevrier 2009
 # ==========================================================================
 class XdocBuilder
   include Utils
@@ -42,7 +42,7 @@ class XdocBuilder
         if index == 0
           html_code_with_lines = html_code_with_lines.concat("<pre><span class='numline'>#{(index + 1).to_s.rjust(4)}  </span>").concat(line.delete("\n").gsub(/<pre>/,'')).concat("\n")
         elsif index == html_code_lines.length - 1
-          print "ok"
+          print "OK"
         else
           html_code_with_lines = html_code_with_lines.concat("<span class='numline'>#{(index + 1).to_s.rjust(4)}  </span>").concat(line.delete("\n")).concat("\n")
         end

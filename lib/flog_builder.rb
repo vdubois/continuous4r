@@ -1,5 +1,3 @@
-require 'utils.rb'
-
 # ==========================================================================
 #  Construction de la tache flog (complexite du code ruby)
 #  author: Vincent Dubois

@@ -28,7 +28,7 @@ module Continuous4r
   #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
   #TASKS = ['flay']
-  TASKS = ['xdoc']
+  TASKS = ['xdoc','flay']
 
   # Methode de generation du site au complet
   def self.generate_site
