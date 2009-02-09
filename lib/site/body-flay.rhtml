@@ -1,29 +1,16 @@
-<%
-    require 'rubygems'
-    require 'hpricot'
-%>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="flay"></a>
-            <%
-                # chargement/modification du rapport flay
-                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flay/index.html"))
-                doc.at("h1").swap("<h2>Flay Results</h2>")
-                doc.search('//a') do |link|
-                  file_name = link.inner_text.split(/:/)[0].gsub(/\//,'_')
-                  link.swap("<a target='_blank' href='xdoc/#{file_name}.html'>#{link.inner_text}</a>") if link.attributes['href'].index("http://").nil?
-                end
-                doc.search('table') do |table|
-                  table.swap("<table class='bodyTable'>#{table.html}</table>")
-                end
-                doc.search(".light") do |tr|
-                  tr.swap("<tr class='a'>#{tr.inner_html}</tr>")
-                end
-                doc.search(".dark") do |tr|
-                  tr.swap("<tr class='b'>#{tr.inner_html}</tr>")
-                end
-            %>
-            <%= (doc/"body").html %>
+          <h2>Flay Results</h2>
+          <p><a href='http://ruby.sadi.st/Flay.html'>Flay</a> analyzes ruby code for structural similarities.</p>
+          <table class="bodyTable">
+            <tr>
+              <th>Files</th>
+              <th>Matches</th>
+            </tr>
+            <%= File.read("#{Continuous4r::WORK_DIR}/flay/index.html") %>
+          </table>
+          <p>Generated on <%= Time.now.localtime %></p>	
         </div>
     </div>
 </div>

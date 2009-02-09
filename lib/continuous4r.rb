@@ -25,9 +25,10 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
+  TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  TASKS = ['saikuro']
+  #TASKS = ['xdoc','roodi']
+  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','reek','roodi','saikuro']
 
   # Methode de generation du site au complet
   def self.generate_site
@@ -128,50 +129,6 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, scm, auto_install, proxy_option)
-#    # ==========================================================================
-#    #  Construction de la tache kwala (métriques et rapports de qualite ruby)
-#    # ==========================================================================
-#    when 'kwala'
-#      # On verifie la presence de kwala
-#      kwala_result = `kwala`
-#      if kwala_result.empty?
-#        raise " You don't seem to have kwala installed. please go first to http://kwala.rubyforge.org/."
-#      end
-#      # On lance la generation
-#      puts " Building kwala code reports..."
-#      actions = ""
-#      task.params.actions.each('action') do |action|
-#        actions = actions + " -a #{action.text}"
-#      end
-#      if actions.empty?
-#        raise " You must specify at least one action for your kwala task."
-#      end
-#      kwala_pass = system("kwala -p #{project_name} -d . -o #{WORK_DIR}/kwala #{actions}")
-#      if !kwala_pass
-#        raise " Execution of kwala failed with command 'kwala -p #{project_name} -d . -o #{WORK_DIR}/kwala #{actions}'.\n BUILD FAILED."
-#      end
-#    # ==========================================================================
-#    #  Construction de la tache heckle (eprouvage des tests)
-#    # ==========================================================================
-#    when 'heckle'
-#      # On verifie la presence de heckle
-#      heckle_result = `heckle`
-#      if heckle_result.empty?
-#        if auto_install == "true"
-#          puts " Installing heckle..."
-#          heckle_installed = system("sudo gem install heckle")
-#          if !heckle_installed
-#            raise " Install for heckle failed with command 'sudo gem install heckle'\n BUILD FAILED."
-#          end
-#        else
-#          raise " You don't seem to have heckle installed. You can install it with 'gem install heckle'.\n BUILD FAILED."
-#        end
-#      end
-#      # On lance la generation
-#      puts " Building heckle reports..."
-#      heckle_report = File.open("heckle.html", "w")
-#      heckle_report.write(HeckleFormatter.new(task.params).to_html)
-#      heckle_report.close
 #    # ==========================================================================
 #    #  Construction de la tache tests (tests unitaires, toutes categories)
 #    # ==========================================================================

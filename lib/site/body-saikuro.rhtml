@@ -7,7 +7,7 @@
         <div class="section"><a name="saikuro"></a>
             <%
                 # chargement/modification du rapport roodi
-                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/saikuro/index.html"))
+                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/saikuro/index_cyclo.html"))
                 doc.search("h2") do |h2|
                   h2.swap("<h3>#{h2.inner_text}</h3>")
                 end

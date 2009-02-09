@@ -10,13 +10,32 @@ class RoodiBuilder
   def build(project_name, scm, auto_install, proxy_option)
     # On verifie la presence de roodi
     Utils.verify_gem_presence("roodi", auto_install, proxy_option)
-    # On lance la generation (produite dans tmp/metric_fu/reek)
+    # On lance la generation
     puts " Building roodi report..."
-    system("rake metrics:roodi")
-    if !File.exist?("tmp/metric_fu/roodi/index.html")
-      raise " Execution of roodi with the metric_fu gem failed.\n BUILD FAILED."
+    files = Array.new
+    files << Dir.glob("app/**/*.rb")
+    files << Dir.glob("lib/**/*.rb")
+    files << Dir.glob("test/**/*.rb")
+    files.flatten!
+    roodi_command = "roodi"
+    files.each do |file|
+      roodi_command += " '#{file}'"
     end
-    # On recupere les fichiers générés
-    FileUtils.mv("tmp/metric_fu/roodi", "#{Continuous4r::WORK_DIR}/roodi")
+    roodi_result = Utils.run_command(roodi_command)
+    matches = roodi_result.chomp.split("\n").map{|m| m.split(" - ") }
+    FileUtils.mkdir("#{Continuous4r::WORK_DIR}/roodi")
+    roodi_file = File.open("#{Continuous4r::WORK_DIR}/roodi/index.html","w")
+    matches.each_with_index do |match, count|
+      roodi_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
+      if match.first and match.first.index("Found ").nil?
+        roodi_file.write("<td><a href='xdoc/#{match.first.split(':').first.gsub(/\//,'_')}.html' target='_blank'>#{match.first.split(':').first}</a></td>")
+      elsif match.first and !match.first.index("Found ").nil?
+        roodi_file.write("<td><b>#{match.first}</b></td>")
+      else
+        roodi_file.write("<td>&#160;</td>")
+      end
+      roodi_file.write("<td>#{match[1]}</td></tr>")
+    end
+    roodi_file.close
   end
 end

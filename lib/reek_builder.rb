@@ -10,13 +10,29 @@ class ReekBuilder
   def build(project_name, scm, auto_install, proxy_option)
     # On verifie la presence de reek
     Utils.verify_gem_presence("reek", auto_install, proxy_option)
-    # On lance la generation (produite dans tmp/metric_fu/reek)
+    # On lance la generation
     puts " Building reek report..."
-    system("rake metrics:reek")
-    if !File.exist?("tmp/metric_fu/reek/index.html")
-      raise " Execution of reek with the metric_fu gem failed.\n BUILD FAILED."
+    files = Array.new
+    files << Dir.glob("app/**/*.rb")
+    files << Dir.glob("lib/**/*.rb")
+    files << Dir.glob("test/**/*.rb")
+    files.flatten!
+    reek_command = "reek"
+    files.each do |file|
+      reek_command += " '#{file}'"
     end
-    # On recupere les fichiers générés
-    FileUtils.mv("tmp/metric_fu/reek", "#{Continuous4r::WORK_DIR}/reek")
+    reek_result = Utils.run_command(reek_command)
+    matches = reek_result.chomp.split("\n\n").map{|m| m.split("\n") }
+    FileUtils.mkdir("#{Continuous4r::WORK_DIR}/reek")
+    reek_file = File.open("#{Continuous4r::WORK_DIR}/reek/index.html","w")
+    matches.each_with_index do |match, count|
+      reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
+      reek_file.write("<td><a href='xdoc/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> #{match.first.split("\"")[2]}</td><td>")
+      match[1..-1].each do |filename|
+        reek_file.write("#{filename}<br/>")
+      end
+      reek_file.write("</td></tr>")
+    end
+    reek_file.close
   end
 end

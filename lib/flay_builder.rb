@@ -12,11 +12,27 @@ class FlayBuilder
     Utils.verify_gem_presence("flay", auto_install, proxy_option)
     # On lance la generation (produite dans tmp/metric_fu/flay)
     puts " Building flay report..."
-    system("rake metrics:flay")
-    if !File.exist?("tmp/metric_fu/flay/index.html")
-      raise " Execution of flay with the metric_fu gem failed.\n BUILD FAILED."
+    ENV['HOME'] = ENV['USERPROFILE'] if Config::CONFIG['host_os'] =~ /mswin/ and ENV['HOME'].nil?
+    files = Array.new
+    files << Dir.glob("app/**/*.rb")
+    files << Dir.glob("lib/**/*.rb")
+    files << Dir.glob("test/**/*.rb")
+    files.flatten!
+    flay_command = "flay"
+    files.each do |file|
+      flay_command += " '#{file}'"
     end
-    # On recupere les fichiers générés
-    FileUtils.mv("tmp/metric_fu/flay", "#{Continuous4r::WORK_DIR}/flay")
+    flay_result = Utils.run_command(flay_command)
+    matches = flay_result.chomp.split("\n\n").map{|m| m.split("\n  ") }
+    FileUtils.mkdir("#{Continuous4r::WORK_DIR}/flay")
+    flay_file = File.open("#{Continuous4r::WORK_DIR}/flay/index.html","w")
+    matches.each_with_index do |match, count|
+      flay_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'><td>")
+      match[1..-1].each do |filename|
+        flay_file.write("<a href='xdoc/#{filename.split(":")[0].gsub(/\//,'_')}.html' target='_blank'>#{filename}</a><br/>")
+      end
+      flay_file.write("</td><td>#{match.first}</td></tr>")
+    end
+    flay_file.close
   end
 end

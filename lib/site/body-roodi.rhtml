@@ -1,34 +1,16 @@
-<%
-    require 'rubygems'
-    require 'hpricot'
-%>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="roodi"></a>
-            <%
-                # chargement/modification du rapport roodi
-                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/roodi/index.html"))
-                doc.at("h1").swap("<h2>Roodi Results</h2>")
-                doc.search('//a') do |link|
-                  file_name = link.inner_text.split(/:/)[0].gsub(/\//,'_')
-                  link.swap("<a target='_blank' href='xdoc/#{file_name}.html'>#{link.inner_text.split(/:/)[0]}</a>") if link.attributes['href'].index("http://").nil?
-                end
-                doc.search('//a') do |link|
-                  if link.inner_text.include?("Found ")
-                    link.swap("<b>#{link.inner_text.split(/:/)[0]}</b>")
-                  end
-                end
-                doc.search('table') do |table|
-                  table.swap("<table class='bodyTable'>#{table.html}</table>")
-                end
-                doc.search(".light") do |tr|
-                  tr.swap("<tr class='a'>#{tr.inner_html}</tr>")
-                end
-                doc.search(".dark") do |tr|
-                  tr.swap("<tr class='b'>#{tr.inner_html}</tr>")
-                end
-            %>
-            <%= (doc/"body").html %>
+          <h2>Roodi Results</h2>
+          <p><a href="http://roodi.rubyforge.org/">Roodi</a> parses your Ruby code and warns you about design issues you have based on the checks that is has configured.</p>
+          <table class="bodyTable">
+            <tr>
+              <th>File Path</th>
+              <th>Warning</th>
+            </tr>
+            <%= File.read("#{Continuous4r::WORK_DIR}/roodi/index.html") %>
+          </table>
+          <p>Generated on <%= Time.now.localtime %></p>
         </div>
     </div>
 </div>

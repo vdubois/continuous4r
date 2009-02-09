@@ -5,7 +5,6 @@ README.rdoc
 Rakefile
 lib/continuous4r.rb
 lib/flog_formatter.rb
-lib/heckle_formatter.rb
 lib/stats_formatter.rb
 lib/subversion_extractor.rb
 lib/tests_formatter.rb
@@ -16,7 +15,6 @@ lib/site/body-dcov.rhtml
 lib/site/body-dependencies.rhtml
 lib/site/body-flog.rhtml
 lib/site/body-flay.rhtml
-lib/site/body-heckle.rhtml
 lib/site/body-issue-tracking.rhtml
 lib/site/body-kwala.rhtml
 lib/site/body-index.rhtml
