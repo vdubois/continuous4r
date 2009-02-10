@@ -1,20 +1,7 @@
-<%
-    require 'rubygems'
-    require 'hpricot'
-%>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="dcov"></a>
-            <%
-                # chargement/modification du rapport dcov
-                path = "./coverage.html"
-                doc = Hpricot(File.read(path))
-                doc.at("h1").swap("<h2>Dcov Results</h2>")
-                doc.search('//font') do |font|
-                  font.swap("<span style='color: red;'>#{font.inner_html}</span>")
-                end
-            %>
-            <%= (doc/"body").inner_html %>
+          <%= File.read("#{Continuous4r::WORK_DIR}/dcov/coverage.html") %>
         </div>
     </div>
 </div>
