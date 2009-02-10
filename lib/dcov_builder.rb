@@ -30,7 +30,7 @@ module Dcov
     def build_stats_body
       output = ""
       output << "<h3>Summary</h3><p>\n"
-      output << "<table class='bodyTable' style='width: 300px;'><tr><th>Coverage type</th><th>Coverage percentage</th></tr>"
+      output << "<table class='bodyTable' style='width: 200px;'><tr><th>Type</th><th>Coverage</th></tr>"
       output << "<tr class='a'><td><b>Class</b></td><td style='text-align: right;'>#{class_coverage}%</td></tr>\n"
       output << "<tr class='b'><td><b>Module</b></td><td style='text-align: right;'>#{module_coverage}%</td></tr>\n"
       output << "<tr class='a'><td><b>Method</b></td><td style='text-align: right;'>#{method_coverage}%</td></tr></table>\n"
