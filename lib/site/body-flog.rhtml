@@ -1,28 +1,7 @@
-<%
-    require 'rubygems'
-    require 'hpricot'
-%>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="flog"></a>
-            <%
-                # chargement/modification du rapport flog
-                doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flog/index.html"))
-                doc.at("h1").swap("<h2>Flog Results</h2>")
-                doc.search('//a') do |link|
-                  link.swap("<a target='_blank' href='flog/#{link.attributes['href']}'>#{link.inner_text}</a>") if link.attributes['href'].index("http://").nil?
-                end
-                doc.search('table') do |table|
-                  table.swap("<table class='bodyTable'>#{table.html}</table>")
-                end
-                doc.search(".light") do |tr|
-                  tr.swap("<tr class='a'>#{tr.inner_html}</tr>")
-                end
-                doc.search(".dark") do |tr|
-                  tr.swap("<tr class='b'>#{tr.inner_html}</tr>")
-                end
-            %>
-            <%= (doc/"body").html %>
+          <%= File.read("#{Continuous4r::WORK_DIR}/flog/index.html") %>
         </div>
     </div>
 </div>

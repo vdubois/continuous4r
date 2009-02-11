@@ -1,0 +1,33 @@
+	<h2>Flog Results</h2>
+	<p><a href='http://ruby.sadi.st/Flog.html'>Flog</a> measures code complexity.</p>
+	<table class='bodyTable'>
+		<tr>
+		  <th>File</th>
+		  <th>Total score</th>
+		  <th>Methods</th>
+		  <th>Average score</th>
+		  <th>Highest score</th>
+		</tr>
+		<%
+                  def cycle(first_value, second_value, iteration)
+                    return first_value if iteration % 2 == 0
+                    return second_value
+                  end
+                  pages.sort {|x,y| y.highest_score <=> x.highest_score }.each_with_index do |page, count| %>
+  		<tr class='<%= cycle("a", "b", count) %>'>
+                  <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a>&#160;&#160;<i>(<a class="externalLink" href="xdoc/<%= page.filename.sub('.txt', '.rb.html').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'').gsub(/\//,'_') %>" target="_blank">view source</a>)</i></td>
+  			<td class='score'><%= sprintf("%0.2f", page.score) %></td>
+  			<td class='score'><%=                       page.scanned_methods.length %></td>
+  			<td class='score'><%= sprintf("%0.2f", page.average_score) %></td>
+  			<td class='score'><%= sprintf("%0.2f", page.highest_score) %></td>
+  		</tr>
+		<% end %>
+		<tr>
+			<td><strong>Totals</strong></td>
+			<td class='score'><strong><%= sprintf("%0.2f", pages.inject(0){|sum, page| sum + page.score }) %></strong></td>
+			<td class='score'><strong><%=                       pages.inject(0){|sum, page| sum + page.scanned_methods.length } %></strong></td>
+			<td class='score'></td>
+			<td class='score'></td>
+		</tr>		
+	</table>
+	<p>Generated on <%= Time.now.localtime %></p>	

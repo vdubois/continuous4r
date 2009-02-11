@@ -29,7 +29,7 @@ class FlayBuilder
     matches.each_with_index do |match, count|
       flay_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'><td>")
       match[1..-1].each do |filename|
-        flay_file.write("<a href='xdoc/#{filename.split(":")[0].gsub(/\//,'_')}.html' target='_blank'>#{filename}</a><br/>")
+        flay_file.write("<a href='xdoc/#{filename.split(":")[0].gsub(/\//,'_')}.html##{filename.split(":")[1]}' target='_blank'>#{filename}</a><br/>")
       end
       flay_file.write("</td><td>#{match.first}</td></tr>")
     end

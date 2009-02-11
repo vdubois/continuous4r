@@ -1,5 +1,3 @@
-require 'utils.rb'
-
 # ==========================================================================
 #  Construction de la tache rdoc (apidoc)
 #  author: Vincent Dubois

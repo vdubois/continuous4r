@@ -1,5 +1,3 @@
-require 'utils.rb'
-
 # ==========================================================================
 #  Construction de la tache stats (statistiques du code Ruby)
 #  author: Vincent Dubois

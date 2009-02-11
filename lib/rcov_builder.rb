@@ -1,5 +1,3 @@
-require 'utils.rb'
-
 # ==========================================================================
 #  Construction de la tache rcov (couverture des tests sur le code)
 #  author: Vincent Dubois

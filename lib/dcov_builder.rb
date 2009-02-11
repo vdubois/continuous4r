@@ -1,9 +1,9 @@
 require 'dcov'
 
 # ==========================================================================
-#  Surcharge du module Dcov pour l'adapter aux besoins de continous4r
-#  author: Vincent Dubois
-#  date: 10 fevrier 2009
+# Surcharge du module Dcov pour l'adapter aux besoins de continous4r
+# author: Vincent Dubois
+# date: 10 fevrier 2009
 # ==========================================================================
 module Dcov
   # Generates HTML output
@@ -18,7 +18,7 @@ module Dcov
     end
 
     def to_s
-      build_stats_header +  build_stats_body + build_stats_footer
+      build_stats_header + build_stats_body + build_stats_footer
     end
 
     def build_stats_header
@@ -53,34 +53,18 @@ module Dcov
           nbtr += 1
           output << "<tr class='#{indice % 2 == 0 ? 'a' : 'b'}'>"
           if class_error_presence == true or method_error_presence == true
-            output << "<td>#{"<b>" if class_error_presence == true}#{key.is_a?(String) ? key : key.full_name  }#{"</b> in <a href='xdoc/#{value[0].in_files.first.file_absolute_name.gsub(/\//,'_')}.html' target='_blank'>#{value[0].in_files.first.file_absolute_name}</a>" if class_error_presence == true}</td>"
+            output << "<td>#{"<b>" if class_error_presence == true}#{key.is_a?(String) ? key : key.full_name }#{"</b> in <a href='xdoc/#{value[0].in_files.first.file_absolute_name.gsub(/\//,'_')}.html' target='_blank'>#{value[0].in_files.first.file_absolute_name}</a>" if class_error_presence == true}</td>"
           else
             output << "<td>&#160;</td>"
           end
           if count_method_error_presence == 1
             value[1].each do |itm|
-              output << ((itm.comment.nil? || itm.comment == '') ? "<td><ol><li><b>#{itm.name}</b> in <a href='xdoc/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li></ol></td>" : "")
-#          # Quality information
-#          output << "#{"<br /><span class='quality_problem'>parameters without documentation: <tt>" + itm.reporting_data[:parameters_without_coverage].join(", ") + "</tt></span>" if itm.reporting_data[:parameters_without_coverage].length > 0}"
-#          output << "#{"<br /><span class='quality_problem'>default values without documentation: <tt>" + itm.reporting_data[:default_values_without_coverage].join(", ") + "</tt></span>" if itm.reporting_data[:default_values_without_coverage].length > 0}"
-#          output << "#{"<br /><span class='quality_problem'>options are not documented</span>" if itm.reporting_data[:no_options_documentation]}"
-#          output << "#{"<br /><span class='quality_problem'>there are no examples</span>" if itm.reporting_data[:no_examples]}"
-#
-#          output << "</li>\n"
+              output << ((itm.comment.nil? || itm.comment == '') ? "<td><ol><li><b>#{itm.name}</b> in <a href='xdoc/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li></ol></td>" : "")
             end
           elsif count_method_error_presence > 1
             output << "<td><ol>"
             value[1].each do |itm|
-              output << ((itm.comment.nil? || itm.comment == '') ? "<li><b>#{itm.name}</b> in <a href='xdoc/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li>" : "")
-#              location = itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')
-#              output << "<br/>#{location}"
-#          # Quality information
-#          output << "#{"<br /><span class='quality_problem'>parameters without documentation: <tt>" + itm.reporting_data[:parameters_without_coverage].join(", ") + "</tt></span>" if itm.reporting_data[:parameters_without_coverage].length > 0}"
-#          output << "#{"<br /><span class='quality_problem'>default values without documentation: <tt>" + itm.reporting_data[:default_values_without_coverage].join(", ") + "</tt></span>" if itm.reporting_data[:default_values_without_coverage].length > 0}"
-#          output << "#{"<br /><span class='quality_problem'>options are not documented</span>" if itm.reporting_data[:no_options_documentation]}"
-#          output << "#{"<br /><span class='quality_problem'>there are no examples</span>" if itm.reporting_data[:no_examples]}"
-#
-#          output << "</li>\n"
+              output << ((itm.comment.nil? || itm.comment == '') ? "<li><b>#{itm.name}</b> in <a href='xdoc/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li>" : "")
             end
             output << "</ol></td>"
           else
@@ -90,11 +74,6 @@ module Dcov
             indice += 1
             output << "</tr>"
           end
-        elsif class_error_presence == false and method_error_presence == false
-          #output << "<tr class='a'><td colspan='2'>There is no undocumented Ruby code.</td></tr>"
-#        else
-#          puts value[0].class
-#          output << "<tr class='a'><td colspan='2'>There is no undocumented Ruby code.</td></tr>"
         end
       end
       if nbtr == 0
@@ -134,9 +113,9 @@ module Dcov
 end
 
 # ==========================================================================
-#  Construction de la tache dcov (couverture rdoc)
-#  author: Vincent Dubois
-#  date: 06 fevrier 2009
+# Construction de la tache dcov (couverture rdoc)
+# author: Vincent Dubois
+# date: 06 fevrier 2009
 # ==========================================================================
 class DcovBuilder
   include Utils
@@ -152,13 +131,14 @@ class DcovBuilder
     files << Dir.glob("lib/**/*.rb")
     files.flatten!
     options = {
-      :path     => RAILS_ROOT,
+      :path => RAILS_ROOT,
       :output_format => 'html',
       :files => files
     }
     Dcov::Analyzer.new(options)
     if !File.exist?("./coverage.html")
-      raise " Execution of dcov failed with command 'dcov -p app/**/*.rb'.\n BUILD FAILED."
+      raise " Execution of dcov failed.\n BUILD FAILED."
     end
   end
 end
+ 

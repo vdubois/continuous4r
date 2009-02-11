@@ -17,6 +17,7 @@ class XdocBuilder
     files = Array.new
     files << Dir.glob("#{RAILS_ROOT}/app/**/*.rb")
     files << Dir.glob("#{RAILS_ROOT}/lib/**/*.rb")
+    files << Dir.glob("#{RAILS_ROOT}/test/**/*.rb")
     files.flatten!
     convertor = Syntax::Convertors::HTML.for_syntax("ruby")
 
@@ -29,11 +30,11 @@ class XdocBuilder
       html_code_lines = html_code.split(/$/)
       html_code_lines.each_with_index do |line,index|
         if index == 0
-          html_code_with_lines = html_code_with_lines.concat("<pre><span class='numline'>#{(index + 1).to_s.rjust(4)}  </span>").concat(line.delete("\n").gsub(/<pre>/,'')).concat("\n")
+          html_code_with_lines = html_code_with_lines.concat("<pre><a name='#{(index + 1).to_s}'></a><span class='numline'>#{(index + 1).to_s.rjust(4)}  </span>").concat(line.delete("\n").gsub(/<pre>/,'')).concat("\n")
         elsif index == html_code_lines.length - 1
           print "OK"
         else
-          html_code_with_lines = html_code_with_lines.concat("<span class='numline'>#{(index + 1).to_s.rjust(4)}  </span>").concat(line.delete("\n")).concat("\n")
+          html_code_with_lines = html_code_with_lines.concat("<span class='numline'>#{(index + 1).to_s.rjust(4)}  </span><a name='#{(index + 2).to_s}'></a>").concat(line.delete("\n")).concat("\n")
         end
       end
       html_file = File.open("#{Continuous4r::WORK_DIR}/xdoc/#{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'').gsub(/\//,'_')}.html", "w")
