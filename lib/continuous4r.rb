@@ -25,7 +25,7 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
+  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro','tests']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
   TASKS = ['tests']
   #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','reek','roodi','saikuro']
