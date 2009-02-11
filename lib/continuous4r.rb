@@ -25,9 +25,9 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
+  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  #TASKS = ['dcov']
+  TASKS = ['tests']
   #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','reek','roodi','saikuro']
 
   # Methode de generation du site au complet
@@ -129,18 +129,6 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, scm, auto_install, proxy_option)
-#    # ==========================================================================
-#    #  Construction de la tache tests (tests unitaires, toutes categories)
-#    # ==========================================================================
-#    when 'tests'
-#      # On lance la generation
-#      puts " Building tests report..."
-#      if File.exist?("tests.html")
-#        File.delete("tests.html")
-#      end
-#      tests_report = File.open("tests.html", "a")
-#      tests_report.write(TestsFormatter.new(task.params).to_html)
-#      tests_report.close
 #    # ==========================================================================
 #    #  Construction de la tache zentest (manques dans les tests unitaires)
 #    # ==========================================================================
