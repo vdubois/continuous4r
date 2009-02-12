@@ -75,4 +75,5 @@ lib/saikuro_builder.rb
 lib/stats_builder.rb
 lib/tests_builder.rb
 lib/xdoc_builder.rb
+lib/zentest_builder.rb
 lib/utils.rb
