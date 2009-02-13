@@ -15,7 +15,7 @@ class TestsFormatter
       puts " Running #{runner} tests..."
       html = html + "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'><td><strong>#{runner}</strong></td>"
       result = Utils.run_command("rake test:#{runner}")
-      passed = (result.index("Failure:").nil? and result.index("Error:").nil? and result.index("pending migrations").nil?)
+      passed = (result.index("Failure:").nil? and result.index("Error:").nil? and result.index("pending migrations").nil? and result.split(/$/).length > 2)
       f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")
       f.write(result)
       f.close

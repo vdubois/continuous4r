@@ -25,9 +25,9 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro','tests']
+  TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  TASKS = ['zentest']
+  #TASKS = ['tests']
   #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','reek','roodi','saikuro']
 
   # Methode de generation du site au complet
@@ -129,28 +129,6 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, scm, auto_install, proxy_option)
-#    # ==========================================================================
-#    #  Construction de la tache zentest (manques dans les tests unitaires)
-#    # ==========================================================================
-#    when 'zentest'
-#      # On vérifie la presence de ZenTest
-#      zentest_result = `zentest`
-#      if zentest_result.empty?
-#        if auto_install == "true"
-#          puts " Installing ZenTest..."
-#          zentest_installed = system("sudo gem install ZenTest")
-#          if !zentest_installed
-#            raise " Install for ZenTest failed with command 'sudo gem install ZenTest'.\n BUILD FAILED."
-#          end
-#        else
-#          raise " You don't seem to have ZenTest installed. You can install it with 'gem install ZenTest'.\n BUILD FAILED."
-#        end
-#      end
-#      # On lance la generation
-#      puts " Building ZenTest report..."
-#      zentest_report = File.open("zentest.html", "w")
-#      zentest_report.write(ZenTestFormatter.new(task.params).to_html)
-#      zentest_report.close
 #    # ===========================================================================
 #    #  Construction de la tache changelog (changements du referentiel de sources)
 #    # ===========================================================================
