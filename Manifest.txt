@@ -64,6 +64,7 @@ website/template.rhtml
 lib/tasks/continuous4r.rake
 lib/tasks/continuous4r.rb
 lib/tasks/continuous4r-project.xml
+lib/changelog_builder.rb
 lib/dcov_builder.rb
 lib/flay_builder.rb
 lib/flog_builder.rb

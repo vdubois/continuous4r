@@ -1,27 +1,34 @@
 require 'iconv'
 
 # ====================================================
-# Classe d'extraction des informations de Subversion
+# Classe d'extraction des informations de Git
 # Author: Vincent Dubois
 # Date: 19 fevrier 2009
 # ====================================================
-module SubversionExtractor
-  
+module GitExtractor
+
   # Methode qui permet de fabriquer le flux HTML a partir des informations
   # presentes dans le referentiel
   def self.extract_changelog scm_current_version, scm, file_name
-    get_head_log = Utils.run_command("svn log -r 'HEAD'")
-    get_head_log_lines = get_head_log.split(/$/)
-    revision = get_head_log_lines[1].split(/ \| /)[0]
-    revision = revision[2..(revision.length-1)]
-    # scm.url.text à remplacer par 'svn info'
-    svn_info = Utils.run_command("svn info")
-    svn_url = svn_info.split(/$/)[1].split(Regexp.new("URL : "))[1]
-    puts " Computing changelog for #{svn_url}, from revision #{scm_current_version} to revision #{revision}..."
+    git_revisions = Utils.run_command("git log").split(/$/).select{ |l| l =~ /^commit / }.collect { |l| l[8..(l.length-1)] }
+    revision = git_revisions[0]
+    begin
+      git_url = File.read(".git/config").split(/$/).select {|l| l =~ /url = /}[0].split(/url = /)[1]
+      puts " Computing changelog for #{git_url}, from commit #{scm_current_version} to revision #{revision}..."
+    rescue
+      puts " Computing changelog, from commit #{scm_current_version} to revision #{revision}..."
+    end
     i = 0
-    html = "<table class='bodyTable'><thead><th>Revision</th><th>Date</th><th>Author</th><th>File(s)</th><th>Comment</th></thead><tbody>"
+    html = "<table class='bodyTable'><thead><th>Commit</th><th>Date</th><th>Author</th><th>File(s)</th><th>Comment</th></thead><tbody>"
+    # TODO A améliorer en dessous
+    commits = Utils.run_command("git log --name-status").split(/^commit/)
+    commits.pop
+    commits.each do |commit|
+      lines = commit.split(/$/)
+      puts lines
+    end
     (scm_current_version.to_i..revision.to_i).to_a.reverse_each do |rev|
-      puts " Changelog for revision #{rev}..."
+      puts " Changelog for commit #{rev}..."
       rev_files = Array.new
       # TODO Dans la suite, gérer les icônes ajout/modif/suppression
       if rev == 1 #or (!scm['min_revision'].nil? and rev == scm['min_revision'].to_i)
@@ -62,5 +69,5 @@ module SubversionExtractor
     changelog_file.close
     return revision
   end
-  
+
 end
