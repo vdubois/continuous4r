@@ -5,6 +5,7 @@ README.rdoc
 Rakefile
 lib/continuous4r.rb
 lib/stats_formatter.rb
+lib/git_extractor.rb
 lib/subversion_extractor.rb
 lib/tests_formatter.rb
 lib/zen_test_formatter.rb
@@ -38,10 +39,13 @@ lib/site/menu-index.rhtml
 lib/site/menu-scm-usage.rhtml
 lib/site/menu-task.rhtml
 lib/site/menu-team-list.rhtml
+lib/site/images/added.png
 lib/site/images/continuous4r-logo.png
+lib/site/images/deleted.png
 lib/site/images/external.png
 lib/site/images/icon_error_sml.gif
 lib/site/images/icon_success_sml.gif
+lib/site/images/modified.png
 lib/site/images/newwindow.png
 lib/site/style/commons-maven.css
 lib/site/style/maven-base.css

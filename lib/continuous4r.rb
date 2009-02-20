@@ -10,6 +10,7 @@ require 'stats_formatter.rb'
 require 'tests_formatter.rb'
 require 'zen_test_formatter.rb'
 require 'subversion_extractor.rb'
+require 'git_extractor.rb'
 require 'utils.rb'
 
 # ==============================================================================

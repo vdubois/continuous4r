@@ -10,13 +10,13 @@ module SubversionExtractor
   # Methode qui permet de fabriquer le flux HTML a partir des informations
   # presentes dans le referentiel
   def self.extract_changelog scm_current_version, scm, file_name
-    get_head_log = Utils.run_command("svn log -r 'HEAD'")
+    get_head_log = Utils.run_command("svn log -r HEAD")
     get_head_log_lines = get_head_log.split(/$/)
     revision = get_head_log_lines[1].split(/ \| /)[0]
     revision = revision[2..(revision.length-1)]
     # scm.url.text à remplacer par 'svn info'
     svn_info = Utils.run_command("svn info")
-    svn_url = svn_info.split(/$/)[1].split(Regexp.new("URL : "))[1]
+    svn_url = svn_info.split(/$/)[1].split(/^URL/)[1]
     puts " Computing changelog for #{svn_url}, from revision #{scm_current_version} to revision #{revision}..."
     i = 0
     html = "<table class='bodyTable'><thead><th>Revision</th><th>Date</th><th>Author</th><th>File(s)</th><th>Comment</th></thead><tbody>"
@@ -27,13 +27,21 @@ module SubversionExtractor
       if rev == 1 #or (!scm['min_revision'].nil? and rev == scm['min_revision'].to_i)
         rev_result = Utils.run_command("svn diff -r #{rev}").split(/$/).select{ |l| l =~ /^Index:/ }
         rev_result.each do |line|
-          rev_files.push line[8..(line.length-1)]
+          rev_files.push "<img src='images/added.png' align='absmiddle'/>#{line[8..(line.length-1)]}"
         end
       else
         rev_result = Utils.run_command("svn diff -r #{rev-1}:#{rev} --summarize")
-        rev_result_lines = rev_result.split(/$/)
+        rev_result_lines = rev_result.split(/$/).collect { |l| l.gsub(Regexp.new("\n"), "") }
         rev_result_lines.each do |line|
-          rev_files.push line[7..(line.length-1)]
+          text = ''
+          if line[0..0] == 'A'
+            text = "<img src='images/added.png' align='absmiddle'/>"
+          elsif line[0..0] == 'M'
+            text = "<img src='images/modified.png' align='absmiddle'/>"
+          elsif line[0..0] == 'D'
+            text = "<img src='images/deleted.png' align='absmiddle'/>"
+          end
+          rev_files.push "#{text}&#160;#{line[7..(line.length-1)]}"
         end
         rev_files.pop
       end

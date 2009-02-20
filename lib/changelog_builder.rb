@@ -27,6 +27,7 @@ class ChangelogBuilder
     end
     # Gestion de la derniere version
     # 1 - On verifie le repertoire home/continuous4r
+    ENV['HOME'] = ENV['USERPROFILE'] if Config::CONFIG['host_os'] =~ /mswin/ and ENV['HOME'].nil?
     unless File.exist?(ENV["HOME"] + "/.continuous4r")
       Dir.mkdir(ENV["HOME"] + "/.continuous4r")
     end
