@@ -27,7 +27,7 @@ class ReekBuilder
     reek_file = File.open("#{Continuous4r::WORK_DIR}/reek/index.html","w")
     matches.each_with_index do |match, count|
       reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
-      reek_file.write("<td><a href='xdoc/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> #{match.first.split("\"")[2]}</td><td>")
+      reek_file.write("<td><a href='xdoclet/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> #{match.first.split("\"")[2]}</td><td>")
       match[1..-1].each do |filename|
         reek_file.write("#{filename}<br/>")
       end

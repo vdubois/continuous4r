@@ -24,7 +24,7 @@ module Continuous4r
   VERSION = '0.0.2'
 
   # Support de CruiseControl.rb
-  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
+  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
 

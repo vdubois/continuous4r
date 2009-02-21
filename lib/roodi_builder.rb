@@ -28,7 +28,7 @@ class RoodiBuilder
     matches.each_with_index do |match, count|
       roodi_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
       if match.first and match.first.index("Found ").nil?
-        roodi_file.write("<td><a href='xdoc/#{match.first.split(':').first.gsub(/\//,'_')}.html' target='_blank'>#{match.first.split(':').first}</a></td>")
+        roodi_file.write("<td><a href='xdoclet/#{match.first.split(':').first.gsub(/\//,'_')}.html' target='_blank'>#{match.first.split(':').first}</a></td>")
       elsif match.first and !match.first.index("Found ").nil?
         roodi_file.write("<td><b>#{match.first}</b></td>")
       else

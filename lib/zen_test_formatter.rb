@@ -21,7 +21,7 @@ class ZenTestFormatter
       ['functional','integration'].each do |test_type|
         if File.exist?("#{RAILS_ROOT}/test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}")
           puts " Running ZenTest on #{runner} against test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}..."
-          html = html + "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'><td><a href='xdoc/#{runner.gsub(/\//,'_')}.html' target='_blank'>#{runner}</a><br/><strong>run against</strong><br/><a href='xdoc/#{"test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}".gsub(/\//,'_')}.html' target='_blank'>test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}</a></td>"
+          html = html + "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'><td><a href='xdoclet/#{runner.gsub(/\//,'_')}.html' target='_blank'>#{runner}</a><br/><strong>run against</strong><br/><a href='xdoclet/#{"test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}".gsub(/\//,'_')}.html' target='_blank'>test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")}</a></td>"
           Utils.run_command("zentest -r #{runner} test/#{test_type}/#{runner.split("/")[2].gsub(Regexp.new(".rb"),"_test.rb")} > #{Continuous4r::WORK_DIR}/zentest.log")
           file_content = File.read("#{Continuous4r::WORK_DIR}/zentest.log")
           file_lines = file_content.split(/$/)
