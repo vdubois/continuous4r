@@ -25,10 +25,8 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','flay','reek','roodi','saikuro','tests','zentest']
-  #TASKS << 'churn' if File.exist?("#{RAILS_ROOT}/.svn") or File.exist?("#{RAILS_ROOT}/.git")
-  TASKS = ['changelog']
-  #TASKS = ['dcov','rcov','rdoc','stats','flog','xdoc','reek','roodi','saikuro']
+  
+  TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoc','flay','reek','roodi','saikuro','tests','zentest']
 
   # Methode de generation du site au complet
   def self.generate_site
@@ -129,39 +127,5 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, scm, auto_install, proxy_option)
-#    # ===========================================================================
-#    #  Construction de la tache changelog (changements du referentiel de sources)
-#    # ===========================================================================
-#    when 'changelog'
-#      unless scm.repository_type.text == "svn"
-#        raise " Only Subversion is supported at the moment. You need to deactivate the 'changelog' task.\n BUILD FAILED."
-#      end
-#      # On verifie l'existence de Subversion
-#      svn_version = `svn --version`
-#      if svn_version.empty?
-#        raise " Subversion don't seem to be installed. Go see Subversion website on http://subversion.tigris.org.\n BUILD FAILED"
-#      end
-#      # Gestion de la derniere version
-#      # 1 - On verifie le repertoire home/continuous4r
-#      unless File.exist?(ENV["HOME"] + "/.continuous4r")
-#        Dir.mkdir(ENV["HOME"] + "/.continuous4r")
-#      end
-#      # 2 - On verifie le numero de version
-#      scm_current_version = scm['min_revision']
-#      scm_current_version ||= "1"
-#      scm_last_version = 1
-#      if File.exist?(ENV["HOME"] + "/.continuous4r/#{project_name}_#{scm.repository_type.text}.version")
-#        scm_current_version = File.read(ENV["HOME"] + "/.continuous4r/#{project_name}_#{scm.repository_type.text}.version")
-#      end
-#      # 3 - On extrait les informations du referentiel
-#      case scm.repository_type.text
-#      when "svn"
-#        scm_last_version = SubversionExtractor.extract_changelog(scm_current_version.to_i,scm,"changelog.html")
-#      end
-#      # 4 - On ecrit le nouveau numero de revision
-#      rev_file = File.open(ENV["HOME"] + "/.continuous4r/#{project_name}_#{scm.repository_type.text}.version","w")
-#      rev_file.write(scm_last_version)
-#      rev_file.close
-#    end
   end
 end
