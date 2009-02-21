@@ -9,28 +9,29 @@
         <div class="section"><a name="Source_repository"></a>
             <h2>Source repository</h2>
             <%
-                scms = {'cvs' => ['CVS', 'http://www.nongnu.org/cvs/'], 'svn' => ['subversion', 'http://subversion.tigris.org']}
-                if !scms.has_key? project.scm.repository_type.text
+                scms = {'git' => ['Git', 'http://git-scm.com'], 'svn' => ['Subversion', 'http://subversion.tigris.org']}
+                if File.exist?(".git")
+                  scm_name = "git"
+                  scm_url = File.read(".git/config").split(/$/).select {|l| l =~ /url = /}[0].split(/url = /)[1]
+                end
+                if File.exist?(".svn")
+                  scm_name = "svn"
+                  svn_info = Utils.run_command("svn info")
+                  scm_url = svn_info.split(/$/)[1].split(/^URL/)[1].strip.split(/: /)[1]
+                end
+                if !scms.has_key?(scm_name)
             %>
             <p>
                 <%= project['name'] %> is hosted on an unknown repository type.
             </p>
             <% else %>
             <p>
-                <%= project['name'] %> is hosted on a <a href="<%= scms[project.scm.repository_type.text][1] %>" target="_blank" class="externalLink" title="External Link"><%= scms[project.scm.repository_type.text][0] %></a> repository.
+                <%= project['name'] %> is hosted on a <a href="<%= scms[scm_name][1] %>" target="_blank" class="externalLink" title="External Link"><%= scms[scm_name][0] %></a> repository.
             </p>
             <% end %>
             <p>
                 The project URL is:<br></br>
-                <code><%= project.scm.url.text %></code>
-            </p>
-            <p>
-                The best way to view the repository is via the
-                <a href="<%= project.scm.view.text %>" class="externalLink" target="_blank" title="External Link"><%= scms[project.scm.repository_type.text][0] %> viewer</a>.
-            </p>
-            <p>
-                The alternative is to use the
-                <a href="<%= project.scm.url.text %>" class="externalLink" target="_blank" title="External Link">native <%= scms[project.scm.repository_type.text][0] %></a> display.
+                <code><%= scm_url %></code>
             </p>
         </div>
     </div>

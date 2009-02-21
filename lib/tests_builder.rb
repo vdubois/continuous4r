@@ -7,7 +7,7 @@ class TestsBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     # On lance la generation
     puts " Building tests report..."
     if File.exist?("#{Continuous4r::WORK_DIR}/tests-run.html")

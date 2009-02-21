@@ -7,35 +7,51 @@
   generation_date = DateTime.now
 %>
 <html>
-	<head>
-            <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-            <title>Project Information - <%= project['name'] %></title>
-            <style type="text/css" media="all">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+        <title>Project Information - <%= project['name'] %></title>
+        <style type="text/css" media="all">
             @import url("./style/maven-base.css");
             @import url("./style/maven-theme.css");
         </style>
     </head>
     <body class="composite">
     	<div id="banner">
-            <a href="<%= project.url.text %>" id="projectLogo"><img alt="<%= project['name'] %>" src="<%= project.logo.text %>"></a>
-    		<% begin
-                     if !project.company.nil? and !project.company.logo.nil? and 
-                      !project.company.logo.text.empty? and !project.company.url.nil? and 
-                      !project.company.url.text.empty? and !project.company.name.nil? and !project.company.name.text.empty? %>
-                      <a href="<%= project.company.url.text %>" id="organizationLogo"><img alt="<%= project.company.name.text %>" src="<%= project.company.logo.text %>"></a>
-	    	<%   end
-                   rescue Exception => e
-                   end %>
-    		<div class="clear"><hr></div>
+          <table style="width: 100%; border: 0px solid black;">
+            <tr>
+              <%
+                begin
+                  if !project.company.nil? and !project.company.logo.nil? and !project.company.url.nil? and !project.company.name.nil? %>
+                  <td><a target="_blank" href="<%= project.company.url.text %>" id="organizationLogo"><img alt="<%= project.company.denomination.text %>" title="<%= project.company.denomination.text %>" src="<%= project.company.logo.text %>"></a></td>
+              <%  end
+                rescue
+                  # XML error safe
+                end
+              %>
+              <td width="100%">&#160;</td>
+              <td style="white-space: nowrap;"><a href="<%= project.url.text %>" id="projectLogo"><%= project['name'] %></a>&#160;&#160;</td>
+              <% if !project.logo.nil? %>
+              <td><img src="<%= project.logo.text %>" align="absmiddle"/></td>
+              <% end %>
+            </tr>
+          </table>
+          <div class="clear"><hr></div>
     	</div>
     	<div id="breadcrumbs">
-            <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for  1.8.0-SNAPSHOT</div>
+          <%
+            if File.exist?(".git")
+              display_version = ", commit #{Utils.run_command("git log").split(/$/).select{ |l| l =~ /^commit / }.collect { |l| l[8..(l.length-1)] }[0]}"
+            end
+            if File.exist?(".svn")
+              get_head_log = Utils.run_command("svn log -r HEAD")
+              get_head_log_lines = get_head_log.split(/$/)
+              revision = get_head_log_lines[1].split(/ \| /)[0]
+              revision = revision[2..(revision.length-1)]
+              display_version = ", revision #{revision}"
+            end
+          %>
+            <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for <%= project['name'] %><%= display_version %></div>
             <div class="xright">
-        	<!-- a href="http://www..org/" class="externalLink" title="External Link">Assembla</a>
-	        <span class="separator">|</span>
-        
-		<a href="http://commons.apache.org/" class="externalLink" title="External Link">Commons</a> -->
-		Pas de liens
             </div>
             <div class="clear"><hr></div>
       	</div>

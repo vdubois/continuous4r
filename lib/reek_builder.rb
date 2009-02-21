@@ -7,7 +7,7 @@ class ReekBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     # On verifie la presence de reek
     Utils.verify_gem_presence("reek", auto_install, proxy_option)
     # On lance la generation

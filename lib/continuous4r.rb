@@ -14,7 +14,7 @@ require 'git_extractor.rb'
 require 'utils.rb'
 
 # ==============================================================================
-# Classe modelisant un fichier de description de projet Ruby/Rails
+# Classe modelisant un fichier de description de projet Ruby on Rails
 # Author:: Vincent Dubois
 # Date : 03 decembre 2007 - version 0.0.1
 #        03 fevrier 2009  - version 0.0.2
@@ -24,15 +24,18 @@ module Continuous4r
   VERSION = '0.0.2'
 
   # Support de CruiseControl.rb
-  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
+  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r_build"}"
   
-  TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoc','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
 
   # Methode de generation du site au complet
   def self.generate_site
     tasks = TASKS
     project = XmlElements.fromString(File.read("#{RAILS_ROOT}/continuous4r-project.xml"))
     generation_date = DateTime.now
+    auto_install = project['auto-install-tools']
+    auto_install ||= "false"
+
     puts "====================================================================="
     puts " Continuous Integration for Ruby, starting website generation..."
     puts "---------------------------------------------------------------------"
@@ -57,14 +60,7 @@ module Continuous4r
     end
 
     # Verification de la presence d'hpricot
-    hpricot_version = Utils.run_command("gem list hpricot")
-    if hpricot_version.empty?
-      puts " Installing Hpricot..."
-      hpricot_installed = system("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install hpricot#{proxy_option}")
-      if !hpricot_installed
-        raise " Install for Hpricot failed with command '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install hpricot#{proxy_option}'\n BUILD FAILED."
-      end
-    end
+    Utils.verify_gem_presence("hpricot", auto_install, proxy_option)
 
     # Chargement/Vérification des gems nécessaires à l'application
     puts " Checking gems for this project, please hold on..."
@@ -86,12 +82,9 @@ module Continuous4r
     end
     Dir.mkdir WORK_DIR
 
-    auto_install = project['auto-install-tools']
-    auto_install ||= "false"
-
     # Construction des taches
     tasks.each do |task|
-      self.build_task task, project['name'], project.scm, auto_install, proxy_option
+      self.build_task task, project['name'], auto_install, proxy_option
       puts "\n---------------------------------------------------------------------"
     end
     puts " All tasks done."
@@ -122,10 +115,10 @@ module Continuous4r
   end
 
   # Methode qui permet de construire une tache de nom donne
-  def self.build_task task, project_name, scm, auto_install, proxy_option
+  def self.build_task task, project_name, auto_install, proxy_option
     require "#{task}_builder.rb"
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
-    task_builder.build(project_name, scm, auto_install, proxy_option)
+    task_builder.build(project_name, auto_install, proxy_option)
   end
 end

@@ -7,7 +7,7 @@ module GitExtractor
 
   # Methode qui permet de fabriquer le flux HTML a partir des informations
   # presentes dans le referentiel
-  def self.extract_changelog scm_current_version, scm, file_name
+  def self.extract_changelog scm_current_version, file_name
     git_revisions = Utils.run_command("git log").split(/$/).select{ |l| l =~ /^commit / }.collect { |l| l[8..(l.length-1)] }
     revision = git_revisions[0]
     begin

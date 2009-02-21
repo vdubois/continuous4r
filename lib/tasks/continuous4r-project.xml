@@ -14,14 +14,6 @@
         <url>BUGTRACKER_URL_TICKETS_LIST</url>
         <add>BUGTRACKER_URL_TICKET_ADD</add>
     </bugtracker>
-    <scm>
-        <repository_type>[svn|cvs]</repository_type>
-        <url>SCM_URL</url>
-        <view>SCM_VIEWER_URL</view>
-        <!-- needed if authentication for access is mandatory -->
-        <user>userlogin</user>
-        <password>userpassword</password>
-    </scm>
     <!-- Gems mandatory for your project -->
     <gems repository="http://gems.rubyforge.org/gems/">
         <gem name="GEM_NAME" version="GEM_VERSION"/>

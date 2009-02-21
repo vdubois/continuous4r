@@ -7,7 +7,7 @@ class RdocBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     # On lance la generation
     puts " Building rdoc api and rdoc generation report..."
     if !File.exist?("#{RAILS_ROOT}/doc")

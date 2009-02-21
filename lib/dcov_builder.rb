@@ -121,7 +121,7 @@ class DcovBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     # On verifie la presence de dcov
     Utils.verify_gem_presence("dcov", auto_install, proxy_option)
     # On lance la generation
@@ -136,7 +136,7 @@ class DcovBuilder
       :files => files
     }
     Dcov::Analyzer.new(options)
-    if !File.exist?("./coverage.html")
+    if !File.exist?("#{Continuous4r::WORK_DIR}/dcov/coverage.html")
       raise " Execution of dcov failed.\n BUILD FAILED."
     end
   end

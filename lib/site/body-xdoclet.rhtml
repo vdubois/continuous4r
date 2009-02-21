@@ -1,7 +1,7 @@
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section"><a name="xdoc"></a>
-            <h2>XDoc Report</h2>
+            <h2>XDoclet Report</h2>
             <table class="bodyTable">
               <thead>
                 <tr class="b">
@@ -17,7 +17,7 @@
                   files.each_with_index do |file,index|
                 %>
                 <tr class="<%= index % 2 == 0 ? 'a' : 'b' %>">
-                  <td><a href="xdoc/<%= "#{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'').gsub(/\//,'_')}" %>.html" target="_blank"><%= file.gsub(Regexp.new("#{RAILS_ROOT}/"),'') %></a></td>
+                  <td><a href="xdoclet/<%= "#{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'').gsub(/\//,'_')}" %>.html" target="_blank"><%= file.gsub(Regexp.new("#{RAILS_ROOT}/"),'') %></a></td>
                 </tr>
                 <%
                   end

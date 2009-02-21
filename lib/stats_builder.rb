@@ -7,7 +7,7 @@ class StatsBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     # On lance la generation
     puts " Building stats report..."
     stats_result = Utils.run_command("rake stats")

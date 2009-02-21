@@ -7,7 +7,7 @@ class ChangelogBuilder
   include Utils
 
   # Implementation de la construction de la tache
-  def build(project_name, scm, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option)
     unless File.exist?(".svn") or File.exist?(".git")
       puts " Only Subversion and Git are supported. The 'changelog' task will be empty."
       break
@@ -39,9 +39,9 @@ class ChangelogBuilder
     end
     # 3 - On extrait les informations du referentiel
     if scm_name == "svn"
-      scm_last_version = SubversionExtractor.extract_changelog(scm_current_version.to_i, scm, "changelog.html")
+      scm_last_version = SubversionExtractor.extract_changelog(scm_current_version.to_i, "#{Continuous4r::WORK_DIR}/changelog-body.html")
     elsif scm_name == "git"
-      scm_last_version = GitExtractor.extract_changelog(scm_current_version.to_i, scm, "changelog.html")
+      scm_last_version = GitExtractor.extract_changelog(scm_current_version.to_i, "#{Continuous4r::WORK_DIR}/changelog-body.html")
     end
     # 4 - On ecrit le nouveau numero de revision
     rev_file = File.open(ENV["HOME"] + "/.continuous4r/#{project_name}_#{scm_name}.version","w")

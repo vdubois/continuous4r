@@ -9,14 +9,14 @@ module SubversionExtractor
   
   # Methode qui permet de fabriquer le flux HTML a partir des informations
   # presentes dans le referentiel
-  def self.extract_changelog scm_current_version, scm, file_name
+  def self.extract_changelog scm_current_version, file_name
     get_head_log = Utils.run_command("svn log -r HEAD")
     get_head_log_lines = get_head_log.split(/$/)
     revision = get_head_log_lines[1].split(/ \| /)[0]
     revision = revision[2..(revision.length-1)]
     # scm.url.text à remplacer par 'svn info'
     svn_info = Utils.run_command("svn info")
-    svn_url = svn_info.split(/$/)[1].split(/^URL/)[1]
+    svn_url = svn_info.split(/$/)[1].split(/^URL/)[1].strip.split(/: /)[1]
     puts " Computing changelog for #{svn_url}, from revision #{scm_current_version} to revision #{revision}..."
     i = 0
     html = "<table class='bodyTable'><thead><th>Revision</th><th>Date</th><th>Author</th><th>File(s)</th><th>Comment</th></thead><tbody>"
