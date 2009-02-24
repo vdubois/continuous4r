@@ -33,63 +33,55 @@
     <h1>continuous4r</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/continuous4r"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/continuous4r" class="numbers">0.0.1</a>
+      <a href="http://rubyforge.org/projects/continuous4r" class="numbers">0.0.2</a>
     </div>
     <h2><br/>What is it ?</h2>
-
-
-	<p>Continuous4R is a continuous integration tool for Ruby on Rails. With it, you can
-aggregate reports of the best analysis, quality, tests and deployment tools for
-Ruby and Rails.
-By just defining one Rake task and writing an <span class="caps">XML</span> file describing your project,
-Continuous4R builds for you an entire website in a Maven form.</p>
-
-
-	<h2>Installing</h2>
-
-
-	<p><pre class='syntax'><span class="ident">sudo</span> <span class="ident">gem</span> <span class="ident">install</span> <span class="ident">continuous4r</span></pre></p>
-
-
-	<h2>The basics</h2>
-
-
-	<h3>Defining the Rake task</h3>
-
-
-	<p>In order to build your project, you need to declare one Rake task. Under the lib/tasks
-directory of your project, create a file named continuous4r.rake :</p>
-
-
-	<p><pre class='syntax'><span class="ident">require</span> <span class="punct">'</span><span class="string">rubygems</span><span class="punct">'</span>
-<span class="ident">require</span> <span class="punct">'</span><span class="string">continuous4r</span><span class="punct">'</span>
-
-<span class="comment"># Tache Rake pour la construction du site Continuous4R</span>
-<span class="ident">namespace</span> <span class="symbol">:continuous4r</span> <span class="keyword">do</span>
-  <span class="ident">desc</span> <span class="punct">'</span><span class="string">Build Continuous4R Website for the current project</span><span class="punct">'</span>
-  <span class="ident">task</span> <span class="symbol">:build</span> <span class="keyword">do</span>
-    <span class="constant">Continuous4r</span><span class="punct">.</span><span class="ident">generate_site</span>
-  <span class="keyword">end</span>  
-<span class="keyword">end</span></pre></p>
-
-
-	<h3>Writing the <span class="caps">XML</span> file describing your project</h3>
-
-
-	<p>This file must be named continuous4r-project.xml, and must be placed at the top
-of your Rails project directory. This file must not have a <span class="caps">XML</span> header (&lt;?xml version&#8230;).
-Here&#8217;s the model of this file :</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">project</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">PROJECT_NAME</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>PROJECT_DESCRIPTION<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">url</span><span class="punct">&gt;</span>PROJECT_URL<span class="punct">&lt;/</span><span class="tag">url</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">logo</span><span class="punct">&gt;</span>PROJECT_IMAGE_URI<span class="punct">&lt;/</span><span class="tag">logo</span><span class="punct">&gt;</span>
-    <span class="comment">&lt;!-- Describing your project members --&gt;</span>
+<p>continuous4r is a continuous integration tool for Ruby on Rails. With it, you can aggregate reports of the best analysis, quality, and tests tools for Ruby on Rails. By just launching one Rake task and customizing a <span class="caps">XML</span> file describing your project, continuous4r builds for you an entire website in a Maven-like form/design.</p>
+<h2>Requirements</h2>
+<ul>
+	<li>RubyGems</li>
+	<li>rails (erb)</li>
+	<li>hpricot</li>
+	<li>XmlElements</li>
+</ul>
+<h2>Installing</h2>
+<p><pre class='syntax'><span class="punct">[</span><span class="ident">sudo</span><span class="punct">]</span> <span class="ident">gem</span> <span class="ident">install</span> <span class="ident">continuous4r</span></pre></p>
+<h2>Release notes for this version</h2>
+<ul>
+	<li>Full Windows support, and no need for the user to define the <span class="caps">HOME</span> environment variable.</li>
+	<li>Only quality and code-related tools kept (goodbye Capistrano, httperf, railroad&#8230;).</li>
+	<li>No need to create the project file from scratch now, type &#8216;rake continuous4r:init&#8217; in your Rails project directory, and there you go.</li>
+	<li>Full extensibility : the tasks are now defined in [task]_builder.rb files, and instanciated dynamically.</li>
+	<li>Full refactoring (Ruby and <span class="caps">HTML</span>/<span class="caps">RHTML</span> parts).</li>
+	<li>Git support added.</li>
+	<li><span class="caps">HTTP</span> Proxy support (for those who are constrained by a proxy).</li>
+	<li>No need to have eruby installed, now uses the Rails erb compiler.</li>
+	<li><span class="caps">HTML</span> global template fixes.</li>
+	<li>No need to define or configure your tasks anymore.</li>
+</ul>
+<h2>The basics</h2>
+<h3>Preparing your project</h3>
+<p>In order to have access to continuous4r Rake tasks, you must open your Rakefile, and add to the end :</p>
+<p><pre class='syntax'><span class="ident">require</span> <span class="punct">'</span><span class="string">continuous4r</span><span class="punct">'</span></pre></p>
+<h3>Initializing your project</h3>
+<p>In order to initialize your project, you must create your continuous4r-project.xml file. <br />
+Just type this command and the file will be created :</p>
+<p><pre class='syntax'>rake continuous4r:init</pre></p>
+<p>Here is the content of this file, you can customize it to suite your needs :</p>
+<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">project</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">FIXME project name</span><span class="punct">&quot;</span> <span class="attribute">auto-install-gems</span><span class="punct">=&quot;</span><span class="string">true</span><span class="punct">&quot;</span> 
+    <span class="attribute">auto-install-tools</span><span class="punct">=&quot;</span><span class="string">true</span><span class="punct">&quot;</span> <span class="attribute">ignore-tests-failures</span><span class="punct">=&quot;</span><span class="string">true</span><span class="punct">&quot;&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>FIXME project description<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">url</span><span class="punct">&gt;</span>FIXME project URL<span class="punct">&lt;/</span><span class="tag">url</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">logo</span><span class="punct">&gt;</span>FIXME Logo URL<span class="punct">&lt;/</span><span class="tag">logo</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">company</span><span class="punct">&gt;</span>
+        <span class="punct">&lt;</span><span class="tag">denomination</span><span class="punct">&gt;</span>FIXME your company name here<span class="punct">&lt;/</span><span class="tag">denomination</span><span class="punct">&gt;</span>
+        <span class="punct">&lt;</span><span class="tag">url</span><span class="punct">&gt;</span>FIXME your company website URL here<span class="punct">&lt;/</span><span class="tag">url</span><span class="punct">&gt;</span>
+        <span class="punct">&lt;</span><span class="tag">logo</span><span class="punct">&gt;</span>FIXME your company logo URL here<span class="punct">&lt;/</span><span class="tag">logo</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;/</span><span class="tag">company</span><span class="punct">&gt;</span>
     <span class="punct">&lt;</span><span class="tag">members</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">member</span> <span class="attribute">id</span><span class="punct">=&quot;</span><span class="string">MEMBER_LOGIN</span><span class="punct">&quot;</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">MEMBER_NAME</span><span class="punct">&quot;</span> <span class="attribute">email</span><span class="punct">=&quot;</span><span class="string">MEMBER_EMAIL</span><span class="punct">&quot;</span>
-            <span class="attribute">roles</span><span class="punct">=&quot;</span><span class="string">MEMBER_ROLES</span><span class="punct">&quot;</span> <span class="attribute">company</span><span class="punct">=&quot;</span><span class="string">MEMBER_COMPANY_NAME</span><span class="punct">&quot;/&gt;</span>
-        ...
+        <span class="punct">&lt;</span><span class="tag">member</span> <span class="attribute">id</span><span class="punct">=&quot;</span><span class="string">FIXME user login</span><span class="punct">&quot;</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">FIXME user name</span><span class="punct">&quot;</span> <span class="attribute">email</span><span class="punct">=&quot;</span><span class="string">FIXME user email</span><span class="punct">&quot;</span>
+            <span class="attribute">roles</span><span class="punct">=&quot;</span><span class="string">FIXME user roles, separated by commas</span><span class="punct">&quot;</span> 
+            <span class="attribute">company</span><span class="punct">=&quot;</span><span class="string">FIXME company/organisation name</span><span class="punct">&quot;/&gt;</span>
     <span class="punct">&lt;/</span><span class="tag">members</span><span class="punct">&gt;</span>
     <span class="punct">&lt;</span><span class="tag">bugtracker</span><span class="punct">&gt;</span>
         <span class="punct">&lt;</span><span class="tag">tracker_type</span><span class="punct">&gt;</span>[Trac|Bugzilla|Mantis|etc...]<span class="punct">&lt;/</span><span class="tag">tracker_type</span><span class="punct">&gt;</span>
@@ -99,309 +91,95 @@ Here&#8217;s the model of this file :</p>
         <span class="punct">&lt;</span><span class="tag">url</span><span class="punct">&gt;</span>BUGTRACKER_URL_TICKETS_LIST<span class="punct">&lt;/</span><span class="tag">url</span><span class="punct">&gt;</span>
         <span class="punct">&lt;</span><span class="tag">add</span><span class="punct">&gt;</span>BUGTRACKER_URL_TICKET_ADD<span class="punct">&lt;/</span><span class="tag">add</span><span class="punct">&gt;</span>
     <span class="punct">&lt;/</span><span class="tag">bugtracker</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">scm</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">repository_type</span><span class="punct">&gt;</span>[svn|cvs]<span class="punct">&lt;/</span><span class="tag">repository_type</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">url</span><span class="punct">&gt;</span>SCM_URL<span class="punct">&lt;/</span><span class="tag">url</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">view</span><span class="punct">&gt;</span>SCM_VIEWER_URL<span class="punct">&lt;/</span><span class="tag">view</span><span class="punct">&gt;</span>
-        <span class="comment">&lt;!-- needed if authentication for access is mandatory --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">user</span><span class="punct">&gt;</span>userlogin<span class="punct">&lt;/</span><span class="tag">user</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">password</span><span class="punct">&gt;</span>userpassword<span class="punct">&lt;/</span><span class="tag">password</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">scm</span><span class="punct">&gt;</span>
     <span class="comment">&lt;!-- Gems mandatory for your project --&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">gems</span><span class="punct">&gt;</span>
+    <span class="punct">&lt;</span><span class="tag">gems</span> <span class="attribute">repository</span><span class="punct">=&quot;</span><span class="string">http://gems.rubyforge.org/gems/</span><span class="punct">&quot;&gt;</span>
         <span class="punct">&lt;</span><span class="tag">gem</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">GEM_NAME</span><span class="punct">&quot;</span> <span class="attribute">version</span><span class="punct">=&quot;</span><span class="string">GEM_VERSION</span><span class="punct">&quot;/&gt;</span>
-        ...
     <span class="punct">&lt;/</span><span class="tag">gems</span><span class="punct">&gt;</span>
-    <span class="comment">&lt;!-- Tasks in order to generate reports, described further --&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">tasks</span> [<span class="attribute">autoinstall</span><span class="punct">=&quot;</span><span class="string">true</span><span class="punct">&quot;]</span> &lt;!<span class="attribute">--</span> <span class="attribute">activates</span> <span class="attribute">autoinstall</span> <span class="attribute">for</span> <span class="attribute">gems</span> <span class="attribute">needed</span> <span class="attribute">by</span> <span class="attribute">tasks</span> <span class="attribute">--</span><span class="punct">&gt;</span> &gt;
-        ...
-    <span class="punct">&lt;/</span><span class="tag">tasks</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">project</span><span class="punct">&gt;</span></pre></p>
-
-
-	<h2>Defining tasks</h2>
-
-
-	<h3>Changelog task</h3>
-
-
-	<p>Builds a report of the last modifications on the <span class="caps">SCM</span> repository. Only Subversion is supported
-at the time.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">changelog</span><span class="punct">&quot;/&gt;</span>
+<span class="punct">&lt;/</span><span class="tag">project</span><span class="punct">&gt;</span>
 </pre></p>
-
-
-	<p><a href="changelog.png" target="_blank">Sample</a></p>
-
-
-	<h3>Stats task</h3>
-
-
-	<p>Generates a report of the Rails statistics on your project.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">stats</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>Provides statistics on your Rails code<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span></pre></p>
-
-
-	<p><a href="stats.png" target="_blank">Sample</a></p>
-
-
-	<h3>Dcov task</h3>
-
-
-	<p>Generates a report on the rdoc coverage of your Ruby code. The parts 
-which are not covered are colored in red.<br/>
-The <strong>pattern</strong> param enables you to select the Ruby code to control.<br/>
-The <strong>report</strong> param is the path where Continuous4R can find the dcov 
-original report (due to a bug in dcov).</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">dcov</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>Rdoc coverage analysis report<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">pattern</span> <span class="attribute">value</span><span class="punct">=&quot;</span><span class="string">app/**/*.rb</span><span class="punct">&quot;/&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">report</span> <span class="attribute">path</span><span class="punct">=&quot;</span><span class="string">coverage.html</span><span class="punct">&quot;/&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span></pre></p>
-
-
-	<p><a href="dcov.png" target="_blank">Sample</a></p>
-
-
-	<h3>Rcov task</h3>
-
-
-	<p>Builds a report on the coverage of your tests over your Ruby code.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">rcov</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="comment">&lt;!-- file which loads all the necessary test files (based on requires) --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">file</span> <span class="attribute">path</span><span class="punct">=&quot;</span><span class="string">test/rcov_test_all.rb</span><span class="punct">&quot;/&gt;</span>
-        <span class="comment">&lt;!-- path where to find the reports generated by rcov --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">reports</span> <span class="attribute">path</span><span class="punct">=&quot;</span><span class="string">coverage</span><span class="punct">&quot;/&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
+<h3>Building your project</h3>
+<p>When your project file is suitable, type :</p>
+<p><pre class='syntax'>rake continuous4r:build</pre></p>
+<p>When the build is finished, you can find your site in the RAILS_ROOT/tmp/continuous4r directory.</p>
+<h2>Features</h2>
+<h3>Proxy configuration</h3>
+<p>If you are behind a <span class="caps">HTTP</span> proxy within your company, you can configure it with a simple <span class="caps">YAML</span> file. <br />
+Create a file named proxy.yml within your USER_HOME/.continuous4r directory, with the following content :</p>
+<p><pre class='syntax'><span class="key">proxy</span><span class="punct">:</span>
+  <span class="key">server</span><span class="punct">:</span> my.proxy.server
+  <span class="key">port</span><span class="punct">:</span> my_port
+  <span class="key">login</span><span class="punct">:</span> my_login
+  <span class="key">password</span><span class="punct">:</span> my_password
 </pre></p>
-
-
-	<p><a href="rcov.png" target="_blank">Sample</a></p>
-
-
-	<h3>Rdoc task</h3>
-
-
-	<p>Generates a report of the rdoc generation, and gives access to the rdoc.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">rdoc</span><span class="punct">&quot;/&gt;</span>
-</pre></p>
-
-
-	<p><a href="rdoc.png" target="_blank">Sample</a></p>
-
-
-	<h3>Flog task</h3>
-
-
-	<p><a href="http://ruby.sadi.st/Flog.html" target="_blank">Flog</a> is a tool which 
-provides statistics of your Ruby code&#8217;s complexity. This task generates an <span class="caps">HTML</span>
-report of these statistics.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">flog</span><span class="punct">&quot;/&gt;</span>
-</pre></p>
-
-
-	<p><a href="flog.png" target="_blank">Sample</a></p>
-
-
-	<h3>Kwala task</h3>
-
-
-	<p><a href="http://kwala.rubyforge.org" target="_blank">Kwala</a> is a continuous integration
-tool which gathers informations of the quality and metrics on your project. This 
-task integrates the reports produced by kwala to the site.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">kwala</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="comment">&lt;!-- set of actions understood by kwala --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">actions</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>loc<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>syntax_check<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>formatting<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>code_duplication<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>cyclomatic<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>unit_test<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>comment_check<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>requires<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">action</span><span class="punct">&gt;</span>cycles<span class="punct">&lt;/</span><span class="tag">action</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;/</span><span class="tag">actions</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<p><a href="kwala.png" target="_blank">Sample</a></p>
-
-
-	<h3>Railroad task</h3>
-
-
-	<p>Railroad is a tool to generate graphs of your models and/or your controllers. This 
-task generates your graphs and presents them on a <span class="caps">HTML</span> report. This task is not 
-compatible with CruiseControl.rb.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">railroad</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">generate</span> <span class="attribute">value</span><span class="punct">=&quot;</span><span class="string">controllers|models|all</span><span class="punct">&quot;/&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<h3>Httperf task</h3>
-
-
-	<p><a href="http://www.hpl.hp.com/research/linux/httperf/" target="_blank">Httperf</a> 
-is a <span class="caps">HTTP</span> stress tool which generates text reports for a really important number 
-of statistics. This task generates a <span class="caps">HTML</span> report for these statistics.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">httperf</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="comment">&lt;!-- set of ports which will match Mongrel instances (all managed within) --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">ports</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">port</span><span class="punct">&gt;</span>3334<span class="punct">&lt;/</span><span class="tag">port</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;/</span><span class="tag">ports</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">processes</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">process</span> <span class="attribute">port</span><span class="punct">=&quot;</span><span class="string">3334</span><span class="punct">&quot;</span> <span class="attribute">url</span><span class="punct">=&quot;</span><span class="string">/controller/action?param=value</span><span class="punct">&quot;</span> 
-                <span class="attribute">requests</span><span class="punct">=&quot;</span><span class="string">50</span><span class="punct">&quot;</span> <span class="attribute">timeout</span><span class="punct">=&quot;</span><span class="string">2</span><span class="punct">&quot;&gt;</span>
-                <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>Stressing application with 50 requests (URL http://127.0.0.1:3334/controller/action?param=value), 
-                    with a timeout set to 2 seconds.<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;/</span><span class="tag">process</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;</span><span class="tag">process</span> <span class="attribute">port</span><span class="punct">=&quot;</span><span class="string">3334</span><span class="punct">&quot;</span> <span class="attribute">url</span><span class="punct">=&quot;</span><span class="string">/controller/action?param=value</span><span class="punct">&quot;</span>
-                <span class="attribute">sessions</span><span class="punct">=&quot;</span><span class="string">10,5,2</span><span class="punct">&quot;</span> <span class="attribute">rate</span><span class="punct">=&quot;</span><span class="string">5</span><span class="punct">&quot;</span> <span class="attribute">timeout</span><span class="punct">=&quot;</span><span class="string">3</span><span class="punct">&quot;&gt;</span>
-                <span class="punct">&lt;</span><span class="tag">description</span><span class="punct">&gt;</span>Stressing application with 10 sessions (URL http://127.0.0.1:3334/controller/action?param=value),
-                    with a rate of 5 sessions per second. Each  session consists 
-                    of 5 calls that are spaced out by 2 seconds. Timeout is set to 3 seconds.<span class="punct">&lt;/</span><span class="tag">description</span><span class="punct">&gt;</span>
-            <span class="punct">&lt;/</span><span class="tag">process</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;/</span><span class="tag">processes</span><span class="punct">&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<p><a href="httperf.png" target="_blank">Sample</a></p>
-
-
-	<h3>Tests task</h3>
-
-
-	<p>Generates a report for the results of your tests.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">tests</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">type</span><span class="punct">=&quot;</span><span class="string">units</span><span class="punct">&quot;/&gt;</span><span class="comment">&lt;!-- equivalent to rake test:units --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">type</span><span class="punct">=&quot;</span><span class="string">functionals</span><span class="punct">&quot;/&gt;</span><span class="comment">&lt;!-- equivalent to rake test:functionals --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">type</span><span class="punct">=&quot;</span><span class="string">integration</span><span class="punct">&quot;/&gt;</span><span class="comment">&lt;!-- equivalent to rake test:integration --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">type</span><span class="punct">=&quot;</span><span class="string">rspec</span><span class="punct">&quot;/&gt;</span><span class="comment">&lt;!-- equivalent to rake spec --&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<p><a href="tests.png" target="_blank">Sample</a></p>
-
-
-	<h3>ZenTest task</h3>
-
-
-	<p>ZenTest is a tool which generates Ruby code to show your test leaks. This task generates
-a report to show where these leaks are.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">zentest</span><span class="punct">&quot;&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="comment">&lt;!-- runs an analysis of the efficiency/exhaustiveness of the HomeControllerTest 
-            test class against the HomeController class --&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">class</span><span class="punct">=&quot;</span><span class="string">app/controllers/home_controller.rb</span><span class="punct">&quot;</span> <span class="attribute">test</span><span class="punct">=&quot;</span><span class="string">test/functional/home_controller_test.rb</span><span class="punct">&quot;/&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<p><a href="zentest.png" target="_blank">Sample</a></p>
-
-
-	<h3>Capistrano task</h3>
-
-
-	<p>Generates reports for you Capistrano deployments.</p>
-
-
-	<p><pre class='syntax'><span class="punct">&lt;</span><span class="tag">task</span> <span class="attribute">name</span><span class="punct">=&quot;</span><span class="string">capistrano</span><span class="punct">&quot;&gt;</span>
-    <span class="comment">&lt;!-- set of runners for your Capistrano deployments --&gt;</span>
-    <span class="punct">&lt;</span><span class="tag">params</span><span class="punct">&gt;</span>
-        <span class="punct">&lt;</span><span class="tag">runner</span> <span class="attribute">task</span><span class="punct">=&quot;</span><span class="string">deploy</span><span class="punct">&quot;/&gt;</span><span class="comment">&lt;!-- equivalent to 'cap deploy' --&gt;</span>
-    <span class="punct">&lt;/</span><span class="tag">params</span><span class="punct">&gt;</span>
-<span class="punct">&lt;/</span><span class="tag">task</span><span class="punct">&gt;</span>
-</pre></p>
-
-
-	<p><a href="capistrano.png" target="_blank">Sample</a></p>
-
-
-	<h2>Demonstration of usage</h2>
-
-
-	<p>When the <span class="caps">XML</span> file describing your project is written, you can build the Continuous4R
-website by typing :</p>
-
-
-	<p><pre class='syntax'>rake continuous4r:build</pre></p>
-
-
-	<p>Now you can view the website generated for your project by lauching <strong>[project_folder]/continuous4r_build/index.html</strong>.</p>
-
-
-	<h2>Integration within CruiseControl.rb</h2>
-
-
-	<p>Integration within CruiseControl.rb is quite simple. You just need to configure your
-project to build task &#8220;rake continuous4r:build&#8221;. When the build is done, go to the
-detail page of the build, and click on the link below &#8220;Custom Build Artifacts&#8221;.</p>
-
-
-	<h2>Help needed</h2>
-
-
-	<p>This version 0.0.1 is a beta version of Continuous4r. I&#8217;m searching for volunteers
-to work on this tool. With a more substancial amount of quality and work, this tool 
-could be <span class="caps">REALLY GREAT</span>.</p>
-
-
-	<h2>License</h2>
-
-
-	<p>This code is free to use under the terms of the <span class="caps">MIT</span> license.</p>
-
-
-	<h2>Contact</h2>
-
-
-	<p>Comments are welcome. Send an email to <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>,
+<p>When you will run the build task, if there is a need for continuous4r to find something on the internet (via Rubygems), it will automatically use this configuration.</p>
+<h3>CruiseControl.rb integration</h3>
+<p>If you heard about Continuous Integration, and are a fan of <a href="http://cruisecontrolrb.thoughtworks.com" target="_blank">CruiseControl.rb</a>, just customize your project to build the &#8216;continuous4r:build&#8217; Rake task, and a &#8216;continuous4r&#8217; artifact will appear on your build page.</p>
+<h3>Running tests</h3>
+<p>By default the behaviour of continuous4r is to ignore the fact that there are failures in your tests (because the failures are noticed within the tests report).</p>
+<p>If you want continuous4r to stop on tests failures, then you must set the &#8220;ignore-tests-failures&#8221; flag to false in your project file.</p>
+<h3>Tasks</h3>
+<p>continuous4r built-in tasks are the core of the gem. They produce reports with some of the best code-related tools for Ruby on Rails. These tasks are described below :</p>
+<h4>dcov</h4>
+<p><a href='http://dcov.rubyforge.org' target='_blank'>Dcov</a> task produces a report related to the coverage of your Ruby documentation (rdoc). If there is a class, a module or a method which is not documented, this task finds it and reports it.</p>
+<p>Screenshot :</p>
+<p><a href='images/dcov.png' target='_blank'><img width='200' height='130' src='images/dcov.png' border='0' /></a></p>
+<h4>rcov</h4>
+<p><a href='http://eigenclass.org/hiki/rcov' target='_blank'>Rcov</a> is a tool which produces a report for the coverage of your Ruby code against you tests.</p>
+<p>Screenshot :</p>
+<p><a href='images/rcov.png' target='_blank'><img width='200' height='150' src='images/rcov.png' border='0' /></a></p>
+<h4>rdoc</h4>
+<p>Produces your project documentation.</p>
+<p><a href='images/rdoc.png' target='_blank'><img width='200' height='80' src='images/rdoc.png' border='0' /></a></p>
+<h4>stats</h4>
+<p>Produces what you get if you run &#8216;rake stats&#8217;, but in <span class="caps">HTML</span> format.</p>
+<p><a href='images/stats.png' target='_blank'><img width='200' height='100' src='images/stats.png' border='0' /></a></p>
+<h4>changelog</h4>
+<p>Produces a <span class="caps">HTML</span> report of your code changes in your favorite source content manager. <a href='http://www.git-scm.com' target='_blank'>Git</a> and <a href='http://subversion.tigris.org' target='_blank'>Subversion</a> are supported.</p>
+<p>Screenshot :</p>
+<p><a href='images/changelog.png' target='_blank'><img width='200' height='80' src='images/changelog.png' border='0' /></a></p>
+<h4>flog</h4>
+<p><a href='http://ruby.sadi.st/Flog.html' target='_blank'>Flog</a> is a tool which measures the complexity of your Ruby code.</p>
+<p>Screenshot :</p>
+<p><a href='images/flog.png' target='_blank'><img width='200' height='150' src='images/flog.png' border='0' /></a></p>
+<h4>xdoclet</h4>
+<p>A task which transforms your Ruby files in <span class="caps">HTML</span> format with syntax highlighting support. This task is used via links in other tasks (look flog screenshot for example).</p>
+<p>Screenshot :</p>
+<p><a href='images/xdoclet.png' target='_blank'><img width='200' height='150' src='images/xdoclet.png' border='0' /></a></p>
+<h4>flay</h4>
+<p><a href='http://ruby.sadi.st/Flay.html' target='_blank'>Flay</a> task finds duplicates in your Ruby code.</p>
+<p>Screenshot :</p>
+<p><a href='images/flay.png' target='_blank'><img width='200' height='150' src='images/flay.png' border='0' /></a></p>
+<h4>reek</h4>
+<p><a href='http://wiki.github.com/kevinrutherford/reek' target='_blank'>Reek</a> is code smell detector for Ruby. If there is something bad in your code, it tells you.</p>
+<p>Screenshot :</p>
+<p><a href='images/reek.png' target='_blank'><img width='200' height='150' src='images/reek.png' border='0' /></a></p>
+<h4>roodi</h4>
+<p><a href='http://roodi.rubyforge.org' target='_blank'>Roodi</a> parses your Ruby code and warns you about design issues.</p>
+<p>Screenshot :</p>
+<p><a href='images/roodi.png' target='_blank'><img width='200' height='150' src='images/roodi.png' border='0' /></a></p>
+<h4>saikuro</h4>
+<p><a href='http://saikuro.rubyforge.org' target='_blank'>Saikuro</a> analyzes the cyclomatic complexity of your Ruby code.</p>
+<p>Screenshot :</p>
+<p><a href='images/saikuro.png' target='_blank'><img width='200' height='150' src='images/saikuro.png' border='0' /></a></p>
+<h4>tests</h4>
+<p>Task to run your tests and make a report with details (type, success/failure, result).</p>
+<p>Screenshot :</p>
+<p><a href='images/tests.png' target='_blank'><img width='200' height='100' src='images/tests.png' border='0' /></a></p>
+<h4>zentest</h4>
+<p><a href='http://zentest.rubyforge.org/ZenTest/' target='_blank'>ZenTest</a> is a test tool. It runs a Ruby file against its test file, and generates a convention-delta report if your tests are not good enough.</p>
+<p>Screenshot :</p>
+<p><a href='images/zentest.png' target='_blank'><img width='200' height='150' src='images/zentest.png' border='0' /></a></p>
+<h2>Help needed</h2>
+<p>This version 0.0.2 has many improvements, but is still a pre-RC version of continuous4r. I&#8217;m planning on orienting the gem to collect some statistics about the tasks, and make a global quality report with graphs.<br />
+I&#8217;m searching for volunteers to test, or work on this tool. With a more substancial amount of quality and work, this tool will be really great.</p>
+<h2>License</h2>
+<p>This code is free to use under the terms of the <span class="caps">MIT</span> license.</p>
+<h2>Contact</h2>
+<p>Comments are welcome. Send an email to <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>,<br />
 or post a message on the <a href="http://rubyforge.org/forum/forum.php?forum_id=19721" target="_blank">forum</a>.</p>
     <p class="coda">
-      <a href="duboisv@hotmail.com">Vincent Dubois</a>, 1st January 2008<br>
-      Theme extended from <a href="http://rb2js.rubyforge.org/">Paul Battley</a>
+      <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>, 24th February 2009<br>
+      Theme extended from <a href="http://rb2js.rubyforge.org/" target="_blank">Paul Battley</a>
     </p>
 </div>
 

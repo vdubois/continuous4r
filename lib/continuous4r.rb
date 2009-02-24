@@ -24,7 +24,7 @@ module Continuous4r
   VERSION = '0.0.2'
 
   # Support de CruiseControl.rb
-  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r_build" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
+  WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
 
@@ -68,6 +68,9 @@ module Continuous4r
       puts " Checking for #{gem['name']} gem, version #{gem['version']}..."
       gem_version = Utils.run_command("gem list #{gem['name']}")
       if gem_version.empty? or gem_version.index("#{gem['version']}").nil?
+        if project['auto-install-gems'] == "false"
+          raise " The #{gem['name']} gem with version #{gem['version']} is needed. Please run '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}' to install it.\n BUILD FAILED."
+        end        
         gem_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}#{proxy_option} 2>&1")
         if !gem_installed.index("ERROR").nil?
           raise " Unable to install #{gem['name']} gem with version #{gem['version']}.\n BUILD FAILED."

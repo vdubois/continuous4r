@@ -1,7 +1,12 @@
-<project name="FIXME project name" auto-install-gems="true" auto-install-tools="true">
+<project name="FIXME project name" auto-install-gems="true" auto-install-tools="true" ignore-tests-failures="true">
     <description>FIXME project description</description>
     <url>FIXME project URL</url>
     <logo>FIXME Logo URL</logo>
+    <company>
+        <denomination>FIXME your company name here</denomination>
+        <url>FIXME your company website URL here</url>
+        <logo>FIXME your company logo URL here</logo>
+    </company>
     <members>
         <member id="FIXME user login" name="FIXME user name" email="FIXME user email"
             roles="FIXME user roles, separated by commas" company="FIXME company/ organisation name"/>

@@ -16,7 +16,6 @@ lib/site/body-dependencies.rhtml
 lib/site/body-flog.rhtml
 lib/site/body-flay.rhtml
 lib/site/body-issue-tracking.rhtml
-lib/site/body-kwala.rhtml
 lib/site/body-index.rhtml
 lib/site/body-rcov.rhtml
 lib/site/body-rdoc.rhtml

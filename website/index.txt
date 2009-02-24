@@ -4,49 +4,69 @@ h1. continuous4r
 
 h2. <br/>What is it ?
 
-Continuous4R is a continuous integration tool for Ruby on Rails. With it, you can
-aggregate reports of the best analysis, quality, tests and deployment tools for
-Ruby and Rails.
-By just defining one Rake task and writing an XML file describing your project,
-Continuous4R builds for you an entire website in a Maven form.
+continuous4r is a continuous integration tool for Ruby on Rails. With it, you can aggregate reports of the best analysis, quality, and tests tools for Ruby on Rails. By just launching one Rake task and customizing a XML file describing your project, continuous4r builds for you an entire website in a Maven-like form/design.
+
+h2. Requirements
+
+<ul>
+	<li>RubyGems</li>
+	<li>rails (erb)</li>
+	<li>hpricot</li>
+	<li>XmlElements</li>
+</ul>
+
 
 h2. Installing
 
-<pre syntax="ruby">sudo gem install continuous4r</pre>
+<pre syntax="ruby">[sudo] gem install continuous4r</pre>
+
+
+h2. Release notes for this version
+
+<ul>
+	<li>Full Windows support, and no need for the user to define the HOME environment variable.</li>
+	<li>Only quality and code-related tools kept (goodbye Capistrano, httperf, railroad...).</li>
+	<li>No need to create the project file from scratch now, type 'rake continuous4r:init' in your Rails project directory, and there you go.</li>
+	<li>Full extensibility : the tasks are now defined in [task]_builder.rb files, and instanciated dynamically.</li>
+	<li>Full refactoring (Ruby and HTML/RHTML parts).</li>
+	<li>Git support added.</li>
+	<li>HTTP Proxy support (for those who are constrained by a proxy).</li>
+	<li>No need to have eruby installed, now uses the Rails erb compiler.</li>
+	<li>HTML global template fixes.</li>
+	<li>No need to define or configure your tasks anymore.</li>
+</ul>
 
 h2. The basics
 
-h3. Defining the Rake task
+h3. Preparing your project
 
-In order to build your project, you need to declare one Rake task. Under the lib/tasks
-directory of your project, create a file named continuous4r.rake :
+In order to have access to continuous4r Rake tasks, you must open your Rakefile, and add to the end :
 
-<pre syntax="ruby">require 'rubygems'
-require 'continuous4r'
+<pre syntax="ruby">require 'continuous4r'</pre>
 
-# Tache Rake pour la construction du site Continuous4R
-namespace :continuous4r do
-  desc 'Build Continuous4R Website for the current project'
-  task :build do
-    Continuous4r.generate_site
-  end  
-end</pre>
+h3. Initializing your project
 
-h3. Writing the XML file describing your project
+In order to initialize your project, you must create your continuous4r-project.xml file. 
+Just type this command and the file will be created :
 
-This file must be named continuous4r-project.xml, and must be placed at the top
-of your Rails project directory. This file must not have a XML header (&lt;?xml version...).
-Here's the model of this file :
+<pre syntax="shell">rake continuous4r:init</pre>
 
-<pre syntax="xml"><project name="PROJECT_NAME">
-    <description>PROJECT_DESCRIPTION</description>
-    <url>PROJECT_URL</url>
-    <logo>PROJECT_IMAGE_URI</logo>
-    <!-- Describing your project members -->
+Here is the content of this file, you can customize it to suite your needs :
+
+<pre syntax="xml"><project name="FIXME project name" auto-install-gems="true" 
+    auto-install-tools="true" ignore-tests-failures="true">
+    <description>FIXME project description</description>
+    <url>FIXME project URL</url>
+    <logo>FIXME Logo URL</logo>
+    <company>
+        <denomination>FIXME your company name here</denomination>
+        <url>FIXME your company website URL here</url>
+        <logo>FIXME your company logo URL here</logo>
+    </company>
     <members>
-        <member id="MEMBER_LOGIN" name="MEMBER_NAME" email="MEMBER_EMAIL"
-            roles="MEMBER_ROLES" company="MEMBER_COMPANY_NAME"/>
-        ...
+        <member id="FIXME user login" name="FIXME user name" email="FIXME user email"
+            roles="FIXME user roles, separated by commas" 
+            company="FIXME company/organisation name"/>
     </members>
     <bugtracker>
         <tracker_type>[Trac|Bugzilla|Mantis|etc...]</tracker_type>
@@ -56,237 +76,157 @@ Here's the model of this file :
         <url>BUGTRACKER_URL_TICKETS_LIST</url>
         <add>BUGTRACKER_URL_TICKET_ADD</add>
     </bugtracker>
-    <scm>
-        <repository_type>[svn|cvs]</repository_type>
-        <url>SCM_URL</url>
-        <view>SCM_VIEWER_URL</view>
-        <!-- needed if authentication for access is mandatory -->
-        <user>userlogin</user>
-        <password>userpassword</password>
-    </scm>
     <!-- Gems mandatory for your project -->
-    <gems>
+    <gems repository="http://gems.rubyforge.org/gems/">
         <gem name="GEM_NAME" version="GEM_VERSION"/>
-        ...
     </gems>
-    <!-- Tasks in order to generate reports, described further -->
-    <tasks [autoinstall="true"] <!-- activates autoinstall for gems needed by tasks --> >
-        ...
-    </tasks>
-</project></pre>
-
-h2. Defining tasks
-
-h3. Changelog task
-
-Builds a report of the last modifications on the SCM repository. Only Subversion is supported
-at the time.
-
-<pre syntax="xml"><task name="changelog"/>
+</project>
 </pre>
 
-<a href="changelog.png" target="_blank">Sample</a>
+h3. Building your project
 
-h3. Stats task
-
-Generates a report of the Rails statistics on your project.
-
-<pre syntax="xml"><task name="stats">
-    <description>Provides statistics on your Rails code</description>
-</task></pre>
-
-<a href="stats.png" target="_blank">Sample</a>
-
-h3. Dcov task
-
-Generates a report on the rdoc coverage of your Ruby code. The parts 
-which are not covered are colored in red.<br/>
-The <strong>pattern</strong> param enables you to select the Ruby code to control.<br/>
-The <strong>report</strong> param is the path where Continuous4R can find the dcov 
-original report (due to a bug in dcov).
-
-<pre syntax="xml"><task name="dcov">
-    <description>Rdoc coverage analysis report</description>
-    <params>
-        <pattern value="app/**/*.rb"/>
-        <report path="coverage.html"/>
-    </params>
-</task></pre>
-
-<a href="dcov.png" target="_blank">Sample</a>
-
-h3. Rcov task
-
-Builds a report on the coverage of your tests over your Ruby code.
-
-<pre syntax="xml"><task name="rcov">
-    <params>
-        <!-- file which loads all the necessary test files (based on requires) -->
-        <file path="test/rcov_test_all.rb"/>
-        <!-- path where to find the reports generated by rcov -->
-        <reports path="coverage"/>
-    </params>
-</task>
-</pre>
-
-<a href="rcov.png" target="_blank">Sample</a>
-
-h3. Rdoc task
-
-Generates a report of the rdoc generation, and gives access to the rdoc.
-
-<pre syntax="xml"><task name="rdoc"/>
-</pre>
-
-<a href="rdoc.png" target="_blank">Sample</a>
-
-h3. Flog task
-
-<a href="http://ruby.sadi.st/Flog.html" target="_blank">Flog</a> is a tool which 
-provides statistics of your Ruby code's complexity. This task generates an HTML
-report of these statistics.
-
-<pre syntax="xml"><task name="flog"/>
-</pre>
-
-<a href="flog.png" target="_blank">Sample</a>
-
-h3. Kwala task
-
-<a href="http://kwala.rubyforge.org" target="_blank">Kwala</a> is a continuous integration
-tool which gathers informations of the quality and metrics on your project. This 
-task integrates the reports produced by kwala to the site.
-
-<pre syntax="xml"><task name="kwala">
-    <params>
-        <!-- set of actions understood by kwala -->
-        <actions>
-            <action>loc</action>
-            <action>syntax_check</action>
-            <action>formatting</action>
-            <action>code_duplication</action>
-            <action>cyclomatic</action>
-            <action>unit_test</action>
-            <action>comment_check</action>
-            <action>requires</action>
-            <action>cycles</action>
-        </actions>
-    </params>
-</task>
-</pre>
-
-<a href="kwala.png" target="_blank">Sample</a>
-
-h3. Railroad task
-
-Railroad is a tool to generate graphs of your models and/or your controllers. This 
-task generates your graphs and presents them on a HTML report. This task is not 
-compatible with CruiseControl.rb.
-
-<pre syntax="xml"><task name="railroad">
-    <params>
-        <generate value="controllers|models|all"/>
-    </params>
-</task>
-</pre>
-
-h3. Httperf task
-
-<a href="http://www.hpl.hp.com/research/linux/httperf/" target="_blank">Httperf</a> 
-is a HTTP stress tool which generates text reports for a really important number 
-of statistics. This task generates a HTML report for these statistics.
-
-<pre syntax="xml"><task name="httperf">
-    <params>
-        <!-- set of ports which will match Mongrel instances (all managed within) -->
-        <ports>
-            <port>3334</port>
-        </ports>
-        <processes>
-            <process port="3334" url="/controller/action?param=value" 
-                requests="50" timeout="2">
-                <description>Stressing application with 50 requests (URL http://127.0.0.1:3334/controller/action?param=value), 
-                    with a timeout set to 2 seconds.</description>
-            </process>
-            <process port="3334" url="/controller/action?param=value"
-                sessions="10,5,2" rate="5" timeout="3">
-                <description>Stressing application with 10 sessions (URL http://127.0.0.1:3334/controller/action?param=value),
-                    with a rate of 5 sessions per second. Each  session consists 
-                    of 5 calls that are spaced out by 2 seconds. Timeout is set to 3 seconds.</description>
-            </process>
-        </processes>
-    </params>
-</task>
-</pre>
-
-<a href="httperf.png" target="_blank">Sample</a>
-
-h3. Tests task
-
-Generates a report for the results of your tests.
-
-<pre syntax="xml"><task name="tests">
-    <params>
-        <runner type="units"/><!-- equivalent to rake test:units -->
-        <runner type="functionals"/><!-- equivalent to rake test:functionals -->
-        <runner type="integration"/><!-- equivalent to rake test:integration -->
-        <runner type="rspec"/><!-- equivalent to rake spec -->
-    </params>
-</task>
-</pre>
-
-<a href="tests.png" target="_blank">Sample</a>
-
-h3. ZenTest task
-
-ZenTest is a tool which generates Ruby code to show your test leaks. This task generates
-a report to show where these leaks are.
-
-<pre syntax="xml"><task name="zentest">
-    <params>
-        <!-- runs an analysis of the efficiency/exhaustiveness of the HomeControllerTest 
-            test class against the HomeController class -->
-        <runner class="app/controllers/home_controller.rb" test="test/functional/home_controller_test.rb"/>
-    </params>
-</task>
-</pre>
-
-<a href="zentest.png" target="_blank">Sample</a>
-
-h3. Capistrano task
-
-Generates reports for you Capistrano deployments.
-
-<pre syntax="xml"><task name="capistrano">
-    <!-- set of runners for your Capistrano deployments -->
-    <params>
-        <runner task="deploy"/><!-- equivalent to 'cap deploy' -->
-    </params>
-</task>
-</pre>
-
-<a href="capistrano.png" target="_blank">Sample</a>
-
-h2. Demonstration of usage
-
-When the XML file describing your project is written, you can build the Continuous4R
-website by typing :
+When your project file is suitable, type :
 
 <pre syntax="shell">rake continuous4r:build</pre>
 
-Now you can view the website generated for your project by lauching <strong>[project_folder]/continuous4r_build/index.html</strong>.
+When the build is finished, you can find your site in the RAILS_ROOT/tmp/continuous4r directory.
 
-h2. Integration within CruiseControl.rb
 
-Integration within CruiseControl.rb is quite simple. You just need to configure your
-project to build task "rake continuous4r:build". When the build is done, go to the
-detail page of the build, and click on the link below "Custom Build Artifacts".
+h2. Features
+
+h3. Proxy configuration
+
+If you are behind a HTTP proxy within your company, you can configure it with a simple YAML file. 
+Create a file named proxy.yml within your USER_HOME/.continuous4r directory, with the following content :
+
+<pre syntax="yaml">proxy:
+  server: my.proxy.server
+  port: my_port
+  login: my_login
+  password: my_password
+</pre>
+
+When you will run the build task, if there is a need for continuous4r to find something on the internet (via Rubygems), it will automatically use this configuration.
+
+h3. CruiseControl.rb integration
+
+If you heard about Continuous Integration, and are a fan of <a href="http://cruisecontrolrb.thoughtworks.com" target="_blank">CruiseControl.rb</a>, just customize your project to build the 'continuous4r:build' Rake task, and a 'continuous4r' artifact will appear on your build page.
+
+h3. Running tests
+
+By default the behaviour of continuous4r is to ignore the fact that there are failures in your tests (because the failures are noticed within the tests report).
+
+If you want continuous4r to stop on tests failures, then you must set the "ignore-tests-failures" flag to false in your project file.
+
+h3. Tasks
+
+continuous4r built-in tasks are the core of the gem. They produce reports with some of the best code-related tools for Ruby on Rails. These tasks are described below :
+
+h4. dcov
+
+<a href='http://dcov.rubyforge.org' target='_blank'>Dcov</a> task produces a report related to the coverage of your Ruby documentation (rdoc). If there is a class, a module or a method which is not documented, this task finds it and reports it.
+
+Screenshot :
+
+<a href='images/dcov.png' target='_blank'><img width='200' height='130' src='images/dcov.png' border='0' /></a>
+
+h4. rcov
+
+<a href='http://eigenclass.org/hiki/rcov' target='_blank'>Rcov</a> is a tool which produces a report for the coverage of your Ruby code against you tests.
+
+Screenshot : 
+
+<a href='images/rcov.png' target='_blank'><img width='200' height='150' src='images/rcov.png' border='0' /></a>
+
+h4. rdoc
+
+Produces your project documentation.
+
+<a href='images/rdoc.png' target='_blank'><img width='200' height='80' src='images/rdoc.png' border='0' /></a>
+
+h4. stats
+
+Produces what you get if you run 'rake stats', but in HTML format.
+
+<a href='images/stats.png' target='_blank'><img width='200' height='100' src='images/stats.png' border='0' /></a>
+
+h4. changelog
+
+Produces a HTML report of your code changes in your favorite source content manager. <a href='http://www.git-scm.com' target='_blank'>Git</a> and <a href='http://subversion.tigris.org' target='_blank'>Subversion</a> are supported.
+
+Screenshot :
+
+<a href='images/changelog.png' target='_blank'><img width='200' height='80' src='images/changelog.png' border='0' /></a>
+
+h4. flog
+
+<a href='http://ruby.sadi.st/Flog.html' target='_blank'>Flog</a> is a tool which measures the complexity of your Ruby code.
+
+Screenshot :
+
+<a href='images/flog.png' target='_blank'><img width='200' height='150' src='images/flog.png' border='0' /></a>
+
+h4. xdoclet
+
+A task which transforms your Ruby files in HTML format with syntax highlighting support. This task is used via links in other tasks (look flog screenshot for example).
+
+Screenshot : 
+
+<a href='images/xdoclet.png' target='_blank'><img width='200' height='150' src='images/xdoclet.png' border='0' /></a>
+
+h4. flay
+
+<a href='http://ruby.sadi.st/Flay.html' target='_blank'>Flay</a> task finds duplicates in your Ruby code.
+
+Screenshot : 
+
+<a href='images/flay.png' target='_blank'><img width='200' height='150' src='images/flay.png' border='0' /></a>
+
+h4. reek
+
+<a href='http://wiki.github.com/kevinrutherford/reek' target='_blank'>Reek</a> is code smell detector for Ruby. If there is something bad in your code, it tells you.
+
+Screenshot :
+
+<a href='images/reek.png' target='_blank'><img width='200' height='150' src='images/reek.png' border='0' /></a>
+
+h4. roodi
+
+<a href='http://roodi.rubyforge.org' target='_blank'>Roodi</a> parses your Ruby code and warns you about design issues.
+
+Screenshot :
+
+<a href='images/roodi.png' target='_blank'><img width='200' height='150' src='images/roodi.png' border='0' /></a>
+
+h4. saikuro
+
+<a href='http://saikuro.rubyforge.org' target='_blank'>Saikuro</a> analyzes the cyclomatic complexity of your Ruby code.
+
+Screenshot :
+
+<a href='images/saikuro.png' target='_blank'><img width='200' height='150' src='images/saikuro.png' border='0' /></a>
+
+h4. tests
+
+Task to run your tests and make a report with details (type, success/failure, result).
+
+Screenshot : 
+
+<a href='images/tests.png' target='_blank'><img width='200' height='100' src='images/tests.png' border='0' /></a>
+
+h4. zentest
+
+<a href='http://zentest.rubyforge.org/ZenTest/' target='_blank'>ZenTest</a> is a test tool. It runs a Ruby file against its test file, and generates a convention-delta report if your tests are not good enough.
+
+Screenshot :
+
+<a href='images/zentest.png' target='_blank'><img width='200' height='150' src='images/zentest.png' border='0' /></a>
+
 
 h2. Help needed
 
-This version 0.0.1 is a beta version of Continuous4r. I'm searching for volunteers
-to work on this tool. With a more substancial amount of quality and work, this tool 
-could be REALLY GREAT.
+This version 0.0.2 has many improvements, but is still a pre-RC version of continuous4r. I'm planning on orienting the gem to collect some statistics about the tasks, and make a global quality report with graphs.
+I'm searching for volunteers to test, or work on this tool. With a more substancial amount of quality and work, this tool will be really great.
 
 h2. License
 
@@ -296,3 +236,4 @@ h2. Contact
 
 Comments are welcome. Send an email to "Vincent Dubois":mailto:duboisv@hotmail.com,
 or post a message on the <a href="http://rubyforge.org/forum/forum.php?forum_id=19721" target="_blank">forum</a>.
+

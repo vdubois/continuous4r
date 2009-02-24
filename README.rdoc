@@ -10,16 +10,16 @@ Continuous integration tool which regroups in one place tests, quality and analy
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* See http://continuous4r.rubyforge.org
 
 == SYNOPSIS:
 
   cd /path/to/rails/app
   add : require 'continuous4r' to your Rakefile
   'rake continuous4r:init' to create your continuous4r-project.xml file
-  edit continuous4r-project.xml for your convenience
-  rake continuous4r:build
-  then open continuous4r_build/index.html in your browser
+  edit continuous4r-project.xml to suit your needs
+  Type 'rake continuous4r:build' to build
+  then open tmp/continuous4r/index.html in your browser
 
 == REQUIREMENTS:
 
