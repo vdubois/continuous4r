@@ -44,4 +44,19 @@ module Utils
     end
 
   end
+  
+  # Méthode qui permet de convertir un pourcentage d'un builder en couleur css/html
+  def self.percent_to_css_style(percent)
+    style = "style='font-weight: bold; color: "
+    if percent >= 90 and percent <= 100
+      style += "#00cc00;'"
+    elsif percent >= 80 and percent < 90
+      style += "yellow;'"
+    elsif percent >= 60 and percent < 80
+      style += "red;'"
+    elsif percent >= 0 and percent < 60
+      style += "red; text-decoration: blink;'"
+    end
+    return style
+  end
 end

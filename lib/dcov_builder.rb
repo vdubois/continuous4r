@@ -29,6 +29,11 @@ module Dcov
 
     def build_stats_body
       output = ""
+      num_classes = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Classes:/ }[0].strip.split(/Classes:/)[1].strip.to_f
+      num_modules = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Modules:/ }[0].strip.split(/Modules:/)[1].strip.to_f
+      num_methods = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Methods:/ }[0].strip.split(/Methods:/)[1].strip.to_f
+      global_coverage = ((class_coverage.to_f * num_classes) + (module_coverage.to_f * num_modules) + (method_coverage.to_f * num_methods)) / (num_classes + num_modules + num_methods)
+      output << "<h3 #{Utils.percent_to_css_style(global_coverage.to_i)}>Global coverage percentage : #{global_coverage.to_i}%</h3>\n"
       output << "<h3>Summary</h3><p>\n"
       output << "<table class='bodyTable' style='width: 200px;'><tr><th>Type</th><th>Coverage</th></tr>"
       output << "<tr class='a'><td><b>Class</b></td><td style='text-align: right;'>#{class_coverage}%</td></tr>\n"

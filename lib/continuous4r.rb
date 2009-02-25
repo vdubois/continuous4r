@@ -18,15 +18,16 @@ require 'utils.rb'
 # Author:: Vincent Dubois
 # Date : 03 decembre 2007 - version 0.0.1
 #        03 fevrier 2009  - version 0.0.2
+#        25 fevrier 2009  - version 0.0.3
 # ==============================================================================
 module Continuous4r
   include Utils
-  VERSION = '0.0.2'
+  VERSION = '0.0.3'
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  TASKS = ['dcov','rcov','rdoc','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
 
   # Methode de generation du site au complet
   def self.generate_site

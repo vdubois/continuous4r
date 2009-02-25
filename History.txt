@@ -1,4 +1,4 @@
-== 0.0.1 2009-02-03
+== 0.0.3 2009-02-25
 
-* 1 major enhancement:
-  * Initial release
+* Third release
+To see this release details, go to http://dubois.vct.free.fr/continuous4r
