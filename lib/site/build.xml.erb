@@ -1,0 +1,45 @@
+<chart>
+	<axis_category shadow='shadow2' size='13' color='4e627c' alpha='75' orientation='horizontal' />
+	<axis_ticks value_ticks='' category_ticks='' />
+	<axis_value alpha='0' min='0' max='100' />
+	
+	<chart_border bottom_thickness='0' left_thickness='0' />
+	<chart_data>
+		<row>
+			<null/>
+                        <% Continuous4r::METRICS_HASH.each_key do |key| %>
+			<string><%= key %></string>
+                        <% end %>
+		</row>
+		<row>
+                        <string><%= Continuous4r::BUILD_NAME %></string>
+                        <% Continuous4r::METRICS_HASH.each_value do |value| %>
+			<number tooltip='<%= value %>'><%= value %></number>
+                        <% end %>
+		</row>
+	</chart_data>
+	<chart_grid_h alpha='20' color='000000' thickness='1' type='dashed' />
+	<chart_grid_v alpha='20' color='000000' thickness='1' type='solid' />
+	<chart_pref line_thickness='2' point_size='6' fill_shape='true' grid='circular' point_shape='circle'/>
+	<chart_rect x='100' y='60' width='500' height='325' positive_color='FFFFFF' positive_alpha='25' />
+	<chart_transition type='slide_right' delay='0.5' duration='0.5' order='series' />
+	<chart_type>polar</chart_type>
+	
+	<draw>
+		<text layer='background' shadow='shadow1' transition='slide_right' delay='0' duration='3' color='000000' width='600' alpha='8' size='95' x='0' y='-20'>Build quality</text>
+	</draw>
+	<filter>
+		<shadow id='shadow1' distance='2' angle='45' color='0' alpha='100' blurX='10' blurY='10' />
+		<shadow id='shadow2' distance='1' angle='45' color='0' alpha='50' blurX='3' blurY='3' />
+	</filter>
+	
+	<legend shadow='shadow2' x='20' y='350' width='20' height='40' margin='5' fill_alpha='30' layout='vertical' bullet='line' size='12' color='ffffff' alpha='90' />
+	
+	<series_color>
+		<color>ff4400</color>
+		<!--color>88ff00</color-->
+	</series_color>
+	
+	<tooltip color='FFFFFF' alpha='75' size='11' background_color='8888ff' background_alpha='90' shadow='low' />
+
+</chart>

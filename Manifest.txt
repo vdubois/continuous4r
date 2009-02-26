@@ -9,6 +9,10 @@ lib/git_extractor.rb
 lib/subversion_extractor.rb
 lib/tests_formatter.rb
 lib/zen_test_formatter.rb
+lib/site/charts/charts.swf
+lib/site/build.xml.erb
+lib/site/charts/AC_RunActiveContent.js
+lib/site/charts/charts_library/pono.swf
 lib/site/body-changelog.rhtml
 lib/site/body-continuous4r-reports.rhtml
 lib/site/body-dcov.rhtml

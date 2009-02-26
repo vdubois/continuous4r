@@ -38,19 +38,7 @@
           <div class="clear"><hr></div>
     	</div>
     	<div id="breadcrumbs">
-          <%
-            if File.exist?(".git")
-              display_version = ", commit #{Utils.run_command("git log").split(/$/).select{ |l| l =~ /^commit / }.collect { |l| l[8..(l.length-1)] }[0]}"
-            end
-            if File.exist?(".svn")
-              get_head_log = Utils.run_command("svn log -r HEAD")
-              get_head_log_lines = get_head_log.split(/$/)
-              revision = get_head_log_lines[1].split(/ \| /)[0]
-              revision = revision[2..(revision.length-1)]
-              display_version = ", revision #{revision}"
-            end
-          %>
-            <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for <%= project['name'] %><%= display_version %></div>
+          <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for <%= project['name'] %>, <%= Continuous4r::BUILD_NAME %></div>
             <div class="xright">
             </div>
             <div class="clear"><hr></div>

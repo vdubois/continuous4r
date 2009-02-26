@@ -27,8 +27,11 @@ module Continuous4r
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-
+  #TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['rdoc', 'dcov']
+  METRICS_HASH = Hash.new
+  BUILD_NAME = Utils.build_name
+  
   # Methode de generation du site au complet
   def self.generate_site
     tasks = TASKS
@@ -45,7 +48,7 @@ module Continuous4r
     puts " Generation date : #{generation_date}"
     puts "---------------------------------------------------------------------"
 
-    # Récupération des paramètres de proxy s'ils existent
+    # R�cup�ration des param�tres de proxy s'ils existent
     proxy_option = ""
     if File.exist?("#{(Config::CONFIG['host_os'] =~ /mswin/ ? ENV['USERPROFILE'] : ENV['HOME'])}/.continuous4r/proxy.yml")
       require 'YAML'
@@ -53,7 +56,7 @@ module Continuous4r
       proxy_option = " -p \"http://#{proxy_options['proxy']['login']}:#{proxy_options['proxy']['password']}@#{proxy_options['proxy']['server']}:#{proxy_options['proxy']['port']}\""
     end
 
-    # Vérification de présence et de la version de Rubygems
+    # V�rification de pr�sence et de la version de Rubygems
     puts " Checking presence and version of RubyGems..."
     rubygems_version = Utils.run_command("gem --version")
     if rubygems_version.empty?
@@ -63,7 +66,7 @@ module Continuous4r
     # Verification de la presence d'hpricot
     Utils.verify_gem_presence("hpricot", auto_install, proxy_option)
 
-    # Chargement/Vérification des gems nécessaires à l'application
+    # Chargement/V�rification des gems n�cessaires � l'application
     puts " Checking gems for this project, please hold on..."
     project.gems.each('gem') do |gem|
       puts " Checking for #{gem['name']} gem, version #{gem['version']}..."
@@ -80,7 +83,7 @@ module Continuous4r
     end
 
     puts "---------------------------------------------------------------------"
-    # Création du répertoire de travail
+    # Cr�ation du r�pertoire de travail
     if File.exist?(WORK_DIR)
       FileUtils.rm_rf(WORK_DIR)
     end
@@ -93,8 +96,18 @@ module Continuous4r
     end
     puts " All tasks done."
     puts "\n---------------------------------------------------------------------"
+
     # On copie les feuilles de styles
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/style/", "#{WORK_DIR}/")
+
+    # On copie la partie flash
+    FileUtils.cp_r("#{File.dirname(__FILE__)}/site/charts/", "#{WORK_DIR}/")
+    # Production du fichier XML des indicateurs de qualité
+    page_file = File.open("#{Continuous4r::WORK_DIR}/build.xml", "w")
+    erb = ERB.new(File.read("#{File.dirname(__FILE__)}/site/build.xml.erb"))
+    page_file.write(erb.result)
+    page_file.close
+
     # On copie les images
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/images/", "#{WORK_DIR}/")
     FileUtils.copy_file("#{File.dirname(__FILE__)}/site/images/continuous4r-logo.png", "#{WORK_DIR}/continuous4r-logo.png")
@@ -124,5 +137,9 @@ module Continuous4r
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
     task_builder.build(project_name, auto_install, proxy_option)
+    if task_builder.respond_to?(:quality_percentage)
+      METRICS_HASH[task_builder.quality_indicator_name] = task_builder.quality_percentage
+    end
   end
+
 end

@@ -145,5 +145,21 @@ class DcovBuilder
       raise " Execution of dcov failed.\n BUILD FAILED."
     end
   end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    require 'hpricot'
+    doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/dcov/coverage.html"))
+    doc.search('//h3') do |h3|
+      if h3.inner_text.match(/^Global coverage percentage/)
+        return h3.inner_text.split(/Global coverage percentage : /)[1].split(/%/)[0]
+      end
+    end
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "rdoc coverage"
+  end
 end
  

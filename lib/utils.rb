@@ -45,7 +45,7 @@ module Utils
 
   end
   
-  # M�thode qui permet de convertir un pourcentage d'un builder en couleur css/html
+  # Methode qui permet de convertir un pourcentage d'un builder en couleur css/html
   def self.percent_to_css_style(percent)
     style = "style='font-weight: bold; color: "
     if percent >= 90 and percent <= 100
@@ -58,5 +58,18 @@ module Utils
       style += "red; text-decoration: blink;'"
     end
     return style
+  end
+
+  # Méthode qui permet de récupérerle numéro de build courant dans le SCM
+  def self.build_name
+    if File.exist?(".git")
+      return "commit #{Utils.run_command("git log").split(/$/).select{ |l| l =~ /^commit / }.collect { |l| l[8..(l.length-1)] }[0]}"
+    elsif File.exist?(".svn")
+      get_head_log = Utils.run_command("svn log -r HEAD")
+      get_head_log_lines = get_head_log.split(/$/)
+      revision = get_head_log_lines[1].split(/ \| /)[0]
+      revision = revision[2..(revision.length-1)]
+      return "revision #{revision}"
+    end
   end
 end

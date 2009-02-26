@@ -1,6 +1,14 @@
 <%
   tasks = Continuous4r::TASKS
 %>
+<script src="charts/AC_RunActiveContent.js" language="javascript"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+var requiredMajorVersion = 9;
+var requiredMinorVersion = 0;
+var requiredRevision = 45;
+-->
+</script>
 <div id="bodyColumn">
     <div class="contentBox">
         <div class="section">
@@ -11,7 +19,52 @@
                 . Each report is briefly described below.
             </p>
             
-            <div class="subsection"><a name="Overview"></a><h3>Overview</h3>
+            <div class="subsection">
+            	<a name="BuildQuality"></a><h3>Project quality indicators</h3>
+<script language="JavaScript" type="text/javascript">
+<!--
+if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
+	alert("This page requires AC_RunActiveContent.js.");
+} else {
+	var hasRightVersion = DetectFlashVer(requiredMajorVersion, requiredMinorVersion, requiredRevision);
+	if(hasRightVersion) {  // if we've detected an acceptable version
+		// embed the flash movie
+		AC_FL_RunContent(
+			'codebase', 'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,45,0',
+			'width', '640',
+			'height', '450',
+			'bgcolor', '#ffffff',
+			'movie', 'charts',
+			'src', 'charts/charts',
+			'FlashVars', 'library_path=charts/charts_library&xml_source=build.xml', 
+			'wmode', 'opaque',
+			'scale', 'noScale',
+			'id', 'charts',
+			'name', 'charts',
+			'menu', 'true',
+			'allowFullScreen', 'true',
+			'allowScriptAccess','sameDomain',
+			'quality', 'high',
+			'pluginspage', 'http://www.macromedia.com/go/getflashplayer',
+			'align', 'middle',
+			'play', 'true',
+			'devicefont', 'false',
+			'salign', 'TL'
+			); //end AC code
+	} else {  // flash is too old or we can't detect the plugin
+		var alternateContent = 'This content requires the Adobe Flash Player. '
+			+ '<u><a href=http://www.macromedia.com/go/getflash/>Get Flash</a></u>.';
+		document.write(alternateContent);  // insert non-flash content
+	}
+}
+// -->
+</script>
+<noscript>
+	<P>This content requires JavaScript.</P>
+</noscript>
+            	
+            	
+            	<a name="Overview"></a><h3>Overview</h3>
                 <table class="bodyTable">
                     <tr class="b">
                         <th>
