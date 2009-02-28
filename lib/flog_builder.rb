@@ -117,4 +117,28 @@ class FlogBuilder
     end
     save_html(ERB.new(File.read(File.join(File.dirname(__FILE__), "site/flog.html.erb"))).result(binding))
   end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    require 'hpricot'
+    doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flog/index.html"))
+    doc.search('//h3') do |h3|
+      if h3.inner_text.match(/^Project average score/)
+        score = h3.inner_text.split(/Project average score : /)[1].to_f
+        if score > 100.0
+          percent = 0
+        elsif score < 11.0
+          percent = 100
+        else
+          percent = ((100.0 - score) * 100.0) / 89.0
+        end
+        return percent
+      end
+    end
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "code complexity"
+  end
 end

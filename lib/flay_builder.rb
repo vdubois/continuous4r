@@ -18,20 +18,31 @@ class FlayBuilder
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
     files.flatten!
-    flay_command = "flay"
+    flay_command = "flay -v"
     files.each do |file|
       flay_command += " '#{file}'"
     end
     flay_result = Utils.run_command(flay_command)
-    matches = flay_result.chomp.split("\n\n").map{|m| m.split("\n  ") }
+    matches = flay_result.chomp.split("\n\n")
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/flay")
     flay_file = File.open("#{Continuous4r::WORK_DIR}/flay/index.html","w")
-    matches.each_with_index do |match, count|
-      flay_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'><td>")
-      match[1..-1].each do |filename|
-        flay_file.write("<a href='xdoclet/#{filename.split(":")[0].gsub(/\//,'_')}.html##{filename.split(":")[1]}' target='_blank'>#{filename}</a><br/>")
+    class_index = 0
+    summary = ""
+    matches.each_with_index do |match, index|
+      if index % 2 == 0
+        flay_file.write("<tr class='#{class_index % 2 == 0 ? "a" : "b"}'>")
+        lines = match.split(/$/)
+        summary = lines[0]
+        flay_file.write("<td>")
+        (1..(lines.length - 1)).to_a.each do |line|
+          flay_file.write("<a href='xdoclet/#{lines[line].split(":")[1].strip.gsub(/\//,'_')}.html##{lines[line].split(":")[2]}' target='_blank'>#{lines[line].strip}</a><br/>")
+        end
+        flay_file.write("</td>")
+        class_index += 1
+      else
+        flay_file.write("<td#{" style='background-color: orange;' title='Not DRY'" if summary.match(/IDENTICAL/)}>#{summary}<br/><pre>")
+        flay_file.write("#{match}</pre></td></tr>")
       end
-      flay_file.write("</td><td>#{match.first}</td></tr>")
     end
     flay_file.close
   end

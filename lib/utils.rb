@@ -72,4 +72,44 @@ module Utils
       return "revision #{revision}"
     end
   end
+
+  # Méthode qui permet de typer une cellule de table HTML en fonction d'un score flog
+  def self.flog_caracteristics(flog_score)
+    if flog_score >= 0 and flog_score < 11
+      "title='Awesome'"
+    elsif flog_score >= 11 and flog_score < 21
+      "title='Good enough'"
+    elsif flog_score >= 21 and flog_score < 41
+      "style='background-color: #FFFF99; color: black;' title='Might need refactoring'"
+    elsif flog_score >= 41 and flog_score < 61
+      "style='background-color: yellow; color: black;' title='Possible to justify'"
+    elsif flog_score >= 61 and flog_score < 100
+      "style='background-color: orange; color: black;' title='Danger'"
+    elsif flog_score >= 100 and flog_score < 200
+      "style='background-color: red; color: black;' title='Whoop, whoop, whoop'"
+    elsif flog_score > 200
+      "style='background-color: black; color: white;' title='Someone please think of the children'"
+    end
+  end
+
+  # Methode qui permet de convertir un score flog en couleur css/html de titre
+  def self.flog_score_to_css_style(flog_score)
+    style = "style='font-weight: bold; "
+    if flog_score >= 0 and flog_score < 11
+      style += "background-color: #00cc00;' title='Awesome'"
+    elsif flog_score >= 11 and flog_score < 21
+      style += "background-color: #00cc00;' title='Good enough'"
+    elsif flog_score >= 21 and flog_score < 41
+      style += "background-color: #ffff99;' title='Might need refactoring'"
+    elsif flog_score >= 41 and flog_score < 61
+      style += "background-color: yellow;' title='Possible to justify'"
+    elsif flog_score >= 61 and flog_score < 100
+      style += "background-color: orange;' title='Danger'"
+    elsif flog_score >= 100 and flog_score < 200
+      style += "background-color: red;' title='Whoop, whoop, whoop'"
+    elsif flog_score > 200
+      style += "background-color: red; color: black; text-decoration: blink;' title='Someone please think of the children'"
+    end
+    return style
+  end
 end

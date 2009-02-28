@@ -28,12 +28,19 @@ module Continuous4r
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   #TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-  TASKS = ['rdoc', 'dcov']
+  #TASKS = ['rdoc', 'dcov', 'rcov', 'flog']
+  TASKS = ['stats', 'xdoclet', 'flay']
+  
   METRICS_HASH = Hash.new
-  BUILD_NAME = Utils.build_name
+
+  # Méthode qui permet de récupérer le nom du build pour la construction du template notamment
+  def self.build_name
+    @build_name ||= "no build name found"
+  end
   
   # Methode de generation du site au complet
   def self.generate_site
+	  @build_name = Utils.build_name
     tasks = TASKS
     project = XmlElements.fromString(File.read("#{RAILS_ROOT}/continuous4r-project.xml"))
     generation_date = DateTime.now

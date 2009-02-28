@@ -1,5 +1,9 @@
 	<h2>Flog Results</h2>
 	<p><a href='http://ruby.sadi.st/Flog.html'>Flog</a> measures code complexity.</p>
+        <%
+          project_score = pages.inject(0){|sum, page| sum + page.score } / (pages.inject(0){|sum, page| sum + page.scanned_methods.length})
+        %>
+        <h3 <%= Utils.flog_score_to_css_style(project_score) %>>Project average score : <%= sprintf("%0.2f", project_score) %></h3>
 	<table class='bodyTable'>
 		<tr>
 		  <th>File</th>
@@ -17,34 +21,15 @@
   		<tr class='<%= cycle("a", "b", count) %>'>
                   <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a>&#160;&#160;<i>(<a class="externalLink" href="xdoclet/<%= page.filename.sub('.txt', '.rb.html').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'').gsub(/\//,'_') %>" target="_blank">view source</a>)</i></td>
   			<td class='score'><%= sprintf("%0.2f", page.score) %></td>
-  			<td class='score'><%=                       page.scanned_methods.length %></td>
-  			<% 
-  			  def flog_caracteristics(flog_score)
-  			    if flog_score >= 0 and flog_score < 11
-  			      "title='Awesome'"
-  			    elsif flog_score >= 11 and flog_score < 21
-  			      "title='Good enough'"
-  			    elsif flog_score >= 21 and flog_score < 41
-  			      "style='background-color: #FFFF99; color: black;' title='Might need refactoring'"
-  			    elsif flog_score >= 41 and flog_score < 61
-  			      "style='background-color: yellow; color: black;' title='Possible to justify'"
-  			    elsif flog_score >= 61 and flog_score < 100
-  			      "style='background-color: orange; color: black;' title='Danger'"
-  			    elsif flog_score >= 100 and flog_score < 200
-  			      "style='background-color: red; color: black;' title='Whoop, whoop, whoop'"
-  			    elsif flog_score > 200
-  			      "style='background-color: black; color: white;' title='Someone please think of the children'"
-  			    end
-  			  end
-  			%>
-  			<td class='score' <%= flog_caracteristics(page.average_score) %>><%= sprintf("%0.2f", page.average_score) %></td>
-  			<td class='score' <%= flog_caracteristics(page.highest_score) %>><%= sprintf("%0.2f", page.highest_score) %></td>
+  			<td class='score'><%= page.scanned_methods.length %></td>
+  			<td class='score' <%= Utils.flog_caracteristics(page.average_score) %>><%= sprintf("%0.2f", page.average_score) %></td>
+  			<td class='score' <%= Utils.flog_caracteristics(page.highest_score) %>><%= sprintf("%0.2f", page.highest_score) %></td>
   		</tr>
 		<% end %>
 		<tr>
 			<td><strong>Totals</strong></td>
 			<td class='score'><strong><%= sprintf("%0.2f", pages.inject(0){|sum, page| sum + page.score }) %></strong></td>
-			<td class='score'><strong><%=                       pages.inject(0){|sum, page| sum + page.scanned_methods.length } %></strong></td>
+			<td class='score'><strong><%= pages.inject(0){|sum, page| sum + page.scanned_methods.length } %></strong></td>
 			<td class='score'></td>
 			<td class='score'></td>
 		</tr>		

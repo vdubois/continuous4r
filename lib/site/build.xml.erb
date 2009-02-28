@@ -12,7 +12,7 @@
                         <% end %>
 		</row>
 		<row>
-                        <string><%= Continuous4r::BUILD_NAME %></string>
+                        <string><%= Continuous4r.build_name %></string>
                         <% Continuous4r::METRICS_HASH.each_value do |value| %>
 			<number tooltip='<%= value %>'><%= value %></number>
                         <% end %>

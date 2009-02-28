@@ -20,4 +20,16 @@ class RcovBuilder
       Dir.mkdir "#{Continuous4r::WORK_DIR}/rcov"
       FileUtils.mv("coverage", "#{Continuous4r::WORK_DIR}/rcov/")
   end
+
+  # Methode qui permet d'extraire le pourcentage de qualite extrait d'un builder
+  def quality_percentage
+    require 'hpricot'
+    doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/rcov/coverage/index.html"))
+    (doc/'tt[@class^="coverage_code"]')[0].inner_text.split(/%/)[0]
+  end
+
+  # Nom de l'indicateur de qualite
+  def quality_indicator_name
+    "tests coverage"
+  end
 end
