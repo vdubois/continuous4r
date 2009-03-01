@@ -28,6 +28,7 @@ class FlayBuilder
     flay_file = File.open("#{Continuous4r::WORK_DIR}/flay/index.html","w")
     class_index = 0
     summary = ""
+    duplicate_lines = 0
     matches.each_with_index do |match, index|
       if index % 2 == 0
         flay_file.write("<tr class='#{class_index % 2 == 0 ? "a" : "b"}'>")
@@ -40,10 +41,44 @@ class FlayBuilder
         flay_file.write("</td>")
         class_index += 1
       else
-        flay_file.write("<td#{" style='background-color: orange;' title='Not DRY'" if summary.match(/IDENTICAL/)}>#{summary}<br/><pre>")
+        flay_file.write("<td")
+        begin
+          mass = summary.split(/mass = /)[1].split(/\)/)[0].to_i
+        rescue
+          mass = summary.split(Regexp.new(" = "))[1].split(/\)/)[0].to_i
+        end
+        if summary.match(/IDENTICAL/)
+          flay_file.write(" style='background-color: orange;' title='Not DRY'")
+        elsif mass >= 40
+          flay_file.write(" style='background-color: yellow;' title='Not DRY'")
+        end
+        if summary.match(/IDENTICAL/) or mass >= 40
+          arr_match = match.split(/$/)
+          arr_match.each do |elem|
+            if elem.match(/^A:/) or elem.match(/^ /)
+              duplicate_lines += 1
+            end
+          end
+        end
+        flay_file.write(">#{summary}<br/><pre>")
         flay_file.write("#{match}</pre></td></tr>")
       end
+      require 'hpricot'
+      doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/stats_body.html"))
+      tr_arr = doc.search("//tr")
+      loc = tr_arr[tr_arr.length-1].search("td")[2].inner_text.strip.to_f
+      @dryness = 100.0 - ((duplicate_lines.to_f * 100.0) / loc)
     end
     flay_file.close
+  end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    @dryness
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "DRYness"
   end
 end

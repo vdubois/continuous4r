@@ -3,6 +3,23 @@
 #  author: Vincent Dubois
 #  date: 08 fevrier 2009
 # ==========================================================================
+require 'reek'
+require 'reek/options'
+require 'reek/smells/smells'
+
+module Reek
+
+  SMELLS = {
+    :defn => [
+      Smells::ControlCouple,
+      Smells::UncommunicativeName,
+      Smells::LongMethod,
+      Smells::UtilityFunction,
+      Smells::FeatureEnvy
+      ]
+  }
+end
+
 class ReekBuilder
   include Utils
 
@@ -25,13 +42,24 @@ class ReekBuilder
     matches = reek_result.chomp.split("\n\n").map{|m| m.split("\n") }
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/reek")
     reek_file = File.open("#{Continuous4r::WORK_DIR}/reek/index.html","w")
-    matches.each_with_index do |match, count|
-      reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
-      reek_file.write("<td><a href='xdoclet/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> #{match.first.split("\"")[2]}</td><td>")
+    count = 0
+    matches.each do |match|
+      smells = Array.new
       match[1..-1].each do |filename|
-        reek_file.write("#{filename}<br/>")
+        if filename.index("[Duplication]").nil?
+          #reek_file.write("#{filename}<br/>")
+          smells << filename
+        end
       end
-      reek_file.write("</td></tr>")
+      if smells.length > 0
+        reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
+        reek_file.write("<td><a href='xdoclet/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> -- #{smells.length} warning#{"s" if smells.length > 1}</td><td>")
+        smells.each do |smell|
+          reek_file.write("#{smell}<br/>")
+        end
+        reek_file.write("</td></tr>")
+        count += 1
+      end
     end
     reek_file.close
   end
