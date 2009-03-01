@@ -28,8 +28,8 @@ module Continuous4r
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   #TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-  #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay']
-  TASKS = ['reek']
+  #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
+  TASKS = ['roodi']
   
   METRICS_HASH = Hash.new
 
@@ -73,7 +73,7 @@ module Continuous4r
     # Verification de la presence d'hpricot
     Utils.verify_gem_presence("hpricot", auto_install, proxy_option)
 
-    # Chargement/V�rification des gems n�cessaires � l'application
+    # Chargement/Vérification des gems nécessaires à l'application
     puts " Checking gems for this project, please hold on..."
     project.gems.each('gem') do |gem|
       puts " Checking for #{gem['name']} gem, version #{gem['version']}..."

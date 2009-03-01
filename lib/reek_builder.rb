@@ -30,7 +30,9 @@ class ReekBuilder
     # On lance la generation
     puts " Building reek report..."
     files = Array.new
-    files << Dir.glob("app/**/*.rb")
+    files << Dir.glob("app/controllers/*.rb")
+    files << Dir.glob("app/helpers/*.rb")
+    files << Dir.glob("app/models/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
     files.flatten!
@@ -43,17 +45,20 @@ class ReekBuilder
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/reek")
     reek_file = File.open("#{Continuous4r::WORK_DIR}/reek/index.html","w")
     count = 0
+    score = 0.0
     matches.each do |match|
       smells = Array.new
       match[1..-1].each do |filename|
-        if filename.index("[Duplication]").nil?
-          #reek_file.write("#{filename}<br/>")
-          smells << filename
-        end
+        smells << filename if filename.index("[Duplication]").nil?
       end
       if smells.length > 0
         reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
         reek_file.write("<td><a href='xdoclet/#{match.first.split("\"")[1].gsub(/\//,'_')}.html' target='_blank'>#{match.first.split("\"")[1]}</a> -- #{smells.length} warning#{"s" if smells.length > 1}</td><td>")
+        if smells.length > 10
+          score += 1.0
+        else
+          score += 0.5
+        end
         smells.each do |smell|
           reek_file.write("#{smell}<br/>")
         end
@@ -62,5 +67,16 @@ class ReekBuilder
       end
     end
     reek_file.close
+    @percent = 100 - ((score * files.length) / 100)
+  end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    @percent
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "code smells"
   end
 end
