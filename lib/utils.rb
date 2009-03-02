@@ -31,7 +31,7 @@ module Utils
   # Methode de verification de la presence d'un gem, avec installation au besoin
   def self.verify_gem_presence(gem, auto_install, proxy_option)
     gem_version = run_command("gem list #{gem}")
-    if gem_version.blank?
+    if gem_version.nil? or gem_version.strip.empty?
       if auto_install == "true"
         puts " Installing #{gem}..."
         gem_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem}#{proxy_option}")

@@ -27,9 +27,9 @@ module Continuous4r
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  #TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
-  TASKS = ['roodi']
+  #TASKS = ['saikuro']
   
   METRICS_HASH = Hash.new
 
@@ -55,7 +55,7 @@ module Continuous4r
     puts " Generation date : #{generation_date}"
     puts "---------------------------------------------------------------------"
 
-    # R�cup�ration des param�tres de proxy s'ils existent
+    # Récupération des paramètres de proxy s'ils existent
     proxy_option = ""
     if File.exist?("#{(Config::CONFIG['host_os'] =~ /mswin/ ? ENV['USERPROFILE'] : ENV['HOME'])}/.continuous4r/proxy.yml")
       require 'YAML'
@@ -63,7 +63,7 @@ module Continuous4r
       proxy_option = " -p \"http://#{proxy_options['proxy']['login']}:#{proxy_options['proxy']['password']}@#{proxy_options['proxy']['server']}:#{proxy_options['proxy']['port']}\""
     end
 
-    # V�rification de pr�sence et de la version de Rubygems
+    # Vérification de présence et de la version de Rubygems
     puts " Checking presence and version of RubyGems..."
     rubygems_version = Utils.run_command("gem --version")
     if rubygems_version.empty?
@@ -75,26 +75,30 @@ module Continuous4r
 
     # Chargement/Vérification des gems nécessaires à l'application
     puts " Checking gems for this project, please hold on..."
-    project.gems.each('gem') do |gem|
-      puts " Checking for #{gem['name']} gem, version #{gem['version']}..."
-      gem_version = Utils.run_command("gem list #{gem['name']}")
-      if gem_version.empty? or gem_version.index("#{gem['version']}").nil?
-        if project['auto-install-gems'] == "false"
-          raise " The #{gem['name']} gem with version #{gem['version']} is needed. Please run '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}' to install it.\n BUILD FAILED."
-        end        
-        gem_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}#{proxy_option} 2>&1")
-        if !gem_installed.index("ERROR").nil?
-          raise " Unable to install #{gem['name']} gem with version #{gem['version']}.\n BUILD FAILED."
+    begin
+      project.gems.each('gem') do |gem|
+        puts " Checking for #{gem['name']} gem, version #{gem['version']}..."
+        gem_version = Utils.run_command("gem list #{gem['name']}")
+        if gem_version.empty? or gem_version.index("#{gem['version']}").nil?
+          if project['auto-install-gems'] == "false"
+            raise " The #{gem['name']} gem with version #{gem['version']} is needed. Please run '#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}' to install it.\n BUILD FAILED."
+          end
+          gem_installed = Utils.run_command("#{"sudo " unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}#{proxy_option} 2>&1")
+          if !gem_installed.index("ERROR").nil?
+            raise " Unable to install #{gem['name']} gem with version #{gem['version']}.\n BUILD FAILED."
+          end
         end
       end
+    rescue
+      puts " No gems declared for this project, continuing..."
     end
 
     puts "---------------------------------------------------------------------"
-    # Cr�ation du r�pertoire de travail
+    # Création du répertoire de travail
     if File.exist?(WORK_DIR)
       FileUtils.rm_rf(WORK_DIR)
     end
-    Dir.mkdir WORK_DIR
+    FileUtils.mkdir_p WORK_DIR
 
     # Construction des taches
     tasks.each do |task|
@@ -131,6 +135,9 @@ module Continuous4r
     puts " Building project reports page..."
     Utils.erb_run "continuous4r-reports", false
     tasks.each do |task|
+      task_class = Object.const_get("#{task.capitalize}Builder")
+      task_builder = task_class.new
+      next if task_builder.respond_to?(:prerequisite_met?) and !task_builder.prerequisite_met?
       puts " Building #{task} page..."
       Utils.erb_run task, true
     end
@@ -143,6 +150,12 @@ module Continuous4r
     require "#{task}_builder.rb"
     task_class = Object.const_get("#{task.capitalize}Builder")
     task_builder = task_class.new
+    if task_builder.respond_to?(:prerequisite_met?)
+      if !task_builder.prerequisite_met?
+        puts task_builder.prerequisite_unmet_message
+        return
+      end
+    end
     task_builder.build(project_name, auto_install, proxy_option)
     if task_builder.respond_to?(:quality_percentage)
       METRICS_HASH[task_builder.quality_indicator_name] = task_builder.quality_percentage

@@ -9,7 +9,12 @@
                 <li class="collapsed"><a href="index.html">Project Info</a></li>
                 <li class="expanded"><strong><a href="continuous4r-reports.html">Project Reports</a></strong>
                     <ul>
-                        <% tasks.each do |task| %>
+                        <% 
+                           tasks.each do |task|
+                             task_class = Object.const_get("#{task.capitalize}Builder")
+                             task_builder = task_class.new
+                             next if task_builder.respond_to?(:prerequisite_met?) and !task_builder.prerequisite_met?
+                        %>
                         <li class="none"><a href="<%= task %>.html"><%= task %></a></li>
                         <% end %>
                     </ul>

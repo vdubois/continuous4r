@@ -6,6 +6,16 @@
 class ZentestBuilder
   include Utils
 
+  # Prérequis à la tâche
+  def prerequisite_met?
+    Dir.glob("test/**/*.rb").length > 0
+  end
+
+  # Dans le cas de l'erreur de prérequis
+  def prerequisite_unmet_message
+    " No tests found. The 'ZenTest' task will be empty."
+  end
+
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
     # On verifie la presence de ZenTest

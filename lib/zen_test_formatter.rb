@@ -6,7 +6,7 @@ require 'XmlElements'
 # Author: Vincent Dubois
 # =====================================================
 class ZenTestFormatter
-  
+
   # Methode qui permet de fabriquer le flux HTML a partir des flux console
   # de ZenTest
   def to_html

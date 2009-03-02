@@ -77,6 +77,9 @@ if (AC_FL_RunContent == 0 || DetectFlashVer == 0) {
                     <%
                         i = 0
                         tasks.each do |task|
+                          task_class = Object.const_get("#{task.capitalize}Builder")
+                          task_builder = task_class.new
+                          next if task_builder.respond_to?(:prerequisite_met?) and !task_builder.prerequisite_met?
                     %>
                     <tr class="<% if i % 2 == 0 %>a<% else %>b<% end %>">
                         <td>

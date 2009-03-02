@@ -6,12 +6,18 @@
 class ChangelogBuilder
   include Utils
 
+  # Prérequis à la tâche
+  def prerequisite_met?
+    File.exist?(".svn") or File.exist?(".git")
+  end
+
+  # Dans le cas de l'erreur de prérequis
+  def prerequisite_unmet_message
+    " Only Subversion and Git are supported. The 'changelog' task will be empty."
+  end
+
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
-    unless File.exist?(".svn") or File.exist?(".git")
-      puts " Only Subversion and Git are supported. The 'changelog' task will be empty."
-      break
-    end
     # On verifie l'existence de Subversion
     scm_name = "svn"
     if File.exist?(".git")
