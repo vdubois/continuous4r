@@ -20,8 +20,17 @@ h2. Installing
 
 <pre syntax="ruby">[sudo] gem install continuous4r</pre>
 
+h2. Release notes for 0.0.3 version
 
-h2. Release notes for this version
+<ul>
+	<li>Major bug fixes on rcov, ZenTest, tests, and changelog builders.</li>
+	<li>Various bug fixes on gems and tasks management.</li>
+	<li>Tests made on other projects than mine !!! (Apologies, everyone).</li>
+	<li>Introduction of reporting quality indicators (will be completed for 0.0.4).</li>
+	<li>The release of 0.0.4 will be here very shortly, this release is here for build capability.</li>
+</ul>
+
+h2. Release notes for 0.0.2 version
 
 <ul>
 	<li>Full Windows support, and no need for the user to define the HOME environment variable.</li>

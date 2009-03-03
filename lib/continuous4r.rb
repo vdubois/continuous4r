@@ -29,7 +29,7 @@ module Continuous4r
   
   TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
-  #TASKS = ['saikuro']
+  #TASKS = ['zentest']
   
   METRICS_HASH = Hash.new
 

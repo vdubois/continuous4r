@@ -16,5 +16,33 @@ class SaikuroBuilder
     if !File.exist?("#{Continuous4r::WORK_DIR}/saikuro/index_cyclo.html")
       raise " Execution of saikuro with the metric_fu gem failed.\n BUILD FAILED."
     end
+    require 'hpricot'
+    doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/saikuro/index_cyclo.html"))
+    classes_with_errors = Array.new
+    classes_with_warnings = Array.new
+    doc.search("//tr") do |tr|
+      tds = tr.search("td")
+      if tds.length > 0 and tds[2]['class'] == "error" and !(classes_with_errors.include?(tds[0].inner_text))
+        classes_with_errors << tds[0].inner_text
+      elsif tds.length > 0 and tds[2]['class'] == "warning" and !(classes_with_warnings.include?(tds[0].inner_text))
+        classes_with_warnings << tds[0].inner_text
+      end
+    end
+    files = Array.new
+    files << Dir.glob("app/**/*.rb")
+    files << Dir.glob("lib/**/*.rb")
+    files << Dir.glob("test/**/*.rb")
+    files.flatten!
+    @percent = 100.0 - (((classes_with_errors.length + (classes_with_warnings.length * 0.5)) * 100.0) / files.length.to_f)
+  end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    @percent
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "cyclomatic complexity"
   end
 end
