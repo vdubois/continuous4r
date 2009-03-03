@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: build.xml.erb</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>build.xml.erb</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>lib/site/build.xml.erb
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Mon Mar 02 22:44:32 +0100 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+    <div id="diagram">
+      <map id="map" name="map">
+</map>
+<img src="../../../dot/f_0.png" usemap="#map" border="0" alt="dot/f_0.png">
+    </div>
+
+    <div id="description">
+      <p>
+&lt;chart&gt;
+</p>
+<pre>
+        &lt;axis_category shadow='shadow2' size='13' color='4e627c' alpha='75' orientation='horizontal' /&gt;
+        &lt;axis_ticks value_ticks='' category_ticks='' /&gt;
+        &lt;axis_value alpha='0' min='0' max='100' /&gt;
+
+        &lt;chart_border bottom_thickness='0' left_thickness='0' /&gt;
+        &lt;chart_data&gt;
+                &lt;row&gt;
+                        &lt;null/&gt;
+                        &lt;% Continuous4r::METRICS_HASH.each_key do |key| %&gt;
+                        &lt;string&gt;&lt;%= key %&gt;&lt;/string&gt;
+                        &lt;% end %&gt;
+                &lt;/row&gt;
+                &lt;row&gt;
+                        &lt;string&gt;&lt;%= Continuous4r.build_name %&gt;&lt;/string&gt;
+                        &lt;% Continuous4r::METRICS_HASH.each_value do |value| %&gt;
+                        &lt;number tooltip='&lt;%= &quot;%0.2f&quot; % value %&gt;'&gt;&lt;%= &quot;%0.2f&quot; % value %&gt;&lt;/number&gt;
+                        &lt;% end %&gt;
+                &lt;/row&gt;
+        &lt;/chart_data&gt;
+        &lt;chart_grid_h alpha='20' color='000000' thickness='1' type='dashed' /&gt;
+        &lt;chart_grid_v alpha='20' color='000000' thickness='1' type='solid' /&gt;
+
+        &lt;!--chart_pref line_thickness='2' point_size='6' fill_shape='true' grid='circular' point_shape='circle'/--&gt;
+        &lt;chart_pref line_thickness='2' point_size='4' type='line' grid='circular' /&gt;
+
+        &lt;chart_rect x='100' y='60' width='500' height='325' positive_color='FFFFFF' positive_alpha='25' /&gt;
+        &lt;chart_transition type='slide_right' delay='0.5' duration='0.5' order='series' /&gt;
+        &lt;chart_type&gt;polar&lt;/chart_type&gt;
+
+        &lt;draw&gt;
+                &lt;text layer='background' shadow='shadow1' transition='slide_right' delay='0' duration='3' color='000000' width='600' alpha='8' size='95' x='0' y='-20'&gt;Build quality&lt;/text&gt;
+        &lt;/draw&gt;
+        &lt;filter&gt;
+                &lt;shadow id='shadow1' distance='2' angle='45' color='0' alpha='100' blurX='10' blurY='10' /&gt;
+                &lt;shadow id='shadow2' distance='1' angle='45' color='0' alpha='50' blurX='3' blurY='3' /&gt;
+        &lt;/filter&gt;
+
+        &lt;legend shadow='shadow2' x='20' y='350' width='20' height='40' margin='5' fill_alpha='30' layout='vertical' bullet='line' size='12' color='ffffff' alpha='90' /&gt;
+
+        &lt;series_color&gt;
+                &lt;color&gt;ff4400&lt;/color&gt;
+                &lt;!--color&gt;88ff00&lt;/color--&gt;
+        &lt;/series_color&gt;
+
+        &lt;tooltip color='FFFFFF' alpha='75' size='11' background_color='8888ff' background_alpha='90' shadow='low' /&gt;
+</pre>
+<p>
+&lt;/chart&gt;
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

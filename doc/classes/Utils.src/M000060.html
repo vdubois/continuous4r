@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>verify_gem_presence (Utils)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/utils.rb, line 32</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">verify_gem_presence</span>(<span class="ruby-identifier">gem</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+    <span class="ruby-identifier">gem_version</span> = <span class="ruby-identifier">run_command</span>(<span class="ruby-node">&quot;gem list #{gem}&quot;</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">gem_version</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">gem_version</span>.<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">empty?</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">auto_install</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;true&quot;</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Installing #{gem}...&quot;</span>
+        <span class="ruby-identifier">gem_installed</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-node">&quot;#{&quot;sudo &quot; unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem}#{proxy_option}&quot;</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">gem_installed</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">&quot;installed&quot;</span>).<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot; Install for #{gem} failed with command '#{&quot;sudo &quot; unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem}#{proxy_option}'\n BUILD FAILED.&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot; You don't seem to have #{gem} installed. You can install it with '#{&quot;sudo &quot; unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem}#{proxy_option}'.\n BUILD FAILED.&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

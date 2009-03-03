@@ -1,0 +1,33 @@
+digraph TopLevel {
+    label = "TopLevel"
+    compound = true
+    fontname = Arial
+    fontsize = 8
+    bgcolor = lightcyan1
+    node [
+        color = black,
+        fontname = Arial,
+        fontsize = 8
+    ]
+
+    FlogBuilder [
+        fontcolor = black,
+        shape = ellipse,
+        URL = "classes/FlogBuilder.html",
+        color = palegoldenrod,
+        style = filled,
+        label = "FlogBuilder"
+    ]
+
+    Utils [
+        shape = box,
+        URL = "classes/Utils.html",
+        label = "Utils"
+    ]
+
+    Utils -> FlogBuilder [
+
+    ]
+
+}
+

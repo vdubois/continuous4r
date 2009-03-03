@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>generate_site (Continuous4r)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/continuous4r.rb, line 42</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">generate_site</span>
+          <span class="ruby-ivar">@build_name</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">build_name</span>
+    <span class="ruby-identifier">tasks</span> = <span class="ruby-constant">TASKS</span>
+    <span class="ruby-identifier">project</span> = <span class="ruby-constant">XmlElements</span>.<span class="ruby-identifier">fromString</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/continuous4r-project.xml&quot;</span>))
+    <span class="ruby-identifier">generation_date</span> = <span class="ruby-constant">DateTime</span>.<span class="ruby-identifier">now</span>
+    <span class="ruby-identifier">auto_install</span> = <span class="ruby-identifier">project</span>[<span class="ruby-value str">'auto-install-tools'</span>]
+    <span class="ruby-identifier">auto_install</span> <span class="ruby-operator">||=</span> <span class="ruby-value str">&quot;false&quot;</span>
+
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;=====================================================================&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Continuous Integration for Ruby, starting website generation...&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;---------------------------------------------------------------------&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Project name    : #{project['name']}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Project URL     : #{project.url.text}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Generation date : #{generation_date}&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;---------------------------------------------------------------------&quot;</span>
+
+    <span class="ruby-comment cmt"># Récupération des paramètres de proxy s'ils existent</span>
+    <span class="ruby-identifier">proxy_option</span> = <span class="ruby-value str">&quot;&quot;</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-node">&quot;#{(Config::CONFIG['host_os'] =~ /mswin/ ? ENV['USERPROFILE'] : ENV['HOME'])}/.continuous4r/proxy.yml&quot;</span>)
+      <span class="ruby-identifier">require</span> <span class="ruby-value str">'YAML'</span>
+      <span class="ruby-identifier">proxy_options</span> = <span class="ruby-constant">YAML</span>.<span class="ruby-identifier">load_file</span>(<span class="ruby-node">&quot;#{(Config::CONFIG['host_os'] =~ /mswin/ ? ENV['USERPROFILE'] : ENV['HOME'])}/.continuous4r/proxy.yml&quot;</span>)
+      <span class="ruby-identifier">proxy_option</span> = <span class="ruby-node">&quot; -p \&quot;http://#{proxy_options['proxy']['login']}:#{proxy_options['proxy']['password']}@#{proxy_options['proxy']['server']}:#{proxy_options['proxy']['port']}\&quot;&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-comment cmt"># Vérification de présence et de la version de Rubygems</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Checking presence and version of RubyGems...&quot;</span>
+    <span class="ruby-identifier">rubygems_version</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-value str">&quot;gem --version&quot;</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rubygems_version</span>.<span class="ruby-identifier">empty?</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot; You don't seem to have RubyGems installed, please go first to http://rubygems.rubyforge.org&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-comment cmt"># Verification de la presence d'hpricot</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">verify_gem_presence</span>(<span class="ruby-value str">&quot;hpricot&quot;</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+
+    <span class="ruby-comment cmt"># Chargement/Vérification des gems nécessaires à l'application</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Checking gems for this project, please hold on...&quot;</span>
+    <span class="ruby-keyword kw">begin</span>
+      <span class="ruby-identifier">project</span>.<span class="ruby-identifier">gems</span>.<span class="ruby-identifier">each</span>(<span class="ruby-value str">'gem'</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">gem</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Checking for #{gem['name']} gem, version #{gem['version']}...&quot;</span>
+        <span class="ruby-identifier">gem_version</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-node">&quot;gem list #{gem['name']}&quot;</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">gem_version</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">gem_version</span>.<span class="ruby-identifier">index</span>(<span class="ruby-node">&quot;#{gem['version']}&quot;</span>).<span class="ruby-identifier">nil?</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">project</span>[<span class="ruby-value str">'auto-install-gems'</span>] <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;false&quot;</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot; The #{gem['name']} gem with version #{gem['version']} is needed. Please run '#{&quot;sudo &quot; unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}' to install it.\n BUILD FAILED.&quot;</span>
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">gem_installed</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-node">&quot;#{&quot;sudo &quot; unless Config::CONFIG['host_os'] =~ /mswin/}gem install #{gem['name']} --version #{gem['version']}#{proxy_option} 2&gt;&amp;1&quot;</span>)
+          <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">gem_installed</span>.<span class="ruby-identifier">index</span>(<span class="ruby-value str">&quot;ERROR&quot;</span>).<span class="ruby-identifier">nil?</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot; Unable to install #{gem['name']} gem with version #{gem['version']}.\n BUILD FAILED.&quot;</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">rescue</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; No gems declared for this project, continuing...&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;---------------------------------------------------------------------&quot;</span>
+    <span class="ruby-comment cmt"># Création du répertoire de travail</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">WORK_DIR</span>)
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">rm_rf</span>(<span class="ruby-constant">WORK_DIR</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir_p</span> <span class="ruby-constant">WORK_DIR</span>
+
+    <span class="ruby-comment cmt"># Construction des taches</span>
+    <span class="ruby-identifier">tasks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">task</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">build_task</span> <span class="ruby-identifier">task</span>, <span class="ruby-identifier">project</span>[<span class="ruby-value str">'name'</span>], <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;\n---------------------------------------------------------------------&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; All tasks done.&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;\n---------------------------------------------------------------------&quot;</span>
+
+    <span class="ruby-comment cmt"># On copie les feuilles de styles</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp_r</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/style/&quot;</span>, <span class="ruby-node">&quot;#{WORK_DIR}/&quot;</span>)
+
+    <span class="ruby-comment cmt"># On copie la partie flash</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp_r</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/charts/&quot;</span>, <span class="ruby-node">&quot;#{WORK_DIR}/&quot;</span>)
+    <span class="ruby-comment cmt"># Production du fichier XML des indicateurs de qualité</span>
+    <span class="ruby-identifier">page_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/build.xml&quot;</span>, <span class="ruby-value str">&quot;w&quot;</span>)
+    <span class="ruby-identifier">erb</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/build.xml.erb&quot;</span>))
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">erb</span>.<span class="ruby-identifier">result</span>)
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">close</span>
+
+    <span class="ruby-comment cmt"># On copie les images</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp_r</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/images/&quot;</span>, <span class="ruby-node">&quot;#{WORK_DIR}/&quot;</span>)
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">copy_file</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/images/continuous4r-logo.png&quot;</span>, <span class="ruby-node">&quot;#{WORK_DIR}/continuous4r-logo.png&quot;</span>)
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building project information page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;index&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building team list page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;team-list&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building project dependencies page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;dependencies&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building source control management page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;scm-usage&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building issue tracking page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;issue-tracking&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building project reports page...&quot;</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-value str">&quot;continuous4r-reports&quot;</span>, <span class="ruby-keyword kw">false</span>
+    <span class="ruby-identifier">tasks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">task</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">task_class</span> = <span class="ruby-constant">Object</span>.<span class="ruby-identifier">const_get</span>(<span class="ruby-node">&quot;#{task.capitalize}Builder&quot;</span>)
+      <span class="ruby-identifier">task_builder</span> = <span class="ruby-identifier">task_class</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-keyword kw">next</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">task_builder</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">:prerequisite_met?</span>) <span class="ruby-keyword kw">and</span> <span class="ruby-operator">!</span><span class="ruby-identifier">task_builder</span>.<span class="ruby-identifier">prerequisite_met?</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Building #{task} page...&quot;</span>
+      <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-identifier">task</span>, <span class="ruby-keyword kw">true</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;\n BUILD SUCCESSFUL.&quot;</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;=====================================================================&quot;</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

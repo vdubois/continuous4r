@@ -24,7 +24,7 @@ class ChangelogBuilder
       scm_name = "git"
     end
     scm_version = Utils.run_command("#{scm_name} --version")
-    if scm_version.blank?
+    if scm_version.nil? and scm_version.empty?
       if scm_name == "svn"
         raise " Subversion don't seem to be installed. Go see Subversion website on http://subversion.tigris.org.\n BUILD FAILED"
       else

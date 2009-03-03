@@ -1,0 +1,40 @@
+digraph TopLevel {
+    label = "TopLevel"
+    compound = true
+    fontname = Arial
+    fontsize = 8
+    bgcolor = lightcyan1
+    node [
+        color = black,
+        fontname = Arial,
+        fontsize = 8
+    ]
+
+    subgraph cluster_Continuous4r {
+        label = "Continuous4r"
+        fillcolor = palegreen1
+        URL = "classes/Continuous4r.html"
+        color = blue
+        fontname = Arial
+        style = filled
+        Continuous4r [
+            shape = plaintext,
+            height = 0.01,
+            width = 0.75,
+            label = ""
+        ]
+
+    }
+
+    Utils [
+        shape = box,
+        URL = "classes/Utils.html",
+        label = "Utils"
+    ]
+
+    Utils -> Continuous4r [
+        lhead = cluster_Continuous4r
+    ]
+
+}
+

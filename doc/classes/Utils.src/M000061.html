@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>percent_to_css_style (Utils)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/utils.rb, line 49</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">percent_to_css_style</span>(<span class="ruby-identifier">percent</span>)
+    <span class="ruby-identifier">style</span> = <span class="ruby-value str">&quot;style='font-weight: bold; color: &quot;</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">90</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-value">100</span>
+      <span class="ruby-identifier">style</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;#00cc00;'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">80</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">90</span>
+      <span class="ruby-identifier">style</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;yellow;'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">60</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">80</span>
+      <span class="ruby-identifier">style</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;red;'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">percent</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">60</span>
+      <span class="ruby-identifier">style</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">&quot;red; text-decoration: blink;'&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">style</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

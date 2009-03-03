@@ -23,7 +23,6 @@ module SubversionExtractor
     (scm_current_version.to_i..revision.to_i).to_a.reverse_each do |rev|
       puts " Changelog for revision #{rev}..."
       rev_files = Array.new
-      # TODO Dans la suite, gérer les icônes ajout/modif/suppression
       if rev == 1 #or (!scm['min_revision'].nil? and rev == scm['min_revision'].to_i)
         rev_result = Utils.run_command("svn diff -r #{rev}").split(/$/).select{ |l| l =~ /^Index:/ }
         rev_result.each do |line|
@@ -31,23 +30,27 @@ module SubversionExtractor
         end
       else
         rev_result = Utils.run_command("svn diff -r #{rev-1}:#{rev} --summarize")
-        rev_result_lines = rev_result.split(/$/).collect { |l| l.gsub(Regexp.new("\n"), "") }
-        rev_result_lines.each do |line|
-          text = ''
-          if line[0..0] == 'A'
-            text = "<img src='images/added.png' align='absmiddle'/>"
-          elsif line[0..0] == 'M'
-            text = "<img src='images/modified.png' align='absmiddle'/>"
-          elsif line[0..0] == 'D'
-            text = "<img src='images/deleted.png' align='absmiddle'/>"
+        if rev_result.match(/^svn:/)
+          rev_result_lines = rev_result.split(/$/).collect { |l| l.gsub(Regexp.new("\n"), "") }
+          rev_result_lines.each do |line|
+            text = ''
+            if line[0..0] == 'A'
+              text = "<img src='images/added.png' align='absmiddle'/>"
+            elsif line[0..0] == 'M'
+              text = "<img src='images/modified.png' align='absmiddle'/>"
+            elsif line[0..0] == 'D'
+              text = "<img src='images/deleted.png' align='absmiddle'/>"
+            end
+            rev_files.push "#{text}&#160;#{line[7..(line.length-1)]}"
           end
-          rev_files.push "#{text}&#160;#{line[7..(line.length-1)]}"
+          rev_files.pop
         end
-        rev_files.pop
       end
       rev_log_result = Utils.run_command("svn log -r #{rev}")
       rev_log_result_lines = rev_log_result.split(/$/)
+      next if rev_log_result_lines[1].nil?
       rev_line = rev_log_result_lines[1].split(/ \| /)
+      next if rev_line[2].nil?
       html = html + "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'><td><strong>#{rev_line[0][2..(rev_line[0].length-1)]}</strong></td>"
       html = html + "<td>#{rev_line[2][0..18]}</td><td>#{rev_line[1]}</td><td>"
       rev_files.each do |rev_file|

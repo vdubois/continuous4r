@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>flog_caracteristics (Utils)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/utils.rb, line 77</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">flog_caracteristics</span>(<span class="ruby-identifier">flog_score</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">11</span>
+      <span class="ruby-value str">&quot;title='Awesome'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">11</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">21</span>
+      <span class="ruby-value str">&quot;title='Good enough'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">21</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">41</span>
+      <span class="ruby-value str">&quot;style='background-color: #FFFF99; color: black;' title='Might need refactoring'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">41</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">61</span>
+      <span class="ruby-value str">&quot;style='background-color: yellow; color: black;' title='Possible to justify'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">61</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">100</span>
+      <span class="ruby-value str">&quot;style='background-color: orange; color: black;' title='Danger'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">100</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">200</span>
+      <span class="ruby-value str">&quot;style='background-color: red; color: black;' title='Whoop, whoop, whoop'&quot;</span>
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">flog_score</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">200</span>
+      <span class="ruby-value str">&quot;style='background-color: black; color: white;' title='Someone please think of the children'&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

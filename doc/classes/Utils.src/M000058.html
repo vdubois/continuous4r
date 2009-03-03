@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>erb_run (Utils)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/utils.rb, line 5</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">erb_run</span> <span class="ruby-identifier">page</span>, <span class="ruby-identifier">is_a_task</span> = <span class="ruby-keyword kw">true</span>
+    <span class="ruby-identifier">page_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/#{page}.html&quot;</span>, <span class="ruby-value str">&quot;w&quot;</span>)
+    <span class="ruby-identifier">erb</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/header.rhtml&quot;</span>))
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">erb</span>.<span class="ruby-identifier">result</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">is_a_task</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+      <span class="ruby-identifier">erb</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/menu-task.rhtml&quot;</span>), <span class="ruby-value">0</span>, <span class="ruby-value str">&quot;%&lt;&gt;&quot;</span>)
+      <span class="ruby-identifier">current_task</span> = <span class="ruby-identifier">page</span>
+      <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">erb</span>.<span class="ruby-identifier">result</span>(<span class="ruby-identifier">binding</span>))
+    <span class="ruby-keyword kw">else</span>
+      <span class="ruby-identifier">erb</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/menu-#{page}.rhtml&quot;</span>), <span class="ruby-value">0</span>, <span class="ruby-value str">&quot;%&lt;&gt;&quot;</span>)
+      <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">erb</span>.<span class="ruby-identifier">result</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">erb</span> = <span class="ruby-constant">ERB</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-node">&quot;#{File.dirname(__FILE__)}/site/body-#{page}.rhtml&quot;</span>))
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">erb</span>.<span class="ruby-identifier">result</span>)
+    <span class="ruby-identifier">page_file</span>.<span class="ruby-identifier">close</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

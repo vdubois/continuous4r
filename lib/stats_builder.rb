@@ -12,7 +12,19 @@ class StatsBuilder
     puts " Building stats report..."
     stats_result = Utils.run_command("rake stats")
     stats_report = File.open("#{Continuous4r::WORK_DIR}/stats_body.html", "w")
-    stats_report.write(StatsFormatter.new(stats_result).to_html)
+    stats_formatter = StatsFormatter.new(stats_result)
+    stats_report.write(stats_formatter.to_html)
     stats_report.close
+    @percent = stats_formatter.percent
+  end
+
+  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  def quality_percentage
+    @percent
+  end
+
+  # Nom de l'indicateur de qualité
+  def quality_indicator_name
+    "code-to-test ratio"
   end
 end

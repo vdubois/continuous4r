@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>to_html (StatsFormatter)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/stats_formatter.rb, line 14</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_html</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-value str">&quot;&lt;table class='bodyTable'&gt;&lt;thead&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Lines&lt;/th&gt;&lt;th&gt;LOC&lt;/th&gt;&lt;th&gt;Classes&lt;/th&gt;&lt;th&gt;Methods&lt;/th&gt;&lt;th&gt;M/C&lt;/th&gt;&lt;th&gt;LOC/M&lt;/th&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;</span>
+    <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">results</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">result</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/$/</span>)
+    <span class="ruby-identifier">bottom</span> = <span class="ruby-value">4</span>
+    <span class="ruby-keyword kw">while</span> <span class="ruby-operator">!</span><span class="ruby-identifier">results</span>[<span class="ruby-identifier">bottom</span>].<span class="ruby-identifier">nil?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">results</span>[<span class="ruby-identifier">bottom</span>][<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">1</span>] <span class="ruby-operator">!=</span> <span class="ruby-value str">&quot;\n+&quot;</span> <span class="ruby-keyword kw">do</span>
+      <span class="ruby-identifier">bottom</span> = <span class="ruby-identifier">bottom</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">lines</span> = <span class="ruby-identifier">results</span>[<span class="ruby-value">4</span><span class="ruby-operator">..</span><span class="ruby-identifier">bottom</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]
+    <span class="ruby-identifier">lines</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">elements</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\|/</span>)
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;tr class='#{ i % 2 == 0 ? 'a' : 'b'}'&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td&gt;&lt;strong&gt;#{elements[1]}&lt;/strong&gt;&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[2]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[3]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[4]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[5]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[6]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;#{elements[7]}&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;&lt;/tr&gt;&quot;</span>
+      <span class="ruby-identifier">i</span> = <span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">total</span> = <span class="ruby-identifier">results</span>[<span class="ruby-identifier">bottom</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>]
+    <span class="ruby-identifier">elements</span> = <span class="ruby-identifier">total</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\|/</span>)
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;tr class='#{ i % 2 == 0 ? 'a' : 'b'}'&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td&gt;&lt;strong&gt;#{elements[1]}&lt;/strong&gt;&lt;/td&gt;&quot;</span>
+    [<span class="ruby-value">2</span>,<span class="ruby-value">3</span>,<span class="ruby-value">4</span>,<span class="ruby-value">5</span>,<span class="ruby-value">6</span>,<span class="ruby-value">7</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">j</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td style='text-align: right;'&gt;&lt;strong&gt;#{elements[j]}&lt;/strong&gt;&lt;/td&gt;&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;&lt;/tr&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;&lt;/tbody&gt;&lt;/table&gt;&quot;</span>
+    <span class="ruby-identifier">extra</span> = <span class="ruby-identifier">results</span>[<span class="ruby-identifier">bottom</span> <span class="ruby-operator">+</span> <span class="ruby-value">3</span>]
+    <span class="ruby-identifier">elements</span> = <span class="ruby-identifier">extra</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/:|    /</span>)
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;p&gt;&lt;strong&gt;#{elements[0]} : &lt;/strong&gt;#{elements[1]}&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;strong&gt;#{elements[2]} : &lt;/strong&gt;#{elements[3]}&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&amp;#160;&quot;</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;strong&gt;#{elements[4]} : &lt;/strong&gt;#{elements[5]}:#{elements[6]}&lt;/p&gt;&lt;br/&gt;&quot;</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

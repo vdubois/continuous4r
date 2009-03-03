@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>extract_changelog (GitExtractor)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/git_extractor.rb, line 10</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">extract_changelog</span> <span class="ruby-identifier">scm_current_version</span>, <span class="ruby-identifier">file_name</span>
+    <span class="ruby-identifier">git_revisions</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-value str">&quot;git log&quot;</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/$/</span>).<span class="ruby-identifier">select</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^commit /</span> }.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span>[<span class="ruby-value">8</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">l</span>.<span class="ruby-identifier">length</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)] }
+    <span class="ruby-identifier">revision</span> = <span class="ruby-identifier">git_revisions</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-keyword kw">begin</span>
+      <span class="ruby-identifier">git_url</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-value str">&quot;.git/config&quot;</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/$/</span>).<span class="ruby-identifier">select</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">l</span><span class="ruby-operator">|</span> <span class="ruby-identifier">l</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/url = /</span>}[<span class="ruby-value">0</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/url = /</span>)[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Computing changelog for #{git_url}...&quot;</span>
+    <span class="ruby-keyword kw">rescue</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Computing changelog, from commit #{scm_current_version} to revision #{revision}...&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-value str">&quot;&lt;table class='bodyTable'&gt;&lt;thead&gt;&lt;th&gt;Commit&lt;/th&gt;&lt;th&gt;Date&lt;/th&gt;&lt;th&gt;Author&lt;/th&gt;&lt;th&gt;File(s)&lt;/th&gt;&lt;th&gt;Comment&lt;/th&gt;&lt;/thead&gt;&lt;tbody&gt;&quot;</span>
+    <span class="ruby-identifier">commits</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-value str">&quot;git log --name-status&quot;</span>).<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/^commit/</span>)
+    <span class="ruby-identifier">commits</span>.<span class="ruby-identifier">delete_at</span>(<span class="ruby-value">0</span>)
+    <span class="ruby-identifier">commits</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">commit</span>, <span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">commit_details</span> = <span class="ruby-identifier">commit</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/$/</span>)
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; Changelog for commit #{commit_details[0].strip}...&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;tr class='#{ index % 2 == 0 ? 'a' : 'b'}'&gt;&lt;td&gt;&lt;strong&gt;#{commit_details[0].strip}&lt;/strong&gt;&lt;/td&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;td&gt;#{commit_details[2].strip.split(/Date:   /)[1]}&lt;/td&gt;&lt;td&gt;#{commit_details[1].strip.split(/Author: /)[1]}&lt;/td&gt;&lt;td&gt;&quot;</span>
+      (<span class="ruby-value">6</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">commit_details</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">3</span>)).<span class="ruby-identifier">to_a</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file_detail</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">file_status</span> = <span class="ruby-value str">&quot;added&quot;</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">commit_details</span>[<span class="ruby-identifier">file_detail</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>) <span class="ruby-operator">==</span> <span class="ruby-value str">'A'</span>
+          <span class="ruby-identifier">file_status</span> = <span class="ruby-value str">&quot;added&quot;</span>
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">commit_details</span>[<span class="ruby-identifier">file_detail</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>) <span class="ruby-operator">==</span> <span class="ruby-value str">'M'</span>
+          <span class="ruby-identifier">file_status</span> = <span class="ruby-value str">&quot;modified&quot;</span>
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">commit_details</span>[<span class="ruby-identifier">file_detail</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">at</span>(<span class="ruby-value">0</span>) <span class="ruby-operator">==</span> <span class="ruby-value str">'D'</span>
+          <span class="ruby-identifier">file_status</span> = <span class="ruby-value str">&quot;deleted&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;img src='images/#{file_status}.png' align='absmiddle'/&gt;&amp;#160;#{commit_details[file_detail].strip.split(Regexp.new(&quot;\t&quot;))[1]}&lt;br/&gt;&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;/td&gt;&lt;td&gt;#{commit_details[4].strip}&lt;/td&gt;&lt;/tr&gt;&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">html</span> = <span class="ruby-identifier">html</span> <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;&lt;/tbody&gt;&lt;/table&gt;&quot;</span>
+    <span class="ruby-identifier">changelog_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">file_name</span>,<span class="ruby-value str">&quot;w&quot;</span>)
+    <span class="ruby-identifier">changelog_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">html</span>)
+    <span class="ruby-identifier">changelog_file</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">revision</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

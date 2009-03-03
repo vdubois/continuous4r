@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>build (ChangelogBuilder)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/changelog_builder.rb, line 20</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build</span>(<span class="ruby-identifier">project_name</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+    <span class="ruby-comment cmt"># On verifie l'existence de Subversion</span>
+    <span class="ruby-identifier">scm_name</span> = <span class="ruby-value str">&quot;svn&quot;</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-value str">&quot;.git&quot;</span>)
+      <span class="ruby-identifier">scm_name</span> = <span class="ruby-value str">&quot;git&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">scm_version</span> = <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">run_command</span>(<span class="ruby-node">&quot;#{scm_name} --version&quot;</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">scm_version</span>.<span class="ruby-identifier">blank?</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">scm_name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;svn&quot;</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot; Subversion don't seem to be installed. Go see Subversion website on http://subversion.tigris.org.\n BUILD FAILED&quot;</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot; Git don't seem to be installed. Go see Git website on http://git-scm.com/.\n BUILD FAILED&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># Gestion de la derniere version</span>
+    <span class="ruby-comment cmt"># 1 - On verifie le repertoire home/continuous4r</span>
+    <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'HOME'</span>] = <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'USERPROFILE'</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Config</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG</span>[<span class="ruby-value str">'host_os'</span>] <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/mswin/</span> <span class="ruby-keyword kw">and</span> <span class="ruby-constant">ENV</span>[<span class="ruby-value str">'HOME'</span>].<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;/.continuous4r&quot;</span>)
+      <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-value str">&quot;/.continuous4r&quot;</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># 2 - On verifie le numero de version</span>
+    <span class="ruby-identifier">scm_current_version</span> = <span class="ruby-value str">&quot;1&quot;</span>
+    <span class="ruby-identifier">scm_last_version</span> = <span class="ruby-value">1</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-node">&quot;/.continuous4r/#{project_name}_#{scm_name}.version&quot;</span>)
+      <span class="ruby-identifier">scm_current_version</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-node">&quot;/.continuous4r/#{project_name}_#{scm_name}.version&quot;</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># 3 - On extrait les informations du referentiel</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">scm_name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;svn&quot;</span>
+      <span class="ruby-identifier">scm_last_version</span> = <span class="ruby-constant">SubversionExtractor</span>.<span class="ruby-identifier">extract_changelog</span>(<span class="ruby-identifier">scm_current_version</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/changelog-body.html&quot;</span>)
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">scm_name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;git&quot;</span>
+      <span class="ruby-identifier">scm_last_version</span> = <span class="ruby-constant">GitExtractor</span>.<span class="ruby-identifier">extract_changelog</span>(<span class="ruby-identifier">scm_current_version</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/changelog-body.html&quot;</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># 4 - On ecrit le nouveau numero de revision</span>
+    <span class="ruby-identifier">rev_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">ENV</span>[<span class="ruby-value str">&quot;HOME&quot;</span>] <span class="ruby-operator">+</span> <span class="ruby-node">&quot;/.continuous4r/#{project_name}_#{scm_name}.version&quot;</span>,<span class="ruby-value str">&quot;w&quot;</span>)
+    <span class="ruby-identifier">rev_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">scm_last_version</span>)
+    <span class="ruby-identifier">rev_file</span>.<span class="ruby-identifier">close</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

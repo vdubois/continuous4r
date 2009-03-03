@@ -1,11 +1,10 @@
-== 0.0.3 2009-03-02
+== 0.0.4 2009-03-03
 
-* Third release
-Major bug fixes on rcov, ZenTest, tests, and changelog builders
-Various bug fixes on gems and tasks management
-Tests made on other projects than mine !!! (Apologies for all errors, everyone)
-Introduction of reporting quality indicators (will be completed for 0.0.4)
-The release of 0.0.4 will be here very shortly, this release is here for build capability
+* Fourth release
+Major bug fixes on rcov changelog builder (differences found on svn with the type of checkout http:// or svn://)
+Tests made on various projects, and notableously to a big one (Redmine)
+Introduction of reporting quality indicators (will be completed for 0.1.0)
+The release of 0.0.5 will be here very shortly, this release is here for build capability
 
 
 To see this release details, go to http://dubois.vct.free.fr/continuous4r

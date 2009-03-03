@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: AC_RunActiveContent.js</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>AC_RunActiveContent.js</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>lib/site/charts/AC_RunActiveContent.js
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Fri Jun 27 13:36:06 +0200 2008</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+    <div id="diagram">
+      <map id="map" name="map">
+</map>
+<img src="../../../../dot/f_0.png" usemap="#map" border="0" alt="dot/f_0.png">
+    </div>
+
+    <div id="description">
+      <p>
+//v1.7 // Flash Player Version Detection // Detect Client Browser type //
+Copyright 2005-2007 Adobe Systems Incorporated. All rights reserved. var
+isIE = (navigator.appVersion.indexOf(&quot;MSIE&quot;) != -1) ? true :
+false; var isWin =
+(navigator.appVersion.toLowerCase().indexOf(&quot;win&quot;) != -1) ? true
+: false; var isOpera = (navigator.userAgent.indexOf(&quot;Opera&quot;) !=
+-1) ? true : false;
+</p>
+<p>
+function ControlVersion() {
+</p>
+<pre>
+        var version;
+        var axo;
+        var e;
+
+        // NOTE : new ActiveXObject(strFoo) throws an exception if strFoo isn't in the registry
+
+        try {
+                // version will be set for 7.X or greater players
+                axo = new ActiveXObject(&quot;ShockwaveFlash.ShockwaveFlash.7&quot;);
+                version = axo.GetVariable(&quot;$version&quot;);
+        } catch (e) {
+        }
+
+        if (!version)
+        {
+                try {
+                        // version will be set for 6.X players only
+                        axo = new ActiveXObject(&quot;ShockwaveFlash.ShockwaveFlash.6&quot;);
+
+                        // installed player is some revision of 6.0
+                        // GetVariable(&quot;$version&quot;) crashes for versions 6.0.22 through 6.0.29,
+                        // so we have to be careful.
+
+                        // default to the first public version
+                        version = &quot;WIN 6,0,21,0&quot;;
+
+                        // throws if AllowScripAccess does not exist (introduced in 6.0r47)
+                        axo.AllowScriptAccess = &quot;always&quot;;
+
+                        // safe to call for 6.0r47 or greater
+                        version = axo.GetVariable(&quot;$version&quot;);
+
+                } catch (e) {
+                }
+        }
+
+        if (!version)
+        {
+                try {
+                        // version will be set for 4.X or 5.X player
+                        axo = new ActiveXObject(&quot;ShockwaveFlash.ShockwaveFlash.3&quot;);
+                        version = axo.GetVariable(&quot;$version&quot;);
+                } catch (e) {
+                }
+        }
+
+        if (!version)
+        {
+                try {
+                        // version will be set for 3.X player
+                        axo = new ActiveXObject(&quot;ShockwaveFlash.ShockwaveFlash.3&quot;);
+                        version = &quot;WIN 3,0,18,0&quot;;
+                } catch (e) {
+                }
+        }
+
+        if (!version)
+        {
+                try {
+                        // version will be set for 2.X player
+                        axo = new ActiveXObject(&quot;ShockwaveFlash.ShockwaveFlash&quot;);
+                        version = &quot;WIN 2,0,0,11&quot;;
+                } catch (e) {
+                        version = -1;
+                }
+        }
+
+        return version;
+</pre>
+<p>
+}
+</p>
+<p>
+// JavaScript helper required to detect Flash Player PlugIn version
+information function GetSwfVer(){
+</p>
+<pre>
+        // NS/Opera version &gt;= 3 check for Flash plugin in plugin array
+        var flashVer = -1;
+
+        if (navigator.plugins != null &amp;&amp; navigator.plugins.length &gt; 0) {
+                if (navigator.plugins[&quot;Shockwave Flash 2.0&quot;] || navigator.plugins[&quot;Shockwave Flash&quot;]) {
+                        var swVer2 = navigator.plugins[&quot;Shockwave Flash 2.0&quot;] ? &quot; 2.0&quot; : &quot;&quot;;
+                        var flashDescription = navigator.plugins[&quot;Shockwave Flash&quot; + swVer2].description;
+                        var descArray = flashDescription.split(&quot; &quot;);
+                        var tempArrayMajor = descArray[2].split(&quot;.&quot;);
+                        var versionMajor = tempArrayMajor[0];
+                        var versionMinor = tempArrayMajor[1];
+                        var versionRevision = descArray[3];
+                        if (versionRevision == &quot;&quot;) {
+                                versionRevision = descArray[4];
+                        }
+                        if (versionRevision[0] == &quot;d&quot;) {
+                                versionRevision = versionRevision.substring(1);
+                        } else if (versionRevision[0] == &quot;r&quot;) {
+                                versionRevision = versionRevision.substring(1);
+                                if (versionRevision.indexOf(&quot;d&quot;) &gt; 0) {
+                                        versionRevision = versionRevision.substring(0, versionRevision.indexOf(&quot;d&quot;));
+                                }
+                        }
+                        var flashVer = versionMajor + &quot;.&quot; + versionMinor + &quot;.&quot; + versionRevision;
+                }
+        }
+        // MSN/WebTV 2.6 supports Flash 4
+        else if (navigator.userAgent.toLowerCase().indexOf(&quot;webtv/2.6&quot;) != -1) flashVer = 4;
+        // WebTV 2.5 supports Flash 3
+        else if (navigator.userAgent.toLowerCase().indexOf(&quot;webtv/2.5&quot;) != -1) flashVer = 3;
+        // older WebTV supports Flash 2
+        else if (navigator.userAgent.toLowerCase().indexOf(&quot;webtv&quot;) != -1) flashVer = 2;
+        else if ( isIE &amp;&amp; isWin &amp;&amp; !isOpera ) {
+                flashVer = ControlVersion();
+        }
+        return flashVer;
+</pre>
+<p>
+}
+</p>
+<p>
+// When called with reqMajorVer, reqMinorVer, reqRevision returns true if
+that version or greater is available function DetectFlashVer(reqMajorVer,
+reqMinorVer, reqRevision) {
+</p>
+<pre>
+        versionStr = GetSwfVer();
+        if (versionStr == -1 ) {
+                return false;
+        } else if (versionStr != 0) {
+                if(isIE &amp;&amp; isWin &amp;&amp; !isOpera) {
+                        // Given &quot;WIN 2,0,0,11&quot;
+                        tempArray         = versionStr.split(&quot; &quot;);   // [&quot;WIN&quot;, &quot;2,0,0,11&quot;]
+                        tempString        = tempArray[1];                    // &quot;2,0,0,11&quot;
+                        versionArray      = tempString.split(&quot;,&quot;);   // ['2', '0', '0', '11']
+                } else {
+                        versionArray      = versionStr.split(&quot;.&quot;);
+                }
+                var versionMajor      = versionArray[0];
+                var versionMinor      = versionArray[1];
+                var versionRevision   = versionArray[2];
+
+                // is the major.revision &gt;= requested major.revision AND the minor version &gt;= requested minor
+                if (versionMajor &gt; parseFloat(reqMajorVer)) {
+                        return true;
+                } else if (versionMajor == parseFloat(reqMajorVer)) {
+                        if (versionMinor &gt; parseFloat(reqMinorVer))
+                                return true;
+                        else if (versionMinor == parseFloat(reqMinorVer)) {
+                                if (versionRevision &gt;= parseFloat(reqRevision))
+                                        return true;
+                        }
+                }
+                return false;
+        }
+</pre>
+<p>
+}
+</p>
+<p>
+function AC_AddExtension(src, ext) {
+</p>
+<pre>
+  if (src.indexOf('?') != -1)
+    return src.replace(/\?/, ext+'?');
+  else
+    return src + ext;
+</pre>
+<p>
+}
+</p>
+<p>
+function AC_Generateobj(objAttrs, params, embedAttrs) {
+</p>
+<pre>
+  var str = '';
+  if (isIE &amp;&amp; isWin &amp;&amp; !isOpera)
+  {
+    str += '&lt;object ';
+    for (var i in objAttrs)
+    {
+      str += i + '=&quot;' + objAttrs[i] + '&quot; ';
+    }
+    str += '&gt;';
+    for (var i in params)
+    {
+      str += '&lt;param name=&quot;' + i + '&quot; value=&quot;' + params[i] + '&quot; /&gt; ';
+    }
+    str += '&lt;/object&gt;';
+  }
+  else
+  {
+    str += '&lt;embed ';
+    for (var i in embedAttrs)
+    {
+      str += i + '=&quot;' + embedAttrs[i] + '&quot; ';
+    }
+    str += '&gt; &lt;/embed&gt;';
+  }
+
+  document.write(str);
+</pre>
+<p>
+}
+</p>
+<p>
+function AC_FL_RunContent(){
+</p>
+<pre>
+  var ret =
+    AC_GetArgs
+    (  arguments, &quot;.swf&quot;, &quot;movie&quot;, &quot;clsid:d27cdb6e-ae6d-11cf-96b8-444553540000&quot;
+     , &quot;application/x-shockwave-flash&quot;
+    );
+  AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
+</pre>
+<p>
+}
+</p>
+<p>
+function AC_SW_RunContent(){
+</p>
+<pre>
+  var ret =
+    AC_GetArgs
+    (  arguments, &quot;.dcr&quot;, &quot;src&quot;, &quot;clsid:166B1BCA-3F9C-11CF-8075-444553540000&quot;
+     , null
+    );
+  AC_Generateobj(ret.objAttrs, ret.params, ret.embedAttrs);
+</pre>
+<p>
+}
+</p>
+<p>
+function AC_GetArgs(args, ext, srcParamName, classid, mimeType){
+</p>
+<pre>
+  var ret = new Object();
+  ret.embedAttrs = new Object();
+  ret.params = new Object();
+  ret.objAttrs = new Object();
+  for (var i=0; i &lt; args.length; i=i+2){
+    var currArg = args[i].toLowerCase();
+
+    switch (currArg){
+      case &quot;classid&quot;:
+        break;
+      case &quot;pluginspage&quot;:
+        ret.embedAttrs[args[i]] = args[i+1];
+        break;
+      case &quot;src&quot;:
+      case &quot;movie&quot;:
+        args[i+1] = AC_AddExtension(args[i+1], ext);
+        ret.embedAttrs[&quot;src&quot;] = args[i+1];
+        ret.params[srcParamName] = args[i+1];
+        break;
+      case &quot;onafterupdate&quot;:
+      case &quot;onbeforeupdate&quot;:
+      case &quot;onblur&quot;:
+      case &quot;oncellchange&quot;:
+      case &quot;onclick&quot;:
+      case &quot;ondblclick&quot;:
+      case &quot;ondrag&quot;:
+      case &quot;ondragend&quot;:
+      case &quot;ondragenter&quot;:
+      case &quot;ondragleave&quot;:
+      case &quot;ondragover&quot;:
+      case &quot;ondrop&quot;:
+      case &quot;onfinish&quot;:
+      case &quot;onfocus&quot;:
+      case &quot;onhelp&quot;:
+      case &quot;onmousedown&quot;:
+      case &quot;onmouseup&quot;:
+      case &quot;onmouseover&quot;:
+      case &quot;onmousemove&quot;:
+      case &quot;onmouseout&quot;:
+      case &quot;onkeypress&quot;:
+      case &quot;onkeydown&quot;:
+      case &quot;onkeyup&quot;:
+      case &quot;onload&quot;:
+      case &quot;onlosecapture&quot;:
+      case &quot;onpropertychange&quot;:
+      case &quot;onreadystatechange&quot;:
+      case &quot;onrowsdelete&quot;:
+      case &quot;onrowenter&quot;:
+      case &quot;onrowexit&quot;:
+      case &quot;onrowsinserted&quot;:
+      case &quot;onstart&quot;:
+      case &quot;onscroll&quot;:
+      case &quot;onbeforeeditfocus&quot;:
+      case &quot;onactivate&quot;:
+      case &quot;onbeforedeactivate&quot;:
+      case &quot;ondeactivate&quot;:
+      case &quot;type&quot;:
+      case &quot;codebase&quot;:
+      case &quot;id&quot;:
+        ret.objAttrs[args[i]] = args[i+1];
+        break;
+      case &quot;width&quot;:
+      case &quot;height&quot;:
+      case &quot;align&quot;:
+      case &quot;vspace&quot;:
+      case &quot;hspace&quot;:
+      case &quot;class&quot;:
+      case &quot;title&quot;:
+      case &quot;accesskey&quot;:
+      case &quot;name&quot;:
+      case &quot;tabindex&quot;:
+        ret.embedAttrs[args[i]] = ret.objAttrs[args[i]] = args[i+1];
+        break;
+      default:
+        ret.embedAttrs[args[i]] = ret.params[args[i]] = args[i+1];
+    }
+  }
+  ret.objAttrs[&quot;classid&quot;] = classid;
+  if (mimeType) ret.embedAttrs[&quot;type&quot;] = mimeType;
+  return ret;
+</pre>
+<p>
+}
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

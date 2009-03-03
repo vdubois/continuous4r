@@ -8,12 +8,12 @@ class RcovBuilder
 
   # Prérequis à la tâche
   def prerequisite_met?
-    Dir.glob("test/rcov*.rb").length > 0
+    Dir.glob("test/**/*_test.rb").length > 0
   end
 
   # Dans le cas de l'erreur de prérequis
   def prerequisite_unmet_message
-    " No file matching the [test/rcov*.rb] pattern. Rcov task will be ignored."
+    " No file matching the [test/**/*_test.rb] pattern. Rcov task will be ignored."
   end
 
   # Implementation de la construction de la tache
@@ -22,9 +22,9 @@ class RcovBuilder
     Utils.verify_gem_presence("rcov", auto_install, proxy_option)
     # On lance la generation
     puts " Building rcov code coverage report..."
-    rcov_pass = Utils.run_command("rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple test/rcov*.rb")
+    rcov_pass = Utils.run_command("rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple test/**/*_test.rb")
     if rcov_pass.index("Finished in").nil?
-      raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple test/rcov*.rb'.\n BUILD FAILED."
+      raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple test/**/*_test.rb'.\n BUILD FAILED."
     end
     # On recupere le rapport genere
     Dir.mkdir "#{Continuous4r::WORK_DIR}/rcov"

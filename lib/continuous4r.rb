@@ -19,17 +19,19 @@ require 'utils.rb'
 # Date : 03 decembre 2007 - version 0.0.1
 #        03 fevrier 2009  - version 0.0.2
 #        25 fevrier 2009  - version 0.0.3
+#        03 mars 2009     - version 0.0.4
 # ==============================================================================
 module Continuous4r
   include Utils
-  VERSION = '0.0.3'
+  VERSION = '0.0.4'
+  URL = "http://github.com/vdubois/continuous4r/tree/master"
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
-  #TASKS = ['zentest']
+  #TASKS = ['reek']
   
   METRICS_HASH = Hash.new
 

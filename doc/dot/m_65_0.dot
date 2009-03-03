@@ -1,0 +1,30 @@
+digraph TopLevel {
+    label = "TopLevel"
+    compound = true
+    fontname = Arial
+    fontsize = 8
+    bgcolor = lightcyan1
+    node [
+        color = black,
+        fontname = Arial,
+        fontsize = 8
+    ]
+
+    subgraph cluster_Reek {
+        label = "Reek"
+        fillcolor = palegreen1
+        URL = "classes/Reek.html"
+        color = blue
+        fontname = Arial
+        style = filled
+        Reek [
+            shape = plaintext,
+            height = 0.01,
+            width = 0.75,
+            label = ""
+        ]
+
+    }
+
+}
+

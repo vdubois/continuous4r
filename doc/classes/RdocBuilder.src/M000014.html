@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>build (RdocBuilder)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/rdoc_builder.rb, line 10</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build</span>(<span class="ruby-identifier">project_name</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+    <span class="ruby-comment cmt"># On lance la generation</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building rdoc api and rdoc generation report...&quot;</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/doc&quot;</span>)
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/doc&quot;</span>)
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/doc/README_FOR_APP&quot;</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/README&quot;</span>)
+        <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">copy_file</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/README&quot;</span>, <span class="ruby-node">&quot;#{RAILS_ROOT}/doc/README_FOR_APP&quot;</span>)
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">touch</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/doc/README_FOR_APP&quot;</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-constant">File</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value str">&quot;rdoc.log&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-value str">&quot;rdoc.log&quot;</span>)
+    <span class="ruby-identifier">rdoc_pass</span> = <span class="ruby-identifier">system</span>(<span class="ruby-value str">&quot;rake doc:app &gt; rdoc.log&quot;</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">rdoc_pass</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot; Execution of rdoc failed with command 'rake doc:reapp'.\n BUILD FAILED.&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># On recupere la documentation et le fichier de log generes</span>
+    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span> <span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/rdoc&quot;</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mv</span>(<span class="ruby-value str">&quot;doc/app/&quot;</span>, <span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/rdoc/&quot;</span>)
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mv</span>(<span class="ruby-value str">&quot;rdoc.log&quot;</span>, <span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/rdoc/&quot;</span>)
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

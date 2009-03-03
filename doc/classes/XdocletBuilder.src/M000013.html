@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>build (XdocletBuilder)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/xdoclet_builder.rb, line 10</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build</span>(<span class="ruby-identifier">project_name</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+    <span class="ruby-comment cmt"># Vérification de la présence du gem syntax</span>
+    <span class="ruby-constant">Utils</span>.<span class="ruby-identifier">verify_gem_presence</span>(<span class="ruby-value str">&quot;syntax&quot;</span>, <span class="ruby-identifier">auto_install</span>, <span class="ruby-identifier">proxy_option</span>)
+    <span class="ruby-comment cmt"># Génération du rapport pour chaque fichier source ruby</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot; Building xdoc source report...&quot;</span>
+    <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/xdoclet&quot;</span>)
+    <span class="ruby-identifier">require</span> <span class="ruby-value str">'syntax/convertors/html'</span>
+    <span class="ruby-identifier">files</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">files</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/app/**/*.rb&quot;</span>)
+    <span class="ruby-identifier">files</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/lib/**/*.rb&quot;</span>)
+    <span class="ruby-identifier">files</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-node">&quot;#{RAILS_ROOT}/test/**/*.rb&quot;</span>)
+    <span class="ruby-identifier">files</span>.<span class="ruby-identifier">flatten!</span>
+    <span class="ruby-identifier">convertor</span> = <span class="ruby-constant">Syntax</span><span class="ruby-operator">::</span><span class="ruby-constant">Convertors</span><span class="ruby-operator">::</span><span class="ruby-constant">HTML</span>.<span class="ruby-identifier">for_syntax</span>(<span class="ruby-value str">&quot;ruby&quot;</span>)
+
+    <span class="ruby-identifier">files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">file</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">print</span> <span class="ruby-node">&quot;\nProcessing #{file.gsub(Regexp.new(&quot;#{RAILS_ROOT}/&quot;),'')}...&quot;</span>
+      <span class="ruby-identifier">ruby_code</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">file</span>)
+      <span class="ruby-identifier">html_code</span> = <span class="ruby-identifier">convertor</span>.<span class="ruby-identifier">convert</span>(<span class="ruby-identifier">ruby_code</span>)
+      <span class="ruby-comment cmt"># Ajout des numéros de lignes</span>
+      <span class="ruby-identifier">html_code_with_lines</span> = <span class="ruby-value str">&quot;&quot;</span>
+      <span class="ruby-identifier">html_code_lines</span> = <span class="ruby-identifier">html_code</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/$/</span>)
+      <span class="ruby-identifier">html_code_lines</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">line</span>,<span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">html_code_with_lines</span> = <span class="ruby-identifier">html_code_with_lines</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-node">&quot;&lt;pre&gt;&lt;a name='#{(index + 1).to_s}'&gt;&lt;/a&gt;&lt;span class='numline'&gt;#{(index + 1).to_s.rjust(4)}  &lt;/span&gt;&quot;</span>).<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value str">&quot;\n&quot;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/&lt;pre&gt;/</span>,<span class="ruby-value str">''</span>)).<span class="ruby-identifier">concat</span>(<span class="ruby-value str">&quot;\n&quot;</span>)
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">index</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">html_code_lines</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+          <span class="ruby-identifier">print</span> <span class="ruby-value str">&quot;OK&quot;</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">html_code_with_lines</span> = <span class="ruby-identifier">html_code_with_lines</span>.<span class="ruby-identifier">concat</span>(<span class="ruby-node">&quot;&lt;span class='numline'&gt;#{(index + 1).to_s.rjust(4)}  &lt;/span&gt;&lt;a name='#{(index + 2).to_s}'&gt;&lt;/a&gt;&quot;</span>).<span class="ruby-identifier">concat</span>(<span class="ruby-identifier">line</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-value str">&quot;\n&quot;</span>)).<span class="ruby-identifier">concat</span>(<span class="ruby-value str">&quot;\n&quot;</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">html_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{Continuous4r::WORK_DIR}/xdoclet/#{file.gsub(Regexp.new(&quot;#{RAILS_ROOT}/&quot;),'').gsub(/\//,'_')}.html&quot;</span>, <span class="ruby-value str">&quot;w&quot;</span>)
+      <span class="ruby-identifier">html_global_code</span> = <span class="ruby-node">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Source code for #{file.gsub(Regexp.new(&quot;#{RAILS_ROOT}/&quot;),'')}&lt;/title&gt;&quot;</span>
+      <span class="ruby-identifier">html_global_code</span> = <span class="ruby-identifier">html_global_code</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;style&gt;#{File.read(&quot;#{File.dirname(__FILE__)}/site/syntax_highlighting.css&quot;)}&lt;/style&gt;&quot;</span>
+      <span class="ruby-identifier">html_global_code</span> = <span class="ruby-identifier">html_global_code</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;&lt;body&gt;&lt;h2&gt;Source code for #{file.gsub(Regexp.new(&quot;#{RAILS_ROOT}/&quot;),'')}&lt;/h2&gt;&lt;br/&gt;#{html_code_with_lines}&lt;/body&gt;&lt;/html&gt;&quot;</span>
+      <span class="ruby-identifier">html_file</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">html_global_code</span>)
+      <span class="ruby-identifier">html_file</span>.<span class="ruby-identifier">close</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -13,7 +13,9 @@
 		</row>
 		<row>
                         <string><%= Continuous4r.build_name %></string>
-                        <% Continuous4r::METRICS_HASH.each_value do |value| %>
+                        <% Continuous4r::METRICS_HASH.each_value do |value|
+                            value = 0.0 if value.to_f < 0.0
+                            value = 100.0 if value.to_f > 100.0 %>
 			<number tooltip='<%= "%0.2f" % value %>'><%= "%0.2f" % value %></number>
                         <% end %>
 		</row>

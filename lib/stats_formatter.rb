@@ -4,7 +4,8 @@
 # =========================================================
 class StatsFormatter
   attr_accessor :result
-  
+  attr_reader :percent
+
   # Constructeur
   def initialize result
     self.result = result
@@ -44,6 +45,7 @@ class StatsFormatter
     html = html + "</tbody></table>"
     extra = results[bottom + 3]
     elements = extra.split(/:|    /)
+    @percent = (elements[3].strip.to_f * 100.0) / elements[1].strip.to_f
     html = html + "<p><strong>#{elements[0]} : </strong>#{elements[1]}&#160;&#160;&#160;&#160;&#160;&#160;"
     html = html + "<strong>#{elements[2]} : </strong>#{elements[3]}&#160;&#160;&#160;&#160;&#160;&#160;"
     html = html + "<strong>#{elements[4]} : </strong>#{elements[5]}:#{elements[6]}</p><br/>"

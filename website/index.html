@@ -33,7 +33,7 @@
     <h1>continuous4r</h1>
     <div id="version" class="clickable" onclick='document.location = "http://rubyforge.org/projects/continuous4r"; return false'>
       <p>Get Version</p>
-      <a href="http://rubyforge.org/projects/continuous4r" class="numbers">0.0.2</a>
+      <a href="http://rubyforge.org/projects/continuous4r" class="numbers">0.0.4</a>
     </div>
     <h2><br/>What is it ?</h2>
 <p>continuous4r is a continuous integration tool for Ruby on Rails. With it, you can aggregate reports of the best analysis, quality, and tests tools for Ruby on Rails. By just launching one Rake task and customizing a <span class="caps">XML</span> file describing your project, continuous4r builds for you an entire website in a Maven-like form/design.</p>
@@ -46,7 +46,20 @@
 </ul>
 <h2>Installing</h2>
 <p><pre class='syntax'><span class="punct">[</span><span class="ident">sudo</span><span class="punct">]</span> <span class="ident">gem</span> <span class="ident">install</span> <span class="ident">continuous4r</span></pre></p>
-<h2>Release notes for this version</h2>
+<h2>Release notes for 0.0.4 version</h2>
+<ul>
+	<li>Major bug fixes on rcov and changelog builder (differences found on svn with the type of checkout http:// or svn://).</li>
+	<li>Tests made on various projects, and notableously to a big one (Redmine).</li>
+	<li>Introduction of reporting quality indicators (will be completed for 0.1.0).</li>
+	<li>The release of 0.0.5 will be here very shortly, this release is here for build capability.</li>
+</ul>
+<h2>Release notes for 0.0.3 version</h2>
+<ul>
+	<li>Major bug fixes on rcov, ZenTest, tests, and changelog builders.</li>
+	<li>Various bug fixes on gems and tasks management.</li>
+	<li>Tests made on other projects than mine !!! (Apologies, everyone).</li>
+</ul>
+<h2>Release notes for 0.0.2 version</h2>
 <ul>
 	<li>Full Windows support, and no need for the user to define the <span class="caps">HOME</span> environment variable.</li>
 	<li>Only quality and code-related tools kept (goodbye Capistrano, httperf, railroad&#8230;).</li>
@@ -178,7 +191,7 @@ I&#8217;m searching for volunteers to test, or work on this tool. With a more su
 <p>Comments are welcome. Send an email to <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>,<br />
 or post a message on the <a href="http://rubyforge.org/forum/forum.php?forum_id=19721" target="_blank">forum</a>.</p>
     <p class="coda">
-      <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>, 24th February 2009<br>
+      <a href="mailto:duboisv@hotmail.com">Vincent Dubois</a>, 3rd March 2009<br>
       Theme extended from <a href="http://rb2js.rubyforge.org/" target="_blank">Paul Battley</a>
     </p>
 </div>

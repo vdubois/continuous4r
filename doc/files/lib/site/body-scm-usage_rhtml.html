@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: body-scm-usage.rhtml</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>body-scm-usage.rhtml</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>lib/site/body-scm-usage.rhtml
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Sat Feb 21 17:07:18 +0100 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+    <div id="diagram">
+      <map id="map" name="map">
+</map>
+<img src="../../../dot/f_0.png" usemap="#map" border="0" alt="dot/f_0.png">
+    </div>
+
+    <div id="description">
+      <p>
+&lt;%
+</p>
+<pre>
+  require 'rubygems'
+  require 'XmlElements'
+  require 'date'
+  project = XmlElements.fromString(File.read(&quot;continuous4r-project.xml&quot;))
+</pre>
+<p>
+%&gt; &lt;div id=&quot;bodyColumn&quot;&gt;
+</p>
+<pre>
+    &lt;div class=&quot;contentBox&quot;&gt;
+        &lt;div class=&quot;section&quot;&gt;&lt;a name=&quot;Source_repository&quot;&gt;&lt;/a&gt;
+            &lt;h2&gt;Source repository&lt;/h2&gt;
+            &lt;%
+                scms = {'git' =&gt; ['Git', 'http://git-scm.com'], 'svn' =&gt; ['Subversion', 'http://subversion.tigris.org']}
+                if File.exist?(&quot;.git&quot;)
+                  scm_name = &quot;git&quot;
+                  scm_url = File.read(&quot;.git/config&quot;).split(/$/).select {|l| l =~ /url = /}[0].split(/url = /)[1]
+                end
+                if File.exist?(&quot;.svn&quot;)
+                  scm_name = &quot;svn&quot;
+                  svn_info = Utils.run_command(&quot;svn info&quot;)
+                  scm_url = svn_info.split(/$/)[1].split(/^URL/)[1].strip.split(/: /)[1]
+                end
+                if !scms.has_key?(scm_name)
+            %&gt;
+            &lt;p&gt;
+                &lt;%= project['name'] %&gt; is hosted on an unknown repository type.
+            &lt;/p&gt;
+            &lt;% else %&gt;
+            &lt;p&gt;
+                &lt;%= project['name'] %&gt; is hosted on a &lt;a href=&quot;&lt;%= scms[scm_name][1] %&gt;&quot; target=&quot;_blank&quot; class=&quot;externalLink&quot; title=&quot;External Link&quot;&gt;&lt;%= scms[scm_name][0] %&gt;&lt;/a&gt; repository.
+            &lt;/p&gt;
+            &lt;% end %&gt;
+            &lt;p&gt;
+                The project URL is:&lt;br&gt;&lt;/br&gt;
+                &lt;code&gt;&lt;%= scm_url %&gt;&lt;/code&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+</pre>
+<p>
+&lt;/div&gt;
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
