@@ -1,3 +1,5 @@
+doc
+doc/**/*
 pkg
 pkg/**/*
 nbproject
