@@ -20,10 +20,11 @@ require 'utils.rb'
 #        03 fevrier 2009  - version 0.0.2
 #        25 fevrier 2009  - version 0.0.3
 #        03 mars 2009     - version 0.0.4
+#        05 mars 2009     - version 0.0.5
 # ==============================================================================
 module Continuous4r
   include Utils
-  VERSION = '0.0.4'
+  VERSION = '0.0.5'
   URL = "http://github.com/vdubois/continuous4r/tree/master"
 
   # Support de CruiseControl.rb

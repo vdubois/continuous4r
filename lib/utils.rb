@@ -51,7 +51,7 @@ module Utils
     if percent >= 90 and percent <= 100
       style += "#00cc00;'"
     elsif percent >= 80 and percent < 90
-      style += "yellow;'"
+      style += "orange;'"
     elsif percent >= 60 and percent < 80
       style += "red;'"
     elsif percent >= 0 and percent < 60
