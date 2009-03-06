@@ -60,6 +60,22 @@ module Utils
     return style
   end
 
+  # Methode qui permet de convertir un pourcentage d'un builder en couleur css/html
+  def self.heading_for_builder(heading_title, percent)
+    html = "<h3 style=\""
+    if percent >= 90 and percent <= 100
+      html += "padding-left: 35px; background-image: url('images/accept.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #e3ffdb; color: #7ab86c;"
+    elsif percent >= 80 and percent < 90
+      html += "padding-left: 35px; background-image: url('images/error.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #fffccf; color: #666600;"
+    elsif percent >= 60 and percent < 80
+      html += "padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #ffdddd; color: #770000;"
+    elsif percent >= 0 and percent < 60
+      html += "padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #ffdddd; color: #770000; text-decoration: blink;"
+    end
+    html += "\">#{heading_title}</h3>"
+    return html
+  end
+
   # Méthode qui permet de récupérerle numéro de build courant dans le SCM
   def self.build_name
     if File.exist?(".git")
@@ -94,21 +110,21 @@ module Utils
 
   # Methode qui permet de convertir un score flog en couleur css/html de titre
   def self.flog_score_to_css_style(flog_score)
-    style = "style='font-weight: bold; "
+    style = "style=\"font-weight: bold; "
     if flog_score >= 0 and flog_score < 11
-      style += "background-color: #00cc00;' title='Awesome'"
+      style += "background-color: #e3ffdb; color: #7ab86c; padding-left: 35px; background-image: url('images/accept.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Awesome'"
     elsif flog_score >= 11 and flog_score < 21
-      style += "background-color: #00cc00;' title='Good enough'"
+      style += "background-color: #e3ffdb; color: #7ab86c; padding-left: 35px; background-image: url('images/accept.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Good enough'"
     elsif flog_score >= 21 and flog_score < 41
-      style += "background-color: #ffff99;' title='Might need refactoring'"
+      style += "background-color: #fffccf; color: #666600; padding-left: 35px; background-image: url('images/error.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Might need refactoring'"
     elsif flog_score >= 41 and flog_score < 61
-      style += "background-color: yellow;' title='Possible to justify'"
+      style += "background-color: #fffccf; color: #666600; padding-left: 35px; background-image: url('images/error.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Possible to justify'"
     elsif flog_score >= 61 and flog_score < 100
-      style += "background-color: orange;' title='Danger'"
+      style += "background-color: orange; padding-left: 35px; background-image: url('images/error.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Danger'"
     elsif flog_score >= 100 and flog_score < 200
-      style += "background-color: red;' title='Whoop, whoop, whoop'"
+      style += "background-color: red; padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Whoop, whoop, whoop'"
     elsif flog_score > 200
-      style += "background-color: red; color: black; text-decoration: blink;' title='Someone please think of the children'"
+      style += "background-color: red; color: black; text-decoration: blink; padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Someone please think of the children'"
     end
     return style
   end

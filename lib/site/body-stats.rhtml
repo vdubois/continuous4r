@@ -2,6 +2,7 @@
     <div class="contentBox">
         <div class="section"><a name="heckle"></a>
             <h2>Rails Statistics Report</h2>
+            <%= Utils.heading_for_builder("Overall code-to-test ratio : #{"%0.2f" % StatsBuilder.percent}%", StatsBuilder.percent) %>
             <%= File.read("#{Continuous4r::WORK_DIR}/stats_body.html") %>
         </div>
     </div>

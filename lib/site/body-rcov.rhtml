@@ -16,7 +16,7 @@
             %>
             <h2>Rcov Results</h2>
             <% percent = (doc/'tt[@class^="coverage_code"]')[0].inner_text.split(/%/)[0].to_f %>
-            <h3 <%= Utils.percent_to_css_style(percent) %>><%= "Global code coverage percentage : #{"%0.2f" % percent}%" %></h3>
+            <%= Utils.heading_for_builder("Global code coverage percentage : #{"%0.2f" % percent}%", percent) %>
             <%= doc.search("style")[1].to_html %>
             <%= (doc/"body").inner_html %>
         </div>

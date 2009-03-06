@@ -16,8 +16,14 @@ class StatsBuilder
     stats_report.write(stats_formatter.to_html)
     stats_report.close
     @percent = stats_formatter.percent
+    @@percent = @percent
   end
 
+  # Pourcentage de qualite
+  def StatsBuilder.percent
+    @@percent
+  end
+  
   # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
   def quality_percentage
     @percent

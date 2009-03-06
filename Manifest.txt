@@ -42,9 +42,12 @@ lib/site/menu-index.rhtml
 lib/site/menu-scm-usage.rhtml
 lib/site/menu-task.rhtml
 lib/site/menu-team-list.rhtml
+lib/site/images/accept.png
 lib/site/images/added.png
 lib/site/images/continuous4r-logo.png
 lib/site/images/deleted.png
+lib/site/images/error.png
+lib/site/images/exclamation.png
 lib/site/images/external.png
 lib/site/images/icon_error_sml.gif
 lib/site/images/icon_success_sml.gif
