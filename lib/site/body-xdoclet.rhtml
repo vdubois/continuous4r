@@ -12,7 +12,10 @@
                 <%
                   files = Array.new
                   files << Dir.glob("#{RAILS_ROOT}/app/**/*.rb")
+                  files << Dir.glob("#{RAILS_ROOT}/app/**/*.html.erb")
+                  files << Dir.glob("#{RAILS_ROOT}/app/**/*.rhtml")
                   files << Dir.glob("#{RAILS_ROOT}/lib/**/*.rb")
+                  files << Dir.glob("#{RAILS_ROOT}/test/**/*.rb")
                   files.flatten!
                   files.each_with_index do |file,index|
                 %>

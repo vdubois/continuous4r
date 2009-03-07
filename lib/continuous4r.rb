@@ -32,7 +32,7 @@ module Continuous4r
   
   TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
-  #TASKS = ['reek']
+  #TASKS = ['xdoclet']
   
   METRICS_HASH = Hash.new
 
@@ -47,6 +47,7 @@ module Continuous4r
     tasks = TASKS
     project = XmlElements.fromString(File.read("#{RAILS_ROOT}/continuous4r-project.xml"))
     generation_date = DateTime.now
+    start_time = Time.now
     auto_install = project['auto-install-tools']
     auto_install ||= "false"
 
@@ -144,7 +145,14 @@ module Continuous4r
       puts " Building #{task} page..."
       Utils.erb_run task, true
     end
-    puts "\n BUILD SUCCESSFUL."
+    end_time = Time.now
+    total_time = end_time - start_time
+    hours = (total_time / 3600).to_i
+    total_time -= (3600 * hours)
+    minutes = (total_time / 60).to_i
+    total_time -= (60 * minutes)
+    seconds = total_time.to_i
+    puts "\n [BUILD SUCCESSFUL] Built in #{"#{hours} hour#{"s" if hours > 1} " if hours > 0}#{"#{minutes} minute#{"s" if minutes > 1} " if minutes > 0}#{"#{seconds} second#{"s" if seconds > 1} " if seconds > 0}"
     puts "====================================================================="
   end
 
