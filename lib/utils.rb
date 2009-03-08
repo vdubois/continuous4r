@@ -65,9 +65,9 @@ module Utils
     html = "<h3 style=\""
     if percent >= 90 and percent <= 100
       html += "padding-left: 35px; background-image: url('images/accept.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #e3ffdb; color: #7ab86c;"
-    elsif percent >= 80 and percent < 90
+    elsif percent >= 75 and percent < 90
       html += "padding-left: 35px; background-image: url('images/error.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #fffccf; color: #666600;"
-    elsif percent >= 60 and percent < 80
+    elsif percent >= 60 and percent < 75
       html += "padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #ffdddd; color: #770000;"
     elsif percent >= 0 and percent < 60
       html += "padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%; font-weight: bold; background-color: #ffdddd; color: #770000; text-decoration: blink;"

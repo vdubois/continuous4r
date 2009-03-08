@@ -14,7 +14,8 @@ module SubversionExtractor
     get_head_log_lines = get_head_log.split(/$/)
     revision = get_head_log_lines[1].split(/ \| /)[0]
     revision = revision[2..(revision.length-1)]
-    # scm.url.text à remplacer par 'svn info'
+    scm_current_version = revision.to_i - 10 if revision.to_i - scm_current_version.to_i > 10
+    scm_current_version -= 10 if scm_current_version > 10
     svn_info = Utils.run_command("svn info")
     svn_url = svn_info.split(/$/)[1].split(/^URL/)[1].strip.split(/: /)[1]
     puts " Computing changelog for #{svn_url}, from revision #{scm_current_version} to revision #{revision}..."
@@ -30,7 +31,7 @@ module SubversionExtractor
         end
       else
         rev_result = Utils.run_command("svn diff -r #{rev-1}:#{rev} --summarize")
-        if rev_result.match(/^svn:/)
+        if !rev_result.match(/^svn:/)
           rev_result_lines = rev_result.split(/$/).collect { |l| l.gsub(Regexp.new("\n"), "") }
           rev_result_lines.each do |line|
             text = ''

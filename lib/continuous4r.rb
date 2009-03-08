@@ -30,9 +30,9 @@ module Continuous4r
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests']
   #TASKS = ['rdoc', 'dcov', 'rcov', 'stats', 'flog', 'xdoclet', 'flay', 'reek']
-  #TASKS = ['xdoclet']
+  #TASKS = ['rdoc', 'stats']
   
   METRICS_HASH = Hash.new
 

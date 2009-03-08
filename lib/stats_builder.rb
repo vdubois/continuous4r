@@ -16,6 +16,7 @@ class StatsBuilder
     stats_report.write(stats_formatter.to_html)
     stats_report.close
     @percent = stats_formatter.percent
+    @percent = 100.00 if @percent > 100.00
     @@percent = @percent
   end
 

@@ -8,7 +8,7 @@ class ZentestBuilder
 
   # Prérequis à la tâche
   def prerequisite_met?
-    Dir.glob("test/**/*.rb").length > 0
+    Dir.glob("test/**/*_test.rb").length > 0
   end
 
   # Dans le cas de l'erreur de prérequis
