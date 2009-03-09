@@ -30,12 +30,12 @@ module Continuous4r
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-  #TASKS = ['zentest']
+  # TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  TASKS = ['tests']
   
   METRICS_HASH = Hash.new
 
-  # Méthode qui permet de récupérer le nom du build pour la construction du template notamment
+  # Methode qui permet de recuperer le nom du build pour la construction du template notamment
   def self.build_name
     @build_name ||= "no build name found"
   end
@@ -58,7 +58,7 @@ module Continuous4r
     puts " Generation date : #{generation_date}"
     puts "---------------------------------------------------------------------"
 
-    # Récupération des paramètres de proxy s'ils existent
+    # Recuperation des parametres de proxy s'ils existent
     proxy_option = ""
     if File.exist?("#{(Config::CONFIG['host_os'] =~ /mswin/ ? ENV['USERPROFILE'] : ENV['HOME'])}/.continuous4r/proxy.yml")
       require 'YAML'
@@ -66,7 +66,7 @@ module Continuous4r
       proxy_option = " -p \"http://#{proxy_options['proxy']['login']}:#{proxy_options['proxy']['password']}@#{proxy_options['proxy']['server']}:#{proxy_options['proxy']['port']}\""
     end
 
-    # Vérification de présence et de la version de Rubygems
+    # Verification de presence et de la version de Rubygems
     puts " Checking presence and version of RubyGems..."
     rubygems_version = Utils.run_command("gem --version")
     if rubygems_version.empty?
@@ -76,7 +76,7 @@ module Continuous4r
     # Verification de la presence d'hpricot
     Utils.verify_gem_presence("hpricot", auto_install, proxy_option)
 
-    # Chargement/Vérification des gems nécessaires à l'application
+    # Chargement/Verification des gems necessaires a l'application
     puts " Checking gems for this project, please hold on..."
     begin
       project.gems.each('gem') do |gem|
@@ -97,7 +97,7 @@ module Continuous4r
     end
 
     puts "---------------------------------------------------------------------"
-    # Création du répertoire de travail
+    # Creation du repertoire de travail
     if File.exist?(WORK_DIR)
       FileUtils.rm_rf(WORK_DIR)
     end
@@ -116,7 +116,7 @@ module Continuous4r
 
     # On copie la partie flash
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/charts/", "#{WORK_DIR}/")
-    # Production du fichier XML des indicateurs de qualité
+    # Production du fichier XML des indicateurs de qualite
     page_file = File.open("#{Continuous4r::WORK_DIR}/build.xml", "w")
     erb = ERB.new(File.read("#{File.dirname(__FILE__)}/site/build.xml.erb"))
     page_file.write(erb.result)

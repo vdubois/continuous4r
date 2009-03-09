@@ -2,7 +2,8 @@
     <div class="contentBox">
         <div class="section"><a name="reek"></a>
           <h2>Reek Results</h2>
-          <p><a href="http://reek.rubyforge.org/">Reek</a> detects common code smells in ruby code.</p>
+          <p><a href="http://reek.rubyforge.org/" target="_blank">Reek</a> detects common code smells in ruby code.</p>
+          <%= Utils.heading_for_builder("Common code smells freeness : #{"%0.2f" % ReekBuilder.percent}%", ReekBuilder.percent) %>
           <table class="bodyTable">
             <tr>
               <th>File Path</th>

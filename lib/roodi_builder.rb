@@ -4,7 +4,6 @@
 #  date: 08 fevrier 2009
 # ==========================================================================
 class RoodiBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
@@ -17,7 +16,7 @@ class RoodiBuilder
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
     files.flatten!
-    roodi_command = "roodi"
+    roodi_command = "roodi -config=roodi.yml"
     files.each do |file|
       roodi_command += " '#{file}'"
     end

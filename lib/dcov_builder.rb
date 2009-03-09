@@ -123,7 +123,6 @@ end
 # date: 06 fevrier 2009
 # ==========================================================================
 class DcovBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
@@ -146,7 +145,7 @@ class DcovBuilder
     end
   end
 
-  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  # Methode qui permet d'extraire le pourcentage de qualite extrait d'un builder
   def quality_percentage
     require 'hpricot'
     doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/dcov/coverage.html"))
@@ -157,7 +156,7 @@ class DcovBuilder
     end
   end
 
-  # Nom de l'indicateur de qualité
+  # Nom de l'indicateur de qualite
   def quality_indicator_name
     "rdoc coverage"
   end

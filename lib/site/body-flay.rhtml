@@ -3,6 +3,7 @@
         <div class="section"><a name="flay"></a>
           <h2>Flay Results</h2>
           <p><a href='http://ruby.sadi.st/Flay.html' target="_blank">Flay</a> analyzes ruby code for structural similarities.</p>
+          <%= Utils.heading_for_builder("Project overall DRYness : #{"%0.2f" % FlayBuilder.dryness}%", FlayBuilder.dryness) %>
           <table class="bodyTable">
             <tr>
               <th>Files</th>

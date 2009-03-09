@@ -4,14 +4,13 @@
 #  date: 11 fevrier 2009
 # ==========================================================================
 class TestsBuilder
-  include Utils
 
-  # Prérequis à la tâche
+  # Prerequis a la tache
   def prerequisite_met?
     Dir.glob("test/**/*_test.rb").length > 0
   end
 
-  # Dans le cas de l'erreur de prérequis
+  # Dans le cas de l'erreur de prerequis
   def prerequisite_unmet_message
     " No tests found. The 'tests' task will be empty."
   end

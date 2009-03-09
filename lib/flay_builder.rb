@@ -4,7 +4,6 @@
 #  date: 08 fevrier 2009
 # ==========================================================================
 class FlayBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
@@ -68,10 +67,16 @@ class FlayBuilder
       tr_arr = doc.search("//tr")
       loc = tr_arr[tr_arr.length-1].search("td")[2].inner_text.strip.to_f
       @dryness = 100.0 - ((duplicate_lines.to_f * 100.0) / loc)
+      @@dryness = @dryness
     end
     flay_file.close
   end
 
+  # Methode de classe pour recuperer l'indicateur qualite
+  def self.dryness
+    @@dryness
+  end
+  
   # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
   def quality_percentage
     @dryness

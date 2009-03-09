@@ -8,12 +8,11 @@ class XdocletBuilder
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
-    # Vérification de la présence du gem syntax
-    Utils.verify_gem_presence("syntax", auto_install, proxy_option)
-    # Génération du rapport pour chaque fichier source ruby
+    # Vérification de la presence du gem coderay
+    Utils.verify_gem_presence("coderay", auto_install, proxy_option)
+    # Generation du rapport pour chaque fichier source ruby
     puts " Building xdoc source report..."
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/xdoclet")
-    require 'syntax/convertors/html'
     files = Array.new
     files << Dir.glob("#{RAILS_ROOT}/app/**/*.rb")
     files << Dir.glob("#{RAILS_ROOT}/app/**/*.html.erb")
@@ -27,7 +26,7 @@ class XdocletBuilder
       print "\nProcessing #{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'')}..."
       scanner = :rhtml
       scanner = :ruby if file.match(/\.rb$/)
-      # Magic
+      # magic
       html_code = CodeRay.scan(File.read(file), scanner).div(:line_numbers => :table, :css => :class)
       html_file = File.open("#{Continuous4r::WORK_DIR}/xdoclet/#{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'').gsub(/\//,'_')}.html", "w")
       html_global_code = "<html><head><title>Source code for #{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'')}</title>"

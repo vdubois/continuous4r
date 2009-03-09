@@ -3,25 +3,7 @@
 #  author: Vincent Dubois
 #  date: 08 fevrier 2009
 # ==========================================================================
-require 'reek'
-require 'reek/options'
-require 'reek/smells/smells'
-
-module Reek
-
-  SMELLS = {
-    :defn => [
-      Smells::ControlCouple,
-      Smells::UncommunicativeName,
-      Smells::LongMethod,
-      Smells::UtilityFunction,
-      Smells::FeatureEnvy
-      ]
-  }
-end
-
 class ReekBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
@@ -68,8 +50,14 @@ class ReekBuilder
     end
     reek_file.close
     @percent = 100 - ((score * files.length) / 100)
+    @@percent = @percent
   end
 
+  # Methode de classe pour recuperer l'indicateur de qualite
+  def self.percent
+    @@percent
+  end
+  
   # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
   def quality_percentage
     @percent

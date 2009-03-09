@@ -4,14 +4,13 @@
 #  date: 18 fevrier 2009
 # ===========================================================================
 class ChangelogBuilder
-  include Utils
 
-  # Prérequis à la tâche
+  # Prerequis a la tache
   def prerequisite_met?
     File.exist?(".svn") or File.exist?(".git")
   end
 
-  # Dans le cas de l'erreur de prérequis
+  # Dans le cas de l'erreur de prerequis
   def prerequisite_unmet_message
     " Only Subversion and Git are supported. The 'changelog' task will be empty."
   end

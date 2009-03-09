@@ -1,10 +1,9 @@
 # ==========================================================================
-#  Construction de la tache saikuro (complexité cyclomatique du code)
+#  Construction de la tache saikuro (complexite cyclomatique du code)
 #  author: Vincent Dubois
 #  date: 08 fevrier 2009
 # ==========================================================================
 class SaikuroBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
@@ -34,14 +33,20 @@ class SaikuroBuilder
     files << Dir.glob("test/**/*.rb")
     files.flatten!
     @percent = 100.0 - (((classes_with_errors.length + (classes_with_warnings.length * 0.5)) * 100.0) / files.length.to_f)
+    @@percent = @percent
   end
 
-  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  # Methode de classe pour recuperer l'indicateur de qualite
+  def self.percent
+    @@percent
+  end
+  
+  # Methode qui permet d'extraire le pourcentage de qualite extrait d'un builder
   def quality_percentage
     @percent
   end
 
-  # Nom de l'indicateur de qualité
+  # Nom de l'indicateur de qualite
   def quality_indicator_name
     "cyclomatic complexity"
   end

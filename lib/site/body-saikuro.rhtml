@@ -8,8 +8,11 @@
             <%
                 # chargement/modification du rapport roodi
                 doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/saikuro/index_cyclo.html"))
+                indice = 0
                 doc.search("h2") do |h2|
+                  h2.before Utils.heading_for_builder("Cyclomatic complexity indicator : #{"%0.2f" % SaikuroBuilder.percent}%", SaikuroBuilder.percent) if indice == 0
                   h2.swap("<h3>#{h2.inner_text}</h3>")
+                  indice += 1
                 end
                 description = "Saikuro is a Ruby cyclomatic complexity analyzer. When given Ruby source code Saikuro will generate a report listing the cyclomatic complexity of each method found. In addition, Saikuro counts the number of lines per method and can generate a listing of the number of tokens on each line of code."
                 doc.at("h1").swap("<h2>Index for cyclomatic complexity</h2>\n<p>#{description}</p>")

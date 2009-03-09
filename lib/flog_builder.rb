@@ -5,7 +5,6 @@
 #  date: 06 fevrier 2009
 # ==========================================================================
 class FlogBuilder
-  include Utils
 
   class Page
     attr_accessor :filename, :score, :scanned_methods
@@ -118,7 +117,7 @@ class FlogBuilder
     save_html(ERB.new(File.read(File.join(File.dirname(__FILE__), "site/flog.html.erb"))).result(binding))
   end
 
-  # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
+  # Methode qui permet d'extraire le pourcentage de qualite extrait d'un builder
   def quality_percentage
     require 'hpricot'
     doc = Hpricot(File.read("#{Continuous4r::WORK_DIR}/flog/index.html"))
@@ -137,7 +136,7 @@ class FlogBuilder
     end
   end
 
-  # Nom de l'indicateur de qualité
+  # Nom de l'indicateur de qualite
   def quality_indicator_name
     "code complexity"
   end

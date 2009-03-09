@@ -4,7 +4,6 @@
 #  date: 06 fevrier 2009
 # ==========================================================================
 class RdocBuilder
-  include Utils
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
