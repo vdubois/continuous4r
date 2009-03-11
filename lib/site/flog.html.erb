@@ -19,7 +19,7 @@
                   end
                   pages.sort {|x,y| y.highest_score <=> x.highest_score }.each_with_index do |page, count| %>
   		<tr class='<%= cycle("a", "b", count) %>'>
-                  <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a>&#160;&#160;<i>(<a class="externalLink" href="xdoclet/<%= page.filename.sub('.txt', '.rb.html').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'').gsub(/\//,'_') %>" target="_blank">view source</a>)</i></td>
+                  <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a></td>
   			<td class='score'><%= sprintf("%0.2f", page.score) %></td>
   			<td class='score'><%= page.scanned_methods.length %></td>
   			<td class='score' <%= Utils.flog_caracteristics(page.average_score) %>><%= sprintf("%0.2f", page.average_score) %></td>

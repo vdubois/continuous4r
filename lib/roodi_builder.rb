@@ -15,8 +15,9 @@ class RoodiBuilder
     files << Dir.glob("app/**/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
+    files << Dir.glob("spec/**/*.rb")
     files.flatten!
-    roodi_command = "roodi -config=roodi.yml"
+    roodi_command = "roodi -config=#{Continuous4r::WORK_DIR}/roodi.yml"
     files.each do |file|
       roodi_command += " '#{file}'"
     end

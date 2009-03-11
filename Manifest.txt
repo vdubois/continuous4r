@@ -6,6 +6,7 @@ Rakefile
 lib/continuous4r.rb
 lib/stats_formatter.rb
 lib/git_extractor.rb
+lib/rspec_formatter.rb
 lib/subversion_extractor.rb
 lib/tests_formatter.rb
 lib/zen_test_formatter.rb
@@ -53,6 +54,7 @@ lib/site/images/icon_error_sml.gif
 lib/site/images/icon_success_sml.gif
 lib/site/images/modified.png
 lib/site/images/newwindow.png
+lib/site/roodi.yml
 lib/site/style/coderay.css
 lib/site/style/commons-maven.css
 lib/site/style/maven-base.css

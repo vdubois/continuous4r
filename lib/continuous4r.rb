@@ -8,6 +8,7 @@ require 'date'
 require 'erb'
 require 'stats_formatter.rb'
 require 'tests_formatter.rb'
+require 'rspec_formatter.rb'
 require 'zen_test_formatter.rb'
 require 'subversion_extractor.rb'
 require 'git_extractor.rb'
@@ -30,8 +31,8 @@ module Continuous4r
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
-  # TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-  TASKS = ['tests']
+  TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
+  #TASKS = ['stats', 'flay']
   
   METRICS_HASH = Hash.new
 
@@ -103,6 +104,9 @@ module Continuous4r
     end
     FileUtils.mkdir_p WORK_DIR
 
+    # On copie le fichier de configuration de Roodi
+    FileUtils.cp("#{File.dirname(__FILE__)}/site/roodi.yml", "#{WORK_DIR}/roodi.yml")
+
     # Construction des taches
     tasks.each do |task|
       self.build_task task, project['name'], auto_install, proxy_option
@@ -121,7 +125,7 @@ module Continuous4r
     erb = ERB.new(File.read("#{File.dirname(__FILE__)}/site/build.xml.erb"))
     page_file.write(erb.result)
     page_file.close
-
+    
     # On copie les images
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/images/", "#{WORK_DIR}/")
     FileUtils.copy_file("#{File.dirname(__FILE__)}/site/images/continuous4r-logo.png", "#{WORK_DIR}/continuous4r-logo.png")

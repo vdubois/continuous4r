@@ -17,6 +17,7 @@ class ReekBuilder
     files << Dir.glob("app/models/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
+    files << Dir.glob("spec/**/*.rb")
     files.flatten!
     reek_command = "reek"
     files.each do |file|

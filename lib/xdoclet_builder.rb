@@ -19,6 +19,7 @@ class XdocletBuilder
     files << Dir.glob("#{RAILS_ROOT}/app/**/*.rhtml")
     files << Dir.glob("#{RAILS_ROOT}/lib/**/*.rb")
     files << Dir.glob("#{RAILS_ROOT}/test/**/*.rb")
+    files << Dir.glob("#{RAILS_ROOT}/spec/**/*.rb")
     files.flatten!
 
     require 'coderay'

@@ -11,7 +11,9 @@ class SaikuroBuilder
     Utils.verify_gem_presence("Saikuro", auto_install, proxy_option)
     # On lance la generation
     puts " Building saikuro report..."
-    puts Utils.run_command("saikuro -c -i app -i lib -i test -y 0 -w 5 -e 7 -o #{Continuous4r::WORK_DIR}/saikuro")
+    option = "-i spec " if Dir.glob("spec/**/*_spec.rb").length > 0
+    option ||= ""
+    Utils.run_command("saikuro -c -i app -i lib -i test #{option}-y 0 -w 5 -e 7 -o #{Continuous4r::WORK_DIR}/saikuro")
     if !File.exist?("#{Continuous4r::WORK_DIR}/saikuro/index_cyclo.html")
       raise " Execution of saikuro with the metric_fu gem failed.\n BUILD FAILED."
     end
@@ -31,6 +33,7 @@ class SaikuroBuilder
     files << Dir.glob("app/**/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
+    files << Dir.glob("spec/**/*.rb")
     files.flatten!
     @percent = 100.0 - (((classes_with_errors.length + (classes_with_warnings.length * 0.5)) * 100.0) / files.length.to_f)
     @@percent = @percent

@@ -15,9 +15,7 @@ class TestsFormatter
     project = XmlElements.fromString(File.read("continuous4r-project.xml"))
     errors_or_warnings = 0
     html_details = ""
-    if Config::CONFIG['host_os'] =~ /mswin/
-      require 'win32/open3'
-    else
+    if !(Config::CONFIG['host_os'] =~ /mswin/)
       require 'open3'
     end
     ['units', 'functionals', 'integration'].each do |runner|
@@ -25,16 +23,25 @@ class TestsFormatter
       error_detail = ""
       result = ""
       passed = false
-      Open3::popen3("rake test:#{runner}") do |stdin, stdout, stderr, pid|
-        result = stdout.read.strip
-        if result.match(/Finished in/).nil?
-          error_detail = stderr.read.strip
+      if Config::CONFIG['host_os'] =~ /mswin/
+        stdout = IO.popen("cmd.exe /C rake test:#{runner} 2>test_#{runner}_error.log")
+        result = stdout.read
+        error_detail = File.read("test_#{runner}_error.log")
+      else
+        Open3::popen3("rake test:#{runner}") do |stdin, stdout, stderr, pid|
+          result = stdout.read.strip
+          if result.match(/Finished in/).nil?
+            error_detail = stderr.read.strip
+          end
         end
       end
       passed = (result.index("Failure:").nil? and result.index("Error:").nil? and error_detail.match(/rake aborted/).nil?)
       if !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
         arr_error = error_detail.split(/$/)
         arr_error.delete_at(arr_error.length - 1)
+        if Config::CONFIG['host_os'] =~ /mswin/
+		  arr_error.delete_at(arr_error.length - 1)
+		end
         arr_error.delete_at(0)
         error_detail = arr_error.to_s
       end
@@ -48,7 +55,11 @@ class TestsFormatter
       html += "<td style='text-align: center;'><img src='images/icon_#{passed ? 'success' : 'error'}_sml.gif'/></td>"
       file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log")
       array_file_content = file_content.split(/$/)
-      test_results = array_file_content[array_file_content.length - 1].split(/, /)
+      if Config::CONFIG['host_os'] =~ /mswin/
+        test_results = array_file_content[array_file_content.length - 2].split(/, /)
+      else
+        test_results = array_file_content[array_file_content.length - 1].split(/, /)
+      end
       tests = test_results[0]
       assertions = test_results[1]
       failures = test_results[2]

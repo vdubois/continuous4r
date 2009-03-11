@@ -1,3 +1,5 @@
+require 'utils.rb'
+
 # ==========================================================================
 #  Construction de la tache flay (doublons dans du code ruby)
 #  author: Vincent Dubois
@@ -16,6 +18,7 @@ class FlayBuilder
     files << Dir.glob("app/**/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
+    files << Dir.glob("spec/**/*.rb")
     files.flatten!
     flay_command = "flay -v"
     files.each do |file|
@@ -23,6 +26,8 @@ class FlayBuilder
     end
     flay_result = Utils.run_command(flay_command)
     matches = flay_result.chomp.split("\n\n")
+    # Fix for flay 1.2.0 : we delete the score
+    matches.delete_at(0)
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/flay")
     flay_file = File.open("#{Continuous4r::WORK_DIR}/flay/index.html","w")
     class_index = 0

@@ -96,6 +96,7 @@ class FlogBuilder
     files << Dir.glob("app/**/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
+    files << Dir.glob("spec/**/*.rb")
     files.flatten!
     files.each do |filename|
       puts "Processing #{filename}..."
