@@ -102,7 +102,7 @@ class FlogBuilder
       puts "Processing #{filename}..."
       output_dir = "#{Continuous4r::WORK_DIR}/flog/#{filename.split("/")[0..-2].join("/")}"
       FileUtils.mkdir_p(output_dir, :verbose => false) unless File.directory?(output_dir)
-      Utils.run_command("flog #{filename} > #{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt")
+      Utils.run_command("flog -a -c #{filename} > #{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt")
     end
     pages = Array.new
     Dir.glob("#{Continuous4r::WORK_DIR}/flog/**/*.txt").each do |filename|

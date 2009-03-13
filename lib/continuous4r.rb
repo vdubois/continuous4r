@@ -32,7 +32,7 @@ module Continuous4r
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
   
   TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
-  #TASKS = ['stats', 'flay']
+  #TASKS = ['stats', 'flay', 'flog']
   
   METRICS_HASH = Hash.new
 
