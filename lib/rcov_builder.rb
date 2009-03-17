@@ -23,7 +23,7 @@ class RcovBuilder
     # On lance la generation
     puts " Building rcov code coverage report..."
     if Dir.glob("test/**/*_test.rb").length > 0
-      pattern = "test/**/*_test.rb"
+      pattern = "test/**/*_test.rb test/test_helper.rb"
     else
       pattern = "spec/**/*_spec.rb"
     end
