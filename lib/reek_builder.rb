@@ -24,7 +24,7 @@ class ReekBuilder
       reek_command += " '#{file}'"
     end
     reek_result = Utils.run_command(reek_command)
-    matches = reek_result.chomp.split("\n\n").map{|m| m.split("\n") }
+    matches = reek_result.chomp.split("\n\n").map {|m| m.split("\n") }
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/reek")
     reek_file = File.open("#{Continuous4r::WORK_DIR}/reek/index.html","w")
     count = 0

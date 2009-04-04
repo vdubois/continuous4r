@@ -82,7 +82,7 @@ class TestsFormatter
           end
         end
         (0..index).to_a.each do |arr_index|
-          error_failure_type = array_details[arr_index][0].split(/\)/)[1].split(/:/)[0]
+          error_failure_type = array_details[arr_index][0].split(/\)/)[1].split(/:/)[0] unless array_details[arr_index][0].nil? or array_details[arr_index][0].split(/\)/)[1].nil?
           error_icon = (error_failure_type.match(/Error/) ? "<img src='images/exclamation.png'/>" : "<img src='images/error.png'/>")
           html_details += "<tr style='#{error_failure_type.match(/Error/) ? "background-color: #ffdddd; color: #770000;" : "background-color: #fffccf; color: #666600;"}'><td align='center'>#{error_icon}</td><td><strong>#{array_details[arr_index][1].split(/\(/)[1].split(/\)/)[0]}##{array_details[arr_index][1].split(/\(/)[0]}</strong>"
           array_details[arr_index].delete_at(1)

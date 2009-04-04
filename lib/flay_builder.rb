@@ -57,8 +57,7 @@ class FlayBuilder
           flay_file.write(" style='background-color: yellow;' title='Not DRY'")
         end
         if summary.match(/IDENTICAL/) or mass >= 40
-          arr_match = match.split(/$/)
-          arr_match.each do |elem|
+          match.each do |elem|
             if elem.match(/^A:/) or elem.match(/^ /)
               duplicate_lines += 1
             end
