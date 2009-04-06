@@ -32,7 +32,7 @@ class ReekBuilder
     matches.each do |match|
       smells = Array.new
       match[1..-1].each do |filename|
-        smells << filename if filename.index("[Duplication]").nil?
+        smells << filename if filename.index("(Duplication)").nil? and filename.index("[Duplication]").nil?
       end
       if smells.length > 0
         reek_file.write("<tr class='#{count % 2 == 0 ? "a" : "b"}'>")
