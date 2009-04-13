@@ -1,9 +1,9 @@
 	<h2>Flog Results</h2>
 	<p><a href='http://ruby.sadi.st/Flog.html' target='_blank'>Flog</a> measures code complexity.</p>
-        <%
-          project_score = pages.inject(0){|sum, page| sum + page.score } / (pages.inject(0){|sum, page| sum + page.scanned_methods.length})
-        %>
-        <h3 <%= Utils.flog_score_to_css_style(project_score) %>>Project average score : <%= sprintf("%0.2f", project_score) %></h3>
+  <%
+    project_score = pages.inject(0){|sum, page| sum + page.score } / pages.inject(0){|sum, page| sum + page.scanned_methods.length}
+  %>
+  <h3 <%= Utils.flog_score_to_css_style(project_score) %>>Project average score : <%= sprintf("%0.2f", project_score) %></h3>
 	<table class='bodyTable'>
 		<tr>
 		  <th>File</th>
@@ -13,13 +13,13 @@
 		  <th>Highest score</th>
 		</tr>
 		<%
-                  def cycle(first_value, second_value, iteration)
-                    return first_value if iteration % 2 == 0
-                    return second_value
-                  end
-                  pages.sort {|x,y| y.highest_score <=> x.highest_score }.each_with_index do |page, count| %>
+      def cycle(first_value, second_value, iteration)
+        return first_value if iteration % 2 == 0
+        return second_value
+      end
+      pages.sort {|x,y| y.highest_score <=> x.highest_score }.each_with_index do |page, count| %>
   		<tr class='<%= cycle("a", "b", count) %>'>
-                  <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a></td>
+        <td><a href='flog/<%= page.path %>' target="_blank"><%= page.filename.sub('.txt', '.rb').gsub(Regexp.new("#{Continuous4r::WORK_DIR}/flog/"),'') %></a></td>
   			<td class='score'><%= sprintf("%0.2f", page.score) %></td>
   			<td class='score'><%= page.scanned_methods.length %></td>
   			<td class='score' <%= Utils.flog_caracteristics(page.average_score) %>><%= sprintf("%0.2f", page.average_score) %></td>
@@ -29,7 +29,7 @@
 		<tr>
 			<td><strong>Totals</strong></td>
 			<td class='score'><strong><%= sprintf("%0.2f", pages.inject(0){|sum, page| sum + page.score }) %></strong></td>
-			<td class='score'><strong><%= pages.inject(0){|sum, page| sum + page.scanned_methods.length } %></strong></td>
+			<td class='score'><strong><%= pages.inject(0){|sum, page| sum + page.scanned_methods.length} %></strong></td>
 			<td class='score'></td>
 			<td class='score'></td>
 		</tr>		

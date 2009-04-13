@@ -45,34 +45,37 @@ class FlogBuilder
     def initialize(score, operator)
       @score = score.to_f
       @operator = operator
-    end
+    end    
   end
 
   class ScannedMethod
     attr_accessor :name, :score, :operators
 
-    def initialize(name, score, operators = [])
+    def initialize(score, name, operators = [])
       @name = name
       @score = score.to_f
       @operators = operators
     end
+
+    def to_s
+      "#{@name} = #{@score} (#{operators}.length)"
+    end
   end
 
-  METHOD_LINE_REGEX = /([A-Za-z]+#.*):\s\((\d+\.\d+)\)/
+  METHOD_LINE_REGEX = /(\d+\.\d+):\s([A-Za-z]+#.*)/
   OPERATOR_LINE_REGEX = /\s+(\d+\.\d+):\s(.*)$/
 
   def parse(text)
-    score = text[/\w+ = (\d+\.\d+)/, 1]
+    score = text[/(\d+\.\d+)\:/, 1]
     return nil unless score
     page = Page.new(score)
 
     text.each_line do |method_line|
-     if match = method_line.match(METHOD_LINE_REGEX)
+      if match = method_line.match(METHOD_LINE_REGEX)
         page.scanned_methods << ScannedMethod.new(match[1], match[2])
       end
 
-      if match = method_line.match(OPERATOR_LINE_REGEX)
-        return if page.scanned_methods.empty?
+      if match = method_line.match(OPERATOR_LINE_REGEX) and !page.scanned_methods.empty?
         page.scanned_methods.last.operators << Operator.new(match[1], match[2])
       end
     end
@@ -102,7 +105,7 @@ class FlogBuilder
       puts "Processing #{filename}..."
       output_dir = "#{Continuous4r::WORK_DIR}/flog/#{filename.split("/")[0..-2].join("/")}"
       FileUtils.mkdir_p(output_dir, :verbose => false) unless File.directory?(output_dir)
-      Utils.run_command("flog -a -c #{filename} > #{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt")
+      Utils.run_command("flog -a -c -d #{filename} > #{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt")
     end
     pages = Array.new
     Dir.glob("#{Continuous4r::WORK_DIR}/flog/**/*.txt").each do |filename|
