@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'dcov'
 
 # ==========================================================================
@@ -126,8 +127,6 @@ class DcovBuilder
 
   # Implementation de la construction de la tache
   def build(project_name, auto_install, proxy_option)
-    # On verifie la presence de dcov
-    Utils.verify_gem_presence("dcov", auto_install, proxy_option)
     # On lance la generation
     puts " Building dcov rdoc coverage report..."
     files = Array.new
@@ -161,4 +160,4 @@ class DcovBuilder
     "rdoc coverage"
   end
 end
- 
+

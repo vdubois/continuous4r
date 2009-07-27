@@ -1,7 +1,11 @@
 	<h2>Flog Results</h2>
 	<p><a href='http://ruby.sadi.st/Flog.html' target='_blank'>Flog</a> measures code complexity.</p>
   <%
-    project_score = pages.inject(0){|sum, page| sum + page.score } / pages.inject(0){|sum, page| sum + page.scanned_methods.length}
+    if pages.inject(0){|sum, page| sum + page.scanned_methods.length} == 0
+      project_score = 0
+    else
+      project_score = pages.inject(0){|sum, page| sum + page.score } / pages.inject(0){|sum, page| sum + page.scanned_methods.length}
+    end
   %>
   <h3 <%= Utils.flog_score_to_css_style(project_score) %>>Project average score : <%= sprintf("%0.2f", project_score) %></h3>
 	<table class='bodyTable'>
@@ -32,6 +36,7 @@
 			<td class='score'><strong><%= pages.inject(0){|sum, page| sum + page.scanned_methods.length} %></strong></td>
 			<td class='score'></td>
 			<td class='score'></td>
-		</tr>		
+		</tr>
 	</table>
-	<p>Generated on <%= Time.now.localtime %></p>	
+	<p>Generated on <%= Time.now.localtime %></p>
+

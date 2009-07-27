@@ -30,17 +30,17 @@ module Continuous4r
 
   # Support de CruiseControl.rb
   WORK_DIR = "#{ENV['CC_BUILD_ARTIFACTS'].nil? ? "tmp/continuous4r" : "#{ENV['CC_BUILD_ARTIFACTS']}/continuous4r"}"
-  
+
   TASKS = ['rdoc','dcov','rcov','stats','changelog','flog','xdoclet','flay','reek','roodi','saikuro','tests','zentest']
   #TASKS = ['roodi']
-  
+
   METRICS_HASH = Hash.new
 
   # Methode qui permet de recuperer le nom du build pour la construction du template notamment
   def self.build_name
     @build_name ||= "no build name found"
   end
-  
+
   # Methode de generation du site au complet
   def self.generate_site
 	  @build_name = Utils.build_name
@@ -76,6 +76,8 @@ module Continuous4r
 
     # Verification de la presence d'hpricot
     Utils.verify_gem_presence("hpricot", auto_install, proxy_option)
+    # Verification de la presence de dcov
+    Utils.verify_gem_presence("dcov", auto_install, proxy_option)
 
     # Chargement/Verification des gems necessaires a l'application
     puts " Checking gems for this project, please hold on..."
@@ -125,7 +127,7 @@ module Continuous4r
     erb = ERB.new(File.read("#{File.dirname(__FILE__)}/site/build.xml.erb"))
     page_file.write(erb.result)
     page_file.close
-    
+
     # On copie les images
     FileUtils.cp_r("#{File.dirname(__FILE__)}/site/images/", "#{WORK_DIR}/")
     FileUtils.copy_file("#{File.dirname(__FILE__)}/site/images/continuous4r-logo.png", "#{WORK_DIR}/continuous4r-logo.png")
@@ -177,3 +179,4 @@ module Continuous4r
   end
 
 end
+
