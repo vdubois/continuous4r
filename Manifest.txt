@@ -79,6 +79,7 @@ lib/tasks/continuous4r.rb
 lib/tasks/continuous4r-project.xml
 lib/changelog_builder.rb
 lib/dcov_builder.rb
+lib/dcov_stats.rb
 lib/flay_builder.rb
 lib/flog_builder.rb
 lib/rcov_builder.rb
@@ -91,3 +92,4 @@ lib/tests_builder.rb
 lib/xdoclet_builder.rb
 lib/zentest_builder.rb
 lib/utils.rb
+

@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'dcov'
-
+require 'dcov_stats.rb'
 # ==========================================================================
 # Surcharge du module Dcov pour l'adapter aux besoins de continous4r
 # author: Vincent Dubois
@@ -58,7 +58,7 @@ module Dcov
         if class_error_presence == true or method_error_presence == true
           nbtr += 1
           output << "<tr class='#{indice % 2 == 0 ? 'a' : 'b'}'>"
-          if class_error_presence == true or method_error_presence == true
+          if class_error_presence == true or method_error_presence == true and !value[0].in_files.first.nil?
             output << "<td>#{"<b>" if class_error_presence == true}#{key.is_a?(String) ? key : key.full_name }#{"</b> in <a href='xdoclet/#{value[0].in_files.first.file_absolute_name.gsub(/\//,'_')}.html' target='_blank'>#{value[0].in_files.first.file_absolute_name}</a>" if class_error_presence == true}</td>"
           else
             output << "<td>&#160;</td>"

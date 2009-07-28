@@ -45,7 +45,7 @@ class FlogBuilder
     def initialize(score, operator)
       @score = score.to_f
       @operator = operator
-    end    
+    end
   end
 
   class ScannedMethod
@@ -92,6 +92,8 @@ class FlogBuilder
   def build(project_name, auto_install, proxy_option)
     # On verifie la presence de flog
     Utils.verify_gem_presence("flog", auto_install, proxy_option)
+    require 'rubygems'
+    require 'flog'
     # On lance la generation
     puts " Building flog report..."
     FileUtils.mkdir("#{Continuous4r::WORK_DIR}/flog")
@@ -105,7 +107,11 @@ class FlogBuilder
       puts "Processing #{filename}..."
       output_dir = "#{Continuous4r::WORK_DIR}/flog/#{filename.split("/")[0..-2].join("/")}"
       FileUtils.mkdir_p(output_dir, :verbose => false) unless File.directory?(output_dir)
-      Utils.run_command("flog -a -c -d #{filename} > #{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt")
+      flogger = Flog.new("-a -c -d")
+      flogger.flog(filename)
+      output_flog_file = File.open("#{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt", "w")
+      flogger.report(output_flog_file)
+      output_flog_file.close
     end
     pages = Array.new
     Dir.glob("#{Continuous4r::WORK_DIR}/flog/**/*.txt").each do |filename|
@@ -145,3 +151,4 @@ class FlogBuilder
     "code complexity"
   end
 end
+

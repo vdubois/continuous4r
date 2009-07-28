@@ -1,10 +1,19 @@
-== 0.0.4 2009-03-03
+== 0.0.5 2009-07-28
 
-* Fourth release
-Major bug fixes on rcov changelog builder (differences found on svn with the type of checkout http:// or svn://)
-Tests made on various projects, and notableously to a big one (Redmine)
-Introduction of reporting quality indicators (will be completed for 0.1.0)
-The release of 0.0.5 will be here very shortly, this release is here for build capability
+* Fifth release
 
+Major update on coderay, dcov and flog gems updates.
+Gems requirements :
+    - rubygems 1.3.5
+    - coderay 0.8.312
+    - dcov 0.2.2
+    - flay 1.3.0
+    - flog 2.1.2
+    - hpricot 0.8.1
+    - rcov 0.8.1.2
+    - reek 1.1.3
+    - roodi 1.4.0
+    - saikuro 1.1.0
+    - xmlelements 0.1.2
+    - ZenTest 4.1.3
 
-To see this release details, go to http://dubois.vct.free.fr/continuous4r

@@ -22,6 +22,7 @@ class XdocletBuilder
     files << Dir.glob("#{RAILS_ROOT}/spec/**/*.rb")
     files.flatten!
 
+    require 'rubygems'
     require 'coderay'
     files.each do |file|
       print "\nProcessing #{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'')}..."
@@ -38,3 +39,4 @@ class XdocletBuilder
     end
   end
 end
+
