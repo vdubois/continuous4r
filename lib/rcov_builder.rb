@@ -8,12 +8,12 @@ class RcovBuilder
 
   # Prérequis à la tâche
   def prerequisite_met?
-    Dir.glob("test/**/*_test.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
+    Dir.glob("test/**/*.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
   end
 
   # Dans le cas de l'erreur de prérequis
   def prerequisite_unmet_message
-    " No file matching the [test/**/*_test.rb] or [spec/**/*_spec.rb] patterns. Rcov task will be ignored."
+    " No file matching the [test/**/*.rb] or [spec/**/*_spec.rb] patterns. Rcov task will be ignored."
   end
 
   # Implementation de la construction de la tache
@@ -22,12 +22,19 @@ class RcovBuilder
     Utils.verify_gem_presence("rcov", auto_install, proxy_option)
     # On lance la generation
     puts " Building rcov code coverage report..."
-    if Dir.glob("test/**/*_test.rb").length > 0
-      pattern = "test/**/*_test.rb test/test_helper.rb"
+    if Dir.glob("test/**/*.rb").length > 0
+      pattern = "test/**/*.rb"
     else
       pattern = "spec/**/*_spec.rb"
     end
-    rcov_pass = Utils.run_command("rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple #{pattern}")
+    rcov_ignored_gems = []
+    gem_list = Utils.run_command("gem list")
+    gem_list.split("\n").each{|gem|rcov_ignored_gems << gem.split(' ')[0]}
+    if rcov_ignored_gems.length == 0
+      rcov_pass = Utils.run_command("rcov --rails #{pattern}")
+    else
+      rcov_pass = Utils.run_command("rcov --rails --exclude #{rcov_ignored_gems.join(',')} #{pattern}")
+    end
     if rcov_pass.index("Finished in").nil?
       raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple #{pattern}'.\n BUILD FAILED."
     end
