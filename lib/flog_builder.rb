@@ -105,13 +105,17 @@ class FlogBuilder
     files.flatten!
     files.each do |filename|
       puts "Processing #{filename}..."
-      output_dir = "#{Continuous4r::WORK_DIR}/flog/#{filename.split("/")[0..-2].join("/")}"
-      FileUtils.mkdir_p(output_dir, :verbose => false) unless File.directory?(output_dir)
-      flogger = Flog.new("-a -c -d")
-      flogger.flog(filename)
-      output_flog_file = File.open("#{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt", "w")
-      flogger.report(output_flog_file)
-      output_flog_file.close
+      begin
+        flogger = Flog.new("-a -c -d")
+        flogger.flog(filename)
+        output_dir = "#{Continuous4r::WORK_DIR}/flog/#{filename.split("/")[0..-2].join("/")}"
+        FileUtils.mkdir_p(output_dir, :verbose => false) unless File.directory?(output_dir)
+        output_flog_file = File.open("#{Continuous4r::WORK_DIR}/flog/#{filename.split('.')[0]}.txt", "w")
+        flogger.report(output_flog_file)
+        output_flog_file.close
+      rescue Exception => e
+        puts "Error processing #{filename} : #{e.to_s}"
+      end
     end
     pages = Array.new
     Dir.glob("#{Continuous4r::WORK_DIR}/flog/**/*.txt").each do |filename|

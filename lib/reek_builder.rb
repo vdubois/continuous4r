@@ -51,6 +51,7 @@ class ReekBuilder
     end
     reek_file.close
     @percent = 100 - ((score * files.length) / 100)
+    @percent = 0 if @percent < 0
     @@percent = @percent
   end
 
@@ -58,7 +59,7 @@ class ReekBuilder
   def self.percent
     @@percent
   end
-  
+
   # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
   def quality_percentage
     @percent
@@ -69,3 +70,4 @@ class ReekBuilder
     "code smells"
   end
 end
+

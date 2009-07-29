@@ -33,6 +33,7 @@ lib/site/body-team-list.rhtml
 lib/site/body-tests.rhtml
 lib/site/body-xdoclet.rhtml
 lib/site/body-zentest.rhtml
+lib/site/defaults.reek
 lib/site/flog.html.erb
 lib/site/flog_page.html.erb
 lib/site/header.rhtml

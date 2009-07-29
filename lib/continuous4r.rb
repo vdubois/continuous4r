@@ -109,6 +109,9 @@ module Continuous4r
     # On copie le fichier de configuration de Roodi
     FileUtils.cp("#{File.dirname(__FILE__)}/site/roodi.yml", "#{WORK_DIR}/roodi.yml")
 
+    # On copie le fichier de configuration de Reek
+    FileUtils.cp("#{File.dirname(__FILE__)}/site/defaults.reek", "#{RAILS_ROOT}/defaults.reek")
+
     # Construction des taches
     tasks.each do |task|
       self.build_task task, project['name'], auto_install, proxy_option
@@ -150,6 +153,10 @@ module Continuous4r
       puts " Building #{task} page..."
       Utils.erb_run task, true
     end
+
+    # On supprime le fichier de configuration de Reek car il est à la racine du projet Rails
+    FileUtils.rm "#{RAILS_ROOT}/defaults.reek", :force => true
+
     end_time = Time.now
     total_time = end_time - start_time
     hours = (total_time / 3600).to_i

@@ -30,13 +30,15 @@ class RcovBuilder
     rcov_ignored_gems = []
     gem_list = Utils.run_command("gem list")
     gem_list.split("\n").each{|gem|rcov_ignored_gems << gem.split(' ')[0]}
+    rcov_command = nil
     if rcov_ignored_gems.length == 0
-      rcov_pass = Utils.run_command("rcov --rails #{pattern}")
+      rcov_command = "rcov --rails #{pattern}"
     else
-      rcov_pass = Utils.run_command("rcov --rails --exclude #{rcov_ignored_gems.join(',')} #{pattern}")
+      rcov_command = "rcov --rails --exclude #{rcov_ignored_gems.join(',')} #{pattern}"
     end
+    rcov_pass = Utils.run_command(rcov_command)
     if rcov_pass.index("Finished in").nil?
-      raise " Execution of rcov failed with command 'rcov --rails --exclude rcov,rubyforge,builder,mime-types,xml-simple #{pattern}'.\n BUILD FAILED."
+      raise " Execution of rcov failed with command '#{rcov_command}'.\n BUILD FAILED."
     end
     # On recupere le rapport genere
     Dir.mkdir "#{Continuous4r::WORK_DIR}/rcov"
@@ -55,3 +57,4 @@ class RcovBuilder
     "tests coverage"
   end
 end
+
