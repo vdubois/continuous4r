@@ -8,12 +8,12 @@ class RcovBuilder
 
   # Prérequis à la tâche
   def prerequisite_met?
-    Dir.glob("test/**/*.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
+    Dir.glob("test/**/*_test.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
   end
 
   # Dans le cas de l'erreur de prérequis
   def prerequisite_unmet_message
-    " No file matching the [test/**/*.rb] or [spec/**/*_spec.rb] patterns. Rcov task will be ignored."
+    " No file matching the [test/**/*_test.rb] or [spec/**/*_spec.rb] patterns. Rcov task will be ignored."
   end
 
   # Implementation de la construction de la tache
@@ -22,8 +22,8 @@ class RcovBuilder
     Utils.verify_gem_presence("rcov", auto_install, proxy_option)
     # On lance la generation
     puts " Building rcov code coverage report..."
-    if Dir.glob("test/**/*.rb").length > 0
-      pattern = "test/**/*.rb"
+    if Dir.glob("test/**/*_test.rb").length > 0
+      pattern = "test/**/*_test.rb"
     else
       pattern = "spec/**/*_spec.rb"
     end
