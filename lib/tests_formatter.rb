@@ -56,9 +56,9 @@ class TestsFormatter
       file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log")
       array_file_content = file_content.split(/$/)
       if Config::CONFIG['host_os'] =~ /mswin/
-        test_results = array_file_content[array_file_content.length - 2].split(/, /)
+        test_results = array_file_content[array_file_content.length - 2].gsub(//,"").gsub(/\[31m/, "").gsub(/\[32m/, "").gsub(/\[35m/, "").gsub(/\[0m/, "").split(/, /).split(/, /)
       else
-        test_results = array_file_content[array_file_content.length - 1].split(/, /)
+        test_results = array_file_content[array_file_content.length - 1].gsub(//,"").gsub(/\[31m/, "").gsub(/\[32m/, "").gsub(/\[35m/, "").gsub(/\[0m/, "").split(/, /).split(/, /)
       end
       tests = test_results[0]
       assertions = test_results[1]
@@ -103,3 +103,4 @@ class TestsFormatter
     html += "<h3>Errors/Failures details</h3><table class='bodyTable'><thead><th>Type</th><th>Method/Trace</th></thead>#{html_details}</table>"
   end
 end
+
