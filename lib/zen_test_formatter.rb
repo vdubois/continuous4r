@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'XmlElements'
 # =====================================================
 # Classe de formatage des resultats renvoyes par les
 # differents resultats de ZenTest
@@ -80,3 +79,4 @@ class ZenTestFormatter
     html = html + "</tbody></table>"
   end
 end
+

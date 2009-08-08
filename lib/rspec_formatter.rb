@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'XmlElements'
 require 'cgi'
 # =====================================================
 # Classe de formatage des resultats renvoyes par les
@@ -13,7 +12,7 @@ class RspecFormatter
   def to_html
     html = "<table class='bodyTable'><thead><th>Testing element</th><th>Pass</th><th>Result</th><th>Time</th></thead><tbody>"
     i = 0
-    project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+    project = Continuous4r.project
     errors_or_warnings = 0
     html_details = ""
     if !(Config::CONFIG['host_os'] =~ /mswin/)
@@ -120,3 +119,4 @@ class RspecFormatter
     html += "<h3>Errors/Failures details</h3><table class='bodyTable'><thead><th>Type</th><th>Trace</th></thead>#{html_details}</table>"
   end
 end
+
