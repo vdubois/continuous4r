@@ -4,6 +4,10 @@ PostInstall.txt
 README.rdoc
 Rakefile
 lib/continuous4r.rb
+lib/continuous4r_project.rb
+lib/company.rb
+lib/bugtracker.rb
+lib/member.rb
 lib/stats_formatter.rb
 lib/git_extractor.rb
 lib/rspec_formatter.rb
@@ -77,7 +81,6 @@ website/stylesheets/screen.css
 website/template.rhtml
 lib/tasks/continuous4r.rake
 lib/tasks/continuous4r.rb
-lib/tasks/continuous4r-project.xml
 lib/changelog_builder.rb
 lib/dcov_builder.rb
 lib/dcov_stats.rb

@@ -28,7 +28,7 @@
                 		        <td>
 									This document provides information on the members of this project.
 									These are the individuals who have contributed to the project in one
-									form or another. 
+									form or another.
 								</td>
                     		</tr>
 		                    <tr class="a">
@@ -51,6 +51,7 @@
 		                            This is a link to the online source repository that can be viewed via a web browser.
 		                        </td>
 		                    </tr>
+		                    <% unless Continuous4r.project.bugtracker.nil? %>
                             <tr class="a">
 		                        <td>
 		                            <a href="issue-tracking.html">
@@ -60,12 +61,14 @@
         		                <td>
 									This is a link to the issue tracking system for this project. Issues
 									(bugs, features, change requests) can be created and queried using this
-									link. 
+									link.
 								</td>
 		                    </tr>
+		                    <% end %>
                         </tbody>
                     </table>
             	</div>
         	</div>
         	</div>
         </div>
+

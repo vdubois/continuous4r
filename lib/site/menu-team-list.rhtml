@@ -8,7 +8,7 @@
                                                         <li class="none"><strong><a href="team-list.html">Project Team</a></strong></li>
       							<li class="none"><a href="dependencies.html">Dependencies</a></li>
       							<li class="none"><a href="scm-usage.html">Source Repository</a></li>
-      							<li class="none"><a href="issue-tracking.html">Issue Tracking</a></li>
+      							<% unless Continuous4r.project.bugtracker.nil? %><li class="none"><a href="issue-tracking.html">Issue Tracking</a></li><% end %>
       						</ul>
       					</li>
       					<li class="collapsed"><a href="continuous4r-reports.html">Project Reports</a></li>
@@ -17,3 +17,4 @@
       			<a href="<%= Continuous4r::URL %>" title="Built by continuous4r" target='_blank'><img alt="Built by continuous4r" src="continuous4r-logo.png"></a>
       		</div>
       	</div>
+

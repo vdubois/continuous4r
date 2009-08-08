@@ -1,15 +1,12 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%
-  require 'rubygems'
-  require 'XmlElements'
-  require 'date'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  project = Continuous4r.project
   generation_date = DateTime.now
 %>
 <html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-        <title>Project Information - <%= project['name'] %></title>
+        <title>Project Information - <%= project.name %></title>
         <style type="text/css" media="all">
             @import url("./style/maven-base.css");
             @import url("./style/maven-theme.css");
@@ -22,24 +19,25 @@
               <%
                 begin
                   if !project.company.nil? and !project.company.logo.nil? and !project.company.url.nil? and !project.company.name.nil? %>
-                  <td><a target="_blank" href="<%= project.company.url.text %>" id="organizationLogo"><img alt="<%= project.company.denomination.text %>" title="<%= project.company.denomination.text %>" src="<%= project.company.logo.text %>"></a></td>
+                  <td><a target="_blank" href="<%= project.company.url %>" id="organizationLogo"><img alt="<%= project.company.denomination.text %>" title="<%= project.company.denomination %>" src="<%= project.company.logo %>"></a></td>
               <%  end
                 rescue
                   # XML error safe
                 end
               %>
               <td width="100%">&#160;</td>
-              <td style="white-space: nowrap;"><a href="<%= project.url.text %>" id="projectLogo"><%= project['name'] %></a>&#160;&#160;</td>
+              <td style="white-space: nowrap;"><a href="<%= project.url %>" id="projectLogo"><%= project.name %></a>&#160;&#160;</td>
               <% if !project.logo.nil? %>
-              <td><img src="<%= project.logo.text %>" align="absmiddle"/></td>
+              <td><img src="<%= project.logo %>" align="absmiddle"/></td>
               <% end %>
             </tr>
           </table>
           <div class="clear"><hr></div>
     	</div>
     	<div id="breadcrumbs">
-          <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for <%= project['name'] %>, <%= Continuous4r.build_name %></div>
+          <div class="xleft">Last published: <%= generation_date.strftime("%Y-%m-%d") %> <span class="separator">|</span>&nbsp;Doc for <%= project.name %>, <%= Continuous4r.build_name %></div>
             <div class="xright">
             </div>
             <div class="clear"><hr></div>
       	</div>
+

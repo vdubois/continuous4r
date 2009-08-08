@@ -1,5 +1,5 @@
 <%
-  tasks = Continuous4r::TASKS
+  tasks = Continuous4r.project.tasks
 %>
 <div id="leftColumn">
     <div id="navcolumn">
@@ -9,7 +9,7 @@
                 <li class="collapsed"><a href="index.html">Project Info</a></li>
                 <li class="expanded"><a href="continuous4r-reports.html">Project Reports</a>
                     <ul>
-                        <% 
+                        <%
                            tasks.each do |task|
                              task_class = Object.const_get("#{task.capitalize}Builder")
                              task_builder = task_class.new
@@ -24,3 +24,4 @@
         <a href="<%= Continuous4r::URL %>" title="Built by continuous4r" target='_blank'><img alt="Built by continuous4r" src="continuous4r-logo.png"></a>
     </div>
 </div>
+

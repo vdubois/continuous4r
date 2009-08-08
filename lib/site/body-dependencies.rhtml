@@ -1,8 +1,7 @@
 <%
   require 'rubygems'
-  require 'XmlElements'
   require 'date'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  project = Continuous4r.project
 %>
 <div id="bodyColumn">
     <div class="contentBox">
@@ -59,3 +58,4 @@
         </div>
     </div>
 </div>
+

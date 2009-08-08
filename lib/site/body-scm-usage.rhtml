@@ -1,8 +1,7 @@
 <%
   require 'rubygems'
-  require 'XmlElements'
   require 'date'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  project = Continuous4r.project
 %>
 <div id="bodyColumn">
     <div class="contentBox">
@@ -22,11 +21,11 @@
                 if !scms.has_key?(scm_name)
             %>
             <p>
-                <%= project['name'] %> is hosted on an unknown repository type.
+                <%= project.name %> is hosted on an unknown repository type.
             </p>
             <% else %>
             <p>
-                <%= project['name'] %> is hosted on a <a href="<%= scms[scm_name][1] %>" target="_blank" class="externalLink" title="External Link"><%= scms[scm_name][0] %></a> repository.
+                <%= project.name %> is hosted on a <a href="<%= scms[scm_name][1] %>" target="_blank" class="externalLink" title="External Link"><%= scms[scm_name][0] %></a> repository.
             </p>
             <% end %>
             <p>
@@ -36,3 +35,4 @@
         </div>
     </div>
 </div>
+

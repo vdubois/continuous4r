@@ -1,8 +1,7 @@
 <%
   require 'rubygems'
-  require 'XmlElements'
   require 'date'
-  project = XmlElements.fromString(File.read("continuous4r-project.xml"))
+  project = Continuous4r.project
 %>
 		<div id="bodyColumn">
 			<div class="contentBox">
@@ -12,14 +11,14 @@
 		            <p>
 		                A successful project requires many people to play many roles. Some members write code or documentation, while others are valuable as testers, submitting patches and suggestions.
 		            </p>
-		
+
 		            <p>
 		                The team is comprised of Members and Contributors. Members have direct access to the source of a project and actively evolve the code-base. Contributors improve the project through submission of patches and suggestions to the Members. The number of Contributors to the project is unbounded. Get involved today. All contributions to the project are greatly appreciated.
 		            </p>
 
 		            <div class="subsection"><a name="Members"></a><h3>Members</h3>
                         <p>
-                    		The following is a list of developers with commit privileges that have directly contributed to the project in one way or another.  
+                    		The following is a list of developers with commit privileges that have directly contributed to the project in one way or another.
                 		</p>
                 		<table class="bodyTable">
                     		<thead>
@@ -43,22 +42,22 @@
 		                </thead>
         		        <tbody>
                                 <%  i = 0
-                                    project.members.each('member') do |details|
+                                    project.members.each do |details|
                                       i = i + 1
                                 %>
                             	<tr class="<% if i % 2 == 0 %>a<% else %>b<% end %>">
                                     <td><%= details['name'] %></td>
-                                    <td><a name="<%= details['id'] %>"></a>
-                                	<%= details['id'] %>
+                                    <td><a name="<%= details.id %>"></a>
+                                	<%= details.id %>
                                     </td>
-                                    <td><a href="mailto:<%= details['email'] %>">
-                                    	<%= details['email'] %>
+                                    <td><a href="mailto:<%= details.email %>">
+                                    	<%= details.email %>
                                 	</a>
                                     </td>
-                                    <td><%= details['company'] %></td>
+                                    <td><%= details.company %></td>
                                     <td>
-                                	<span id="developer-<%= details['id'] %>">
-                                            <%= details['roles'] %>
+                                	<span id="developer-<%= details.id %>">
+                                            <%= details.roles %>
                                 	</span>
                                     </td>
                         	</tr>
@@ -71,3 +70,4 @@
                     </div>
         	</div>
         </div>
+
