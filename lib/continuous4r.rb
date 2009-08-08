@@ -3,7 +3,7 @@ $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname
 require File.join(File.dirname(__FILE__), 'tasks', 'continuous4r')
 
 require 'rubygems'
-require 'XmlElements'
+require 'xmlelements'
 require 'date'
 require 'erb'
 require 'stats_formatter.rb'
