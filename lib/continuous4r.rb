@@ -5,6 +5,7 @@ require File.join(File.dirname(__FILE__), 'tasks', 'continuous4r')
 require 'rubygems'
 require 'date'
 require 'erb'
+require 'code_statistics.rb'
 require 'stats_formatter.rb'
 require 'tests_formatter.rb'
 require 'rspec_formatter.rb'
@@ -56,6 +57,7 @@ module Continuous4r
 
   # Methode de generation du site au complet
   def self.generate_site
+    project_root = '.'
     @build_name = Utils.build_name
     @@project ||= Continuous4rProject.new
     @@project.tasks ||= TASKS
@@ -139,7 +141,7 @@ module Continuous4r
     FileUtils.cp("#{File.dirname(__FILE__)}/site/roodi.yml", "#{WORK_DIR}/roodi.yml")
 
     # On copie le fichier de configuration de Reek
-    FileUtils.cp("#{File.dirname(__FILE__)}/site/defaults.reek", "#{RAILS_ROOT}/defaults.reek")
+    FileUtils.cp("#{File.dirname(__FILE__)}/site/defaults.reek", "#{project_root}/defaults.reek")
 
     # Construction des taches
     @@project.tasks.each do |task|
@@ -186,7 +188,7 @@ module Continuous4r
     end
 
     # On supprime le fichier de configuration de Reek car il est à la racine du projet Rails
-    FileUtils.rm "#{RAILS_ROOT}/defaults.reek", :force => true
+    FileUtils.rm "#{project_root}/defaults.reek", :force => true
 
     end_time = Time.now
     total_time = end_time - start_time

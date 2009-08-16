@@ -9,24 +9,31 @@ class RdocBuilder
   def build(project_name, auto_install, proxy_option)
     # On lance la generation
     puts " Building rdoc api and rdoc generation report..."
-    if !File.exist?("#{RAILS_ROOT}/doc")
-      FileUtils.mkdir("#{RAILS_ROOT}/doc")
+    if !File.exist?("#{project_root}/doc")
+      FileUtils.mkdir("#{project_root}/doc")
     end
-    if !File.exist?("#{RAILS_ROOT}/doc/README_FOR_APP")
-      if File.exist?("#{RAILS_ROOT}/README")
-        FileUtils.copy_file("#{RAILS_ROOT}/README", "#{RAILS_ROOT}/doc/README_FOR_APP")
+    if !File.exist?("#{project_root}/doc/README_FOR_APP")
+      if File.exist?("#{project_root}/README")
+        FileUtils.copy_file("#{project_root}/README", "#{project_root}/doc/README_FOR_APP")
       else
-        FileUtils.touch("#{RAILS_ROOT}/doc/README_FOR_APP")
+        FileUtils.touch("#{project_root}/doc/README_FOR_APP")
       end
     end
     File.delete("rdoc.log") if File.exist?("rdoc.log")
-    rdoc_pass = system("rake doc:app > rdoc.log")
+    rake_doc_task = "doc:app" if ENV["RAILS_ROOT"].present?
+    rake_doc_task ||= "docs"
+    rdoc_pass = system("rake #{rake_doc_task} > rdoc.log")
     if !rdoc_pass
       raise " Execution of rdoc failed with command 'rake doc:reapp'.\n BUILD FAILED."
     end
     # On recupere la documentation et le fichier de log generes
     Dir.mkdir "#{Continuous4r::WORK_DIR}/rdoc"
-    FileUtils.mv("doc/app/", "#{Continuous4r::WORK_DIR}/rdoc/")
+    if File.exists?("app/controllers/")
+      FileUtils.mv("doc/app/", "#{Continuous4r::WORK_DIR}/rdoc/")
+    else
+      FileUtils.mv("doc/", "#{Continuous4r::WORK_DIR}/rdoc/")
+    end
     FileUtils.mv("rdoc.log", "#{Continuous4r::WORK_DIR}/rdoc/")
   end
 end
+

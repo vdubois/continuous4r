@@ -2,7 +2,7 @@
     <div class="contentBox">
         <div class="section"><a name="Rdoc_Report"></a>
             <h2>Rdoc Report</h2>
-            <p style="padding-left: 20px;"><a target="_blank" class="newWindow" href="rdoc/app/index.html">View generated apidoc</a></p>
+            <p style="padding-left: 20px;"><a target="_blank" class="newWindow" href="rdoc/<%= (ENV['RAILS_ROOT'].present? ? "app/" : "doc/") %>index.html">View generated apidoc</a></p>
             <div>
               <pre class="source"><%= File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log") %>
                 </pre>
@@ -10,3 +10,4 @@
         </div>
     </div>
 </div>
+

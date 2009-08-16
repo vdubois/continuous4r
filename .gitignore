@@ -6,3 +6,5 @@ nbproject
 nbproject/**/*
 *~
 **/*~
+tmp
+tmp/**/*

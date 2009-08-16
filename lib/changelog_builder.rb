@@ -54,3 +54,4 @@ class ChangelogBuilder
     rev_file.close
   end
 end
+

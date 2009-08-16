@@ -10,17 +10,19 @@ class StatsFormatter
   def initialize result
     self.result = result
   end
-  
+
   # Methode qui permet de fabriquer le flux HTML a partir des flux console
   def to_html
     html = "<table class='bodyTable'><thead><th>Name</th><th>Lines</th><th>LOC</th><th>Classes</th><th>Methods</th><th>M/C</th><th>LOC/M</th></thead><tbody>"
     i = 0
     results = self.result.split(/$/)
-    bottom = 4
+    bottom = 4 if ENV["RAILS_ROOT"].present?
+    bottom ||= 3
+    top = bottom
     while !results[bottom].nil? and results[bottom][0..1] != "\n+" do
       bottom = bottom + 1
     end
-    lines = results[4..bottom-1]
+    lines = results[top..bottom-1]
     lines.each do |line|
       elements = line.split(/\|/)
       html = html + "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'>"
@@ -49,3 +51,4 @@ class StatsFormatter
     return html
   end
 end
+

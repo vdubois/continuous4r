@@ -46,7 +46,7 @@ class RspecFormatter
         error_detail = arr_error.to_s
       end
       html += "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}' style='#{passed == true ? "background-color: #e3ffdb; color: #7ab86c;" : "background-color: #ffdddd; color: #770000;"}'><td><strong>#{runner}</strong></td>"
-      if project['ignore-tests-failures'] == "false" and passed == false
+      if project.ignore_tests_failures == "false" and passed == false
         raise " #{runner} tests failed.\n BUILD FAILED."
       end
       f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")

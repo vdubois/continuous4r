@@ -80,7 +80,7 @@ class FlayBuilder
   def self.dryness
     @@dryness
   end
-  
+
   # Methode qui permet d'extraire le pourcentage de qualité extrait d'un builder
   def quality_percentage
     @dryness
@@ -91,3 +91,4 @@ class FlayBuilder
     "DRYness"
   end
 end
+

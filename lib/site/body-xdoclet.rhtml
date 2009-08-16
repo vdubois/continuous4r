@@ -11,6 +11,7 @@
               <tbody>
                 <%
                   files = Array.new
+                  project_root = '.'
                   files << Dir.glob("#{RAILS_ROOT}/app/**/*.rb")
                   files << Dir.glob("#{RAILS_ROOT}/app/**/*.html.erb")
                   files << Dir.glob("#{RAILS_ROOT}/app/**/*.rhtml")
@@ -21,7 +22,7 @@
                   files.each_with_index do |file,index|
                 %>
                 <tr class="<%= index % 2 == 0 ? 'a' : 'b' %>">
-                  <td><a href="xdoclet/<%= "#{file.gsub(Regexp.new("#{RAILS_ROOT}/"),'').gsub(/\//,'_')}" %>.html" target="_blank"><%= file.gsub(Regexp.new("#{RAILS_ROOT}/"),'') %></a></td>
+                  <td><a href="xdoclet/<%= "#{file.gsub(Regexp.new("#{project_root.gsub(/\./,"\\.")}/"),'').gsub(/\//,'_')}" %>.html" target="_blank"><%= file.gsub(Regexp.new("#{project_root.gsub(/\./,"\\.")}/"),'') %></a></td>
                 </tr>
                 <%
                   end
@@ -31,3 +32,4 @@
         </div>
     </div>
 </div>
+

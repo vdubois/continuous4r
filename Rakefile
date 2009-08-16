@@ -31,4 +31,9 @@ Dir['tasks/**/*.rake'].each { |t| load t }
 
 # TODO - want other tests/tasks run by default? Add them to the list
 # task :default => [:spec, :features]
+require 'continuous4r'
+c4rproject = Continuous4rProject.new
+c4rproject.name = "continuous4r"
+c4rproject.tasks = ['flay']
+Continuous4r.project = c4rproject
 
