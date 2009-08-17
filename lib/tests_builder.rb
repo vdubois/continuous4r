@@ -7,7 +7,11 @@ class TestsBuilder
 
   # Prerequis a la tache
   def prerequisite_met?
-    Dir.glob("test/**/*_test.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
+    if File.exists?("app/controllers/")
+      Dir.glob("test/**/*_test.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
+    else
+      Dir.glob("test/**/*.rb").length > 0 or Dir.glob("spec/**/*_spec.rb").length > 0
+    end
   end
 
   # Dans le cas de l'erreur de prerequis
@@ -23,7 +27,7 @@ class TestsBuilder
       File.delete("#{Continuous4r::WORK_DIR}/tests-run.html")
     end
     tests_report = File.open("#{Continuous4r::WORK_DIR}/tests-run.html", "w")
-    if Dir.glob("test/**/*_test.rb").length > 0
+    if Dir.glob("test/**/*_test.rb").length > 0 or Dir.glob("test/**/*.rb").length > 0
       html = TestsFormatter.new.to_html
     elsif Dir.glob("spec/**/*_spec.rb").length > 0
       html = RspecFormatter.new.to_html

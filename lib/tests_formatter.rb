@@ -45,7 +45,7 @@ class TestsFormatter
         error_detail = arr_error.to_s
       end
       html += "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}' style='#{passed == true ? "background-color: #e3ffdb; color: #7ab86c;" : "background-color: #ffdddd; color: #770000;"}'><td><strong>#{runner}</strong></td>"
-      if project.ignore_tests_failures == "false" and passed == false
+      if project.ignore_test_failures == false and passed == false
         raise " #{runner} tests failed.\n BUILD FAILED."
       end
       f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")
@@ -90,7 +90,7 @@ class TestsFormatter
         end
       end
       if array_file_content.select{|l| l =~ /^Finished in/}.length == 0
-        html += "<td>0</td><td>#{error_detail if !passed}</td><td>0 seconds</td></tr>"
+        html += "<td>0</td><td><pre>#{error_detail if !passed}</pre></td><td>0 seconds</td></tr>"
       else
         html += "<td>#{tests.split(/ tests/)[0]}</td><td><img src='images/accept.png' align='absmiddle'/>&#160;#{assertions}&#160;&#160;<img src='images/error.png' align='absmiddle'/>&#160;#{failures}&#160;&#160;<img src='images/exclamation.png' align='absmiddle'/>&#160;#{errors}</td>"
         html += "<td>#{array_file_content.select{|l| l =~ /^Finished in/}[0].split(/Finished in /)[1].split(/\.$/)[0]}</td></tr>"

@@ -11,18 +11,17 @@
               <tbody>
                 <%
                   files = Array.new
-                  project_root = '.'
-                  files << Dir.glob("#{RAILS_ROOT}/app/**/*.rb")
-                  files << Dir.glob("#{RAILS_ROOT}/app/**/*.html.erb")
-                  files << Dir.glob("#{RAILS_ROOT}/app/**/*.rhtml")
-                  files << Dir.glob("#{RAILS_ROOT}/lib/**/*.rb")
-                  files << Dir.glob("#{RAILS_ROOT}/test/**/*.rb")
-                  files << Dir.glob("#{RAILS_ROOT}/spec/**/*.rb")
+                  files << Dir.glob("app/**/*.rb")
+                  files << Dir.glob("app/**/*.html.erb")
+                  files << Dir.glob("app/**/*.rhtml")
+                  files << Dir.glob("lib/**/*.rb")
+                  files << Dir.glob("test/**/*.rb")
+                  files << Dir.glob("spec/**/*.rb")
                   files.flatten!
                   files.each_with_index do |file,index|
                 %>
                 <tr class="<%= index % 2 == 0 ? 'a' : 'b' %>">
-                  <td><a href="xdoclet/<%= "#{file.gsub(Regexp.new("#{project_root.gsub(/\./,"\\.")}/"),'').gsub(/\//,'_')}" %>.html" target="_blank"><%= file.gsub(Regexp.new("#{project_root.gsub(/\./,"\\.")}/"),'') %></a></td>
+                  <td><a href="xdoclet/<%= "#{file.gsub(/\//,'_')}" %>.html" target="_blank"><%= file %></a></td>
                 </tr>
                 <%
                   end

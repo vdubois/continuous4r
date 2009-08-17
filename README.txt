@@ -8,6 +8,11 @@
 
 Continuous integration tool which regroups in one place tests, quality and analysis tools in a Maven-like website.
 
+== TODO:
+* Make Roodi produce an indicator
+* Make continuous4r fully parameter-able
+* Make continuous4r collect statistics over the time
+
 == FEATURES/PROBLEMS:
 
 * See http://continuous4r.rubyforge.org
@@ -16,8 +21,6 @@ Continuous integration tool which regroups in one place tests, quality and analy
 
   cd /path/to/rails/app
   add : require 'continuous4r' to your Rakefile
-  'rake continuous4r:init' to create your continuous4r-project.xml file
-  edit continuous4r-project.xml to suit your needs
   Type 'rake continuous4r:build' to build
   then open tmp/continuous4r/index.html in your browser
 
@@ -26,7 +29,6 @@ Continuous integration tool which regroups in one place tests, quality and analy
 * RubyGems
 * rails (erb)
 * hpricot
-* XmlElements
 
 == INSTALL:
 
