@@ -34,6 +34,6 @@ Dir['tasks/**/*.rake'].each { |t| load t }
 require 'continuous4r'
 c4rproject = Continuous4rProject.new
 c4rproject.name = "continuous4r"
-c4rproject.tasks = ['zentest']
+#c4rproject.tasks = ['zentest']
 Continuous4r.project = c4rproject
 

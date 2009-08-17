@@ -9,6 +9,7 @@ class RdocBuilder
   def build(project_name, auto_install, proxy_option)
     # On lance la generation
     puts " Building rdoc api and rdoc generation report..."
+    project_root = '.'
     if !File.exist?("#{project_root}/doc")
       FileUtils.mkdir("#{project_root}/doc")
     end

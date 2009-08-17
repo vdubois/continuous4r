@@ -134,7 +134,7 @@ class DcovBuilder
     files << Dir.glob("lib/**/*.rb")
     files.flatten!
     options = {
-      :path => project_root,
+      :path => '.',
       :output_format => 'html',
       :files => files
     }
