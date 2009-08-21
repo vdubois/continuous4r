@@ -34,6 +34,11 @@ Dir['tasks/**/*.rake'].each { |t| load t }
 require 'continuous4r'
 c4rproject = Continuous4rProject.new
 c4rproject.name = "continuous4r"
-#c4rproject.tasks = ['zentest']
+#c4rproject.tasks = ['dcov']
+c4rproject.company = Company.new
+c4rproject.company.denomination = "SQLI"
+c4rproject.company.url = "http://www.sqli.com"
+c4rproject.company.logo = "file:///home/vdubois/Bureau/logo-sqli.png"
+
 Continuous4r.project = c4rproject
 

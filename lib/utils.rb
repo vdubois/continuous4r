@@ -129,3 +129,9 @@ module Utils
     return style
   end
 end
+
+class String
+  def sanitize_from_terminal_to_html
+    self.gsub(//,"").gsub(/\[31m/, "").gsub(/\[32m/, "").gsub(/\[35m/, "").gsub(/\[0m/, "")
+  end
+end

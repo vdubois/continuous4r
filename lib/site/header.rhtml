@@ -19,7 +19,7 @@
               <%
                 begin
                   if !project.company.nil? and !project.company.logo.nil? and !project.company.url.nil? and !project.company.name.nil? %>
-                  <td><a target="_blank" href="<%= project.company.url %>" id="organizationLogo"><img alt="<%= project.company.denomination.text %>" title="<%= project.company.denomination %>" src="<%= project.company.logo %>"></a></td>
+                  <td><a target="_blank" href="<%= project.company.url %>" id="organizationLogo"><img alt="<%= project.company.denomination %>" title="<%= project.company.denomination %>" src="<%= project.company.logo %>"></a></td>
               <%  end
                 rescue
                   # XML error safe
