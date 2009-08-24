@@ -1,19 +1,18 @@
 require 'rubygems'
 require 'cgi'
-# =====================================================
-# Classe de formatage des resultats renvoyes par les
-# differents tests unitaires
-# Author: Vincent Dubois
-# =====================================================
+
+# Formatting unit tests class
+# <b>Author</b>:: Vincent&#160;Dubois[mailto:duboisv@hotmail.com]
+# <b>Date</b>:: 24/08/2009
 class TestsFormatter
-  # Methode qui permet de fabriquer le flux HTML a partir des flux console
-  # de tests unitaires
   attr_accessor :errors_or_warnings
 
+  # Constructor
   def initialize
     @errors_or_warnings = 0
   end
 
+  # Method which outputs the results of unit tests in HTML format
   def to_html
     html = "<table class='bodyTable'><thead><th>Testing element</th><th>Pass</th><th>Tests</th><th>Result</th><th>Time</th></thead><tbody>"
     i = 0
@@ -29,13 +28,9 @@ class TestsFormatter
     html += "<h3>Errors/Failures details</h3><table class='bodyTable'><thead><th>Type</th><th>Method/Trace</th></thead>#{html_details}</table>"
   end
 
-  def run_runner(runner, index)
-    html = ""
-    project = Continuous4r.project
-    puts " Running #{runner} tests..."
-    error_detail = ""
-    result = ""
-    passed = false
+  # core tests run method
+  # <b>runner</>:: tests type
+  def core_test_run(runner)
     if Config::CONFIG['host_os'] =~ /mswin/
       stdout = IO.popen("cmd.exe /C rake test:#{runner} 2>test_#{runner}_error.log")
       result = stdout.read
@@ -48,13 +43,33 @@ class TestsFormatter
         end
       end
     end
-    passed = (result.index("Failure:").nil? and result.index("Error:").nil? and error_detail.match(/rake aborted/).nil?)
+  end
+
+  # verifies if a test is OK or not
+  # <b>result</b>:: output of test
+  # <b>error_detail</b>:: error details of test
+  def test_passed?(result, error_detail)
+    result.index("Failure:").nil? and result.index("Error:").nil? and error_detail.match(/rake aborted/).nil?
+  end
+      
+  # executing tests method
+  # <b>runner</b>:: tests type
+  # <b>index</b>::  running tests index
+  def run_runner(runner, index)
+    html = ""
+    project = Continuous4r.project
+    puts " Running #{runner} tests..."
+    passed = false
+    result, error_detail = core_test_run(runner)
+    result ||= ""
+    error_detail ||= ""
+    passed = test_passed?(result, error_detail)
     if !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
       arr_error = error_detail.split(/$/)
       arr_error.delete_at(arr_error.length - 1)
       if Config::CONFIG['host_os'] =~ /mswin/
-	  arr_error.delete_at(arr_error.length - 1)
-	end
+	    arr_error.delete_at(arr_error.length - 1)
+	  end
       arr_error.delete_at(0)
       error_detail = arr_error.to_s
     end
