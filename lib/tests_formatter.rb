@@ -43,6 +43,9 @@ class TestsFormatter
         end
       end
     end
+    result ||= ""
+    error_detail ||= ""
+    return result, error_detail
   end
 
   # verifies if a test is OK or not
@@ -51,7 +54,40 @@ class TestsFormatter
   def test_passed?(result, error_detail)
     result.index("Failure:").nil? and result.index("Error:").nil? and error_detail.match(/rake aborted/).nil?
   end
-      
+
+  # initializes HTML for a new line of test results
+  # <b>runner</b>:: type of tests
+  # <b>index</b>:: index of test
+  # <b>passed</b>:: wether the test passed or not
+  def generate_line_start(runner, index, passed)
+    "<tr class='#{ index % 2 == 0 ? 'a' : 'b'}' style='#{passed == true ? "background-color: #e3ffdb; color: #7ab86c;" : "background-color: #ffdddd; color: #770000;"}'><td><strong>#{runner}</strong></td>"
+  end
+
+  # initializes HTML for 'passed' flag column
+  # <b>passed</b>:: wether the test passed or not
+  def generate_passed_column(passed)
+    "<td style='text-align: center;'><img src='images/icon_#{passed ? 'success' : 'error'}_sml.gif'/></td>"
+  end
+
+  # initializes results for current test
+  # <b>array_file_content</b>:: array content of log file
+  def initialize_results(array_file_content)
+    index_for_result = 0
+    if Config::CONFIG['host_os'] =~ /mswin/
+      index_for_result = 2
+    else
+      index_for_result = 1      
+    end
+    test_results = array_file_content[array_file_content.length - index_for_result].sanitize_from_terminal_to_html.split(/, /).split(/, /)
+    tests = test_results[0]
+    assertions = test_results[1]
+    failures = test_results[2]
+    failures ||= 0
+    errors = test_results[3]
+    errors ||= 0
+    return tests, assertions, failures
+  end
+
   # executing tests method
   # <b>runner</b>:: tests type
   # <b>index</b>::  running tests index
@@ -61,8 +97,6 @@ class TestsFormatter
     puts " Running #{runner} tests..."
     passed = false
     result, error_detail = core_test_run(runner)
-    result ||= ""
-    error_detail ||= ""
     passed = test_passed?(result, error_detail)
     if !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
       arr_error = error_detail.split(/$/)
@@ -73,28 +107,18 @@ class TestsFormatter
       arr_error.delete_at(0)
       error_detail = arr_error.to_s
     end
-    html += "<tr class='#{ index % 2 == 0 ? 'a' : 'b'}' style='#{passed == true ? "background-color: #e3ffdb; color: #7ab86c;" : "background-color: #ffdddd; color: #770000;"}'><td><strong>#{runner}</strong></td>"
+    html += generate_line_start(runner, index, passed)
     if project.ignore_test_failures == false and passed == false
       raise " #{runner} tests failed.\n BUILD FAILED."
     end
     f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")
     f.write(result)
     f.close
-    html += "<td style='text-align: center;'><img src='images/icon_#{passed ? 'success' : 'error'}_sml.gif'/></td>"
+    html += generate_passed_column(passed)
     file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log")
     array_file_content = file_content.split(/$/)
-    if Config::CONFIG['host_os'] =~ /mswin/
-      test_results = array_file_content[array_file_content.length - 2].sanitize_from_terminal_to_html.split(/, /).split(/, /)
-    else
-      test_results = array_file_content[array_file_content.length - 1].sanitize_from_terminal_to_html.split(/, /).split(/, /)
-    end
-    tests = test_results[0]
-    assertions = test_results[1]
-    failures = test_results[2]
-    failures ||= 0
+    tests, assertions, failures = initialize_results(array_file_content)
     @errors_or_warnings += failures.to_i
-    errors = test_results[3]
-    errors ||= 0
     @errors_or_warnings += errors.to_i
     if failures.to_i > 0 or errors.to_i > 0
       array_details = Array.new
