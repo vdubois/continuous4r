@@ -76,7 +76,7 @@ class TestsFormatter
     if Config::CONFIG['host_os'] =~ /mswin/
       index_for_result = 2
     else
-      index_for_result = 1      
+      index_for_result = 1
     end
     test_results = array_file_content[array_file_content.length - index_for_result].sanitize_from_terminal_to_html.split(/, /).split(/, /)
     tests = test_results[0]
@@ -86,6 +86,66 @@ class TestsFormatter
     errors = test_results[3]
     errors ||= 0
     return tests, assertions, failures
+  end
+
+  # error detection method
+  # <b>error_detail</b>:: result detail of test
+  def error_found(error_detail)
+    !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
+  end
+
+  # extract actual error from multiple error detail lines
+  # <b>error_detail</b>:: multiple error detail lines
+  def extract_actual_error_detail(error_detail)
+    arr_error = error_detail.split(/$/)
+    arr_error.delete_at(arr_error.length - 1)
+    if Config::CONFIG['host_os'] =~ /mswin/
+      arr_error.delete_at(arr_error.length - 1)
+    end
+    arr_error.delete_at(0)
+    arr_error.to_s
+  end
+
+  # construction of details array from file content array
+  # <b>array_file_content</b>:: file content array
+  def construct_details_array(array_file_content)
+    array_details = Array.new
+    array_get = false
+    index = 0
+    array_file_content.each do |line|
+      index += 1 if array_get and line.match(Regexp.new("#{index + 2}\\)"))
+      array_get = true if line.match(Regexp.new("#{index + 1}\\)"))
+      if array_get and line.match(/assertions/).nil?
+        array_details[index] = Array.new if array_details[index].nil?
+        next if array_details[index].length == 0 and line.match(/[0-9]\)/).nil?
+        array_details[index] << line
+      end
+    end
+  end
+
+  # error caracteristics generation
+  # <b>array_details</b>:: error details array
+  # <b>arr_index</b>:: index of error
+  def generate_error_caracteristics(array_details, arr_index)
+    error_failure_type = array_details[arr_index][0].split(/\)/)[1].split(/:/)[0] unless array_details[arr_index][0].nil? or array_details[arr_index][0].split(/\)/)[1].nil?
+    error_icon = (error_failure_type.match(/Error/) ? "<img src='images/exclamation.png'/>" : "<img src='images/error.png'/>")
+    return error_failure_type, error_icon
+  end
+
+  # generate HTML for error detail line start
+  # <b>error_failure_type</b>:: error type (error or failure)
+  # <b>error_icon</b>:: error icon
+  # <b>array_details</b>:: error details array
+  # <b>arr_index</b>:: index of error
+  def generate_line_detail_start(error_failure_type, error_icon, array_details, arr_index)
+    "<tr style='#{error_failure_type.match(/Error/) ? "background-color: #ffdddd; color: #770000;" : "background-color: #fffccf; color: #666600;"}'><td align='center'>#{error_icon}</td><td><strong>#{array_details[arr_index][1].split(/\(/)[1].split(/\)/)[0]}##{array_details[arr_index][1].split(/\(/)[0]}</strong>"
+  end
+
+  # generate HTML for error detail line start
+  # <b>array_details</b>:: error details array
+  # <b>arr_index</b>:: index of error
+  def generate_line_detail_end(array_details, arr_index)
+    "<br/><pre>#{CGI::escapeHTML(array_details[arr_index].to_s)}</pre></td></tr>"
   end
 
   # executing tests method
@@ -98,48 +158,27 @@ class TestsFormatter
     passed = false
     result, error_detail = core_test_run(runner)
     passed = test_passed?(result, error_detail)
-    if !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
-      arr_error = error_detail.split(/$/)
-      arr_error.delete_at(arr_error.length - 1)
-      if Config::CONFIG['host_os'] =~ /mswin/
-	    arr_error.delete_at(arr_error.length - 1)
-	  end
-      arr_error.delete_at(0)
-      error_detail = arr_error.to_s
+    if error_found(error_detail)
+      error_detail = extract_actual_error_detail(error_detail)
     end
     html += generate_line_start(runner, index, passed)
-    if project.ignore_test_failures == false and passed == false
-      raise " #{runner} tests failed.\n BUILD FAILED."
+    raise " #{runner} tests failed.\n BUILD FAILED." if project.ignore_test_failures == false and passed == false
+    File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w") do |file|
+      file.write(result)
     end
-    f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")
-    f.write(result)
-    f.close
     html += generate_passed_column(passed)
-    file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log")
-    array_file_content = file_content.split(/$/)
+    array_file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log").split(/$/)
     tests, assertions, failures = initialize_results(array_file_content)
     @errors_or_warnings += failures.to_i
     @errors_or_warnings += errors.to_i
     if failures.to_i > 0 or errors.to_i > 0
-      array_details = Array.new
-      array_get = false
-      index = 0
-      array_file_content.each do |line|
-        index += 1 if array_get and line.match(Regexp.new("#{index + 2}\\)"))
-        array_get = true if line.match(Regexp.new("#{index + 1}\\)"))
-        if array_get and line.match(/assertions/).nil?
-          array_details[index] = Array.new if array_details[index].nil?
-          next if array_details[index].length == 0 and line.match(/[0-9]\)/).nil?
-          array_details[index] << line
-        end
-      end
+      array_details = construct_details_array(array_file_content)
       (0..index).to_a.each do |arr_index|
-        error_failure_type = array_details[arr_index][0].split(/\)/)[1].split(/:/)[0] unless array_details[arr_index][0].nil? or array_details[arr_index][0].split(/\)/)[1].nil?
-        error_icon = (error_failure_type.match(/Error/) ? "<img src='images/exclamation.png'/>" : "<img src='images/error.png'/>")
-        html_details += "<tr style='#{error_failure_type.match(/Error/) ? "background-color: #ffdddd; color: #770000;" : "background-color: #fffccf; color: #666600;"}'><td align='center'>#{error_icon}</td><td><strong>#{array_details[arr_index][1].split(/\(/)[1].split(/\)/)[0]}##{array_details[arr_index][1].split(/\(/)[0]}</strong>"
+        error_failure_type, error_icon = generate_error_caracteristics(array_details, arr_index)
+        html_details += generate_line_detail_start(error_failure_type, error_icon, array_details, arr_index)
         array_details[arr_index].delete_at(1)
         array_details[arr_index].delete_at(0)
-        html_details += "<br/><pre>#{CGI::escapeHTML(array_details[arr_index].to_s)}</pre></td></tr>"
+        html_details += generate_line_detail_end(array_details, arr_index)
       end
     end
     if array_file_content.select{|l| l =~ /^Finished in/}.length == 0
