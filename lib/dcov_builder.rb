@@ -28,12 +28,19 @@ module Dcov
       output << """<h2>Dcov results</h2>\n\n<p><a href='http://dcov.rubyforge.org' target='_blank'>Dcov</a> is a documentation coverage analyzer for ruby.</p>"""
     end
 
-    def build_stats_body
+    # find some word in log and return its corresponding value
+    # <b>word</b>:: word to find
+    def find_in_rdoc_log(word)
+      File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ Regexp.new("^#{word}:") }[0].strip.split(Regexp.new("#{word}:"))[1].strip.to_f
+    end
+
+    # builds HTML coverage summary
+    # <b>global_coverage</b>:: global coverage for project
+    # <b>class_coverage</b>:: classes coverage
+    # <b>module_coverage</b>:: modules coverage
+    # <b>method_coverage</b>:: methods coverage
+    def build_summary(global_coverage, class_coverage, module_coverage, method_coverage)
       output = ""
-      num_classes = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Classes:/ }[0].strip.split(/Classes:/)[1].strip.to_f
-      num_modules = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Modules:/ }[0].strip.split(/Modules:/)[1].strip.to_f
-      num_methods = File.read("#{Continuous4r::WORK_DIR}/rdoc/rdoc.log").split(/$/).select { |l| l =~ /^Methods:/ }[0].strip.split(/Methods:/)[1].strip.to_f
-      global_coverage = ((class_coverage.to_f * num_classes) + (module_coverage.to_f * num_modules) + (method_coverage.to_f * num_methods)) / (num_classes + num_modules + num_methods)
       output << Utils.heading_for_builder("Global coverage percentage : #{global_coverage.to_i}%", global_coverage.to_i)
       output << "<h3>Summary</h3><p>\n"
       output << "<table class='bodyTable' style='width: 200px;'><tr><th>Type</th><th>Coverage</th></tr>"
@@ -41,6 +48,14 @@ module Dcov
       output << "<tr class='b'><td><b>Module</b></td><td style='text-align: right;'>#{module_coverage}%</td></tr>\n"
       output << "<tr class='a'><td><b>Method</b></td><td style='text-align: right;'>#{method_coverage}%</td></tr></table>\n"
       output << "</p>\n\n"
+    end
+
+    def build_stats_body
+      num_classes = find_in_rdoc_log("Classes")
+      num_modules = find_in_rdoc_log("Modules")
+      num_methods = find_in_rdoc_log("Methods")
+      global_coverage = ((class_coverage.to_f * num_classes) + (module_coverage.to_f * num_modules) + (method_coverage.to_f * num_methods)) / (num_classes + num_modules + num_methods)
+      output = build_summary(global_coverage, class_coverage, module_coverage, method_coverage)
 
       if data[:structured].length > 0
         output << "<h3>Details</h3><p><table class='bodyTable'><tr><th>Class/Module name</th><th>Method name</th></tr>\n"

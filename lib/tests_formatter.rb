@@ -148,6 +148,21 @@ class TestsFormatter
     "<br/><pre>#{CGI::escapeHTML(array_details[arr_index].to_s)}</pre></td></tr>"
   end
 
+  # generate HTML column for a test statistics
+  # <b>tests</b>:: tests made
+  # <b>assertions</b>:: assertions made
+  # <b>failures</b>:: number of test failures
+  # <b>errors</b>:: number of test errors
+  def generate_stats_column(tests, assertions, failures, errors)
+    "<td>#{tests.split(/ tests/)[0]}</td><td><img src='images/accept.png' align='absmiddle'/>&#160;#{assertions}&#160;&#160;<img src='images/error.png' align='absmiddle'/>&#160;#{failures}&#160;&#160;<img src='images/exclamation.png' align='absmiddle'/>&#160;#{errors}</td>"
+  end
+
+  # generate HTML column for the time passed on a test
+  # <b>array_file_content</b>:: test results array
+  def generate_finished_in_column(array_file_content)
+    "<td>#{array_file_content.select{|l| l =~ /^Finished in/}[0].split(/Finished in /)[1].split(/\.$/)[0]}</td></tr>"
+  end
+
   # executing tests method
   # <b>runner</b>:: tests type
   # <b>index</b>::  running tests index
@@ -184,8 +199,8 @@ class TestsFormatter
     if array_file_content.select{|l| l =~ /^Finished in/}.length == 0
       html += "<td>0</td><td><pre>#{error_detail if !passed}</pre></td><td>0 seconds</td></tr>"
     else
-      html += "<td>#{tests.split(/ tests/)[0]}</td><td><img src='images/accept.png' align='absmiddle'/>&#160;#{assertions}&#160;&#160;<img src='images/error.png' align='absmiddle'/>&#160;#{failures}&#160;&#160;<img src='images/exclamation.png' align='absmiddle'/>&#160;#{errors}</td>"
-      html += "<td>#{array_file_content.select{|l| l =~ /^Finished in/}[0].split(/Finished in /)[1].split(/\.$/)[0]}</td></tr>"
+      html += generate_stats_column(tests, assertions, failures, errors)
+      html += generate_finished_in_column(array_file_content)
     end
   end
 end
