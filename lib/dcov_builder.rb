@@ -50,6 +50,26 @@ module Dcov
       output << "</p>\n\n"
     end
 
+    # builds a class error HTML column
+    # <b>class_error_presence</b>:: if current error is a class error
+    # <b>key</b>:: error key
+    # <b>value</b>:: error data
+    def build_class_error_column(class_error_presence, key, value)
+      "<td>#{"<b>" if class_error_presence == true}#{key.is_a?(String) ? key : key.full_name }#{"</b> in <a href='xdoclet/#{value[0].in_files.first.file_absolute_name.gsub(/\//,'_')}.html' target='_blank'>#{value[0].in_files.first.file_absolute_name}</a>" if class_error_presence == true}</td>"
+    end
+
+    # builds a method error HTML column
+    # <b>itm</b>:: method error item
+    def build_method_error_column(itm)
+      ((itm.comment.nil? || itm.comment == '') ? "<td><ol><li><b>#{itm.name}</b> in <a href='xdoclet/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li></ol></td>" : "")
+    end
+
+    # builds a method error HTML column
+    # <b>itm</b>:: method error item
+    def build_alternate_method_error_column(itm)
+      ((itm.comment.nil? || itm.comment == '') ? "<li><b>#{itm.name}</b> in <a href='xdoclet/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li>" : "")
+    end
+
     def build_stats_body
       num_classes = find_in_rdoc_log("Classes")
       num_modules = find_in_rdoc_log("Modules")
@@ -74,18 +94,18 @@ module Dcov
           nbtr += 1
           output << "<tr class='#{indice % 2 == 0 ? 'a' : 'b'}'>"
           if class_error_presence == true or method_error_presence == true and !value[0].in_files.first.nil?
-            output << "<td>#{"<b>" if class_error_presence == true}#{key.is_a?(String) ? key : key.full_name }#{"</b> in <a href='xdoclet/#{value[0].in_files.first.file_absolute_name.gsub(/\//,'_')}.html' target='_blank'>#{value[0].in_files.first.file_absolute_name}</a>" if class_error_presence == true}</td>"
+            output << build_class_error_column(class_error_presence, key, value)
           else
             output << "<td>&#160;</td>"
           end
           if count_method_error_presence == 1
             value[1].each do |itm|
-              output << ((itm.comment.nil? || itm.comment == '') ? "<td><ol><li><b>#{itm.name}</b> in <a href='xdoclet/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li></ol></td>" : "")
+              output << build_method_error_column(itm)
             end
           elsif count_method_error_presence > 1
             output << "<td><ol>"
             value[1].each do |itm|
-              output << ((itm.comment.nil? || itm.comment == '') ? "<li><b>#{itm.name}</b> in <a href='xdoclet/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li>" : "")
+              output << build_alternate_method_error_column(itm)
             end
             output << "</ol></td>"
           else

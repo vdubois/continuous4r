@@ -44,7 +44,7 @@ module Utils
     end
 
   end
-  
+
   # Methode qui permet de convertir un pourcentage d'un builder en couleur css/html
   def self.percent_to_css_style(percent)
     style = "style='font-weight: bold; color: "
@@ -131,7 +131,9 @@ module Utils
 end
 
 class String
+  # method to sanitize a string found on a terminal output
   def sanitize_from_terminal_to_html
     self.gsub(//,"").gsub(/\[31m/, "").gsub(/\[32m/, "").gsub(/\[35m/, "").gsub(/\[0m/, "")
   end
 end
+
