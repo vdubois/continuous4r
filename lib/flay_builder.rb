@@ -14,8 +14,7 @@ class FlayBuilder
     # On lance la generation (produite dans tmp/metric_fu/flay)
     puts " Building flay report..."
     ENV['HOME'] = ENV['USERPROFILE'] if Config::CONFIG['host_os'] =~ /mswin/ and ENV['HOME'].nil?
-    files = Array.new
-    files << Dir.glob("app/**/*.rb")
+    files = Dir.glob("app/**/*.rb")
     files << Dir.glob("lib/**/*.rb")
     files << Dir.glob("test/**/*.rb")
     files << Dir.glob("spec/**/*.rb")
