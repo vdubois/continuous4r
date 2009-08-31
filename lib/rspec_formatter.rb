@@ -119,6 +119,39 @@ class RspecFormatter
     return html_details, array_details
   end
 
+  # extract error detail string from an error details array
+  # <b>error_detail_array</b>:: array of error details
+  def extract_error_detail(error_detail_array)
+    arr_error = error_detail_array.split(/$/)
+    arr_error.delete_at(arr_error.length - 1)
+    if Config::CONFIG['host_os'] =~ /mswin/
+      arr_error.delete_at(arr_error.length - 1)
+    end
+    arr_error.delete_at(0)
+    arr_error.to_s
+  end
+
+  # generates all errors and failures lines for rspec tests
+  # <b>array_file_content</b>:: file content lines array
+  def generate_failure_lines(array_file_content)
+    array_details = Array.new
+    array_get = false
+    index = 0
+    array_file_content.each do |line|
+      index += 1 if array_get and line.match(Regexp.new("#{index + 2}\\)"))
+      array_get = true if line.match(Regexp.new("#{index + 1}\\)"))
+      if array_get and line.match(/assertions/).nil?
+        array_details[index] = Array.new if array_details[index].nil?
+        next if array_details[index].length == 0 and line.match(/[0-9]\)/).nil?
+        array_details[index] << line
+      end
+    end
+    (0..index).to_a.each do |arr_index|
+      html_details, array_details = generate_failure_or_error_line(array_details, arr_index)
+    end
+    html_details
+  end
+
   # Methode qui permet de fabriquer le flux HTML a partir des flux console
   # de tests unitaires
   def to_html
@@ -131,24 +164,17 @@ class RspecFormatter
       require 'open3'
     end
     ['spec'].each do |runner|
-      error_detail, result = run_runner(runner)
+      error_detail_array, result = run_runner(runner)
       passed = test_passed?(result, error_detail)
-      if !(error_detail.match(/rake aborted/).nil?) and error_detail.split(/$/).length > 1
-        arr_error = error_detail.split(/$/)
-        arr_error.delete_at(arr_error.length - 1)
-        if Config::CONFIG['host_os'] =~ /mswin/
-          arr_error.delete_at(arr_error.length - 1)
-        end
-        arr_error.delete_at(0)
-        error_detail = arr_error.to_s
+      if !(error_detail_array.match(/rake aborted/).nil?) and error_detail_array.split(/$/).length > 1
+        error_detail = extract_error_detail(error_detail_array)
       end
       html << generate_line_start(runner, passed)
-      if project.ignore_tests_failures == "false" and passed == false
-        raise " #{runner} tests failed.\n BUILD FAILED."
+      raise " #{runner} tests failed.\n BUILD FAILED." if project.ignore_tests_failures == "false" and passed == false
+      File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w") do |file|
+        file.write(result)
+        file.close
       end
-      f = File.open("#{Continuous4r::WORK_DIR}/test_#{runner}.log", "w")
-      f.write(result)
-      f.close
       html << "<td style='text-align: center;'><img src='images/icon_#{passed ? 'success' : 'error'}_sml.gif'/></td>"
       file_content = File.read("#{Continuous4r::WORK_DIR}/test_#{runner}.log")
       array_file_content = file_content.split(/$/)
@@ -158,22 +184,7 @@ class RspecFormatter
       failures ||= 0
       errors_or_warnings += failures.to_i
       if failures.to_i > 0
-        array_details = Array.new
-        array_get = false
-        index = 0
-        array_file_content.each do |line|
-          index += 1 if array_get and line.match(Regexp.new("#{index + 2}\\)"))
-          array_get = true if line.match(Regexp.new("#{index + 1}\\)"))
-          if array_get and line.match(/assertions/).nil?
-            array_details[index] = Array.new if array_details[index].nil?
-            next if array_details[index].length == 0 and line.match(/[0-9]\)/).nil?
-            array_details[index] << line
-          end
-        end
-        (0..index).to_a.each do |arr_index|
-          myhtml_details, array_details = generate_failure_or_error_line(array_details, arr_index)
-          html_details << myhtml_details
-        end
+        html_details << generate_failure_lines(array_file_content)
       end
       if array_file_content.select{|l| l =~ /^Finished in/}.length == 0
         html << generate_default_result_and_time_columns(result, error_detail, passed)
