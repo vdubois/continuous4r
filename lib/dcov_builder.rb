@@ -8,8 +8,7 @@ require 'dcov_stats.rb'
 # ==========================================================================
 module Dcov
   # Generates HTML output
-  class Generator # < Ruport::Formatter::HTML
-    # renders :html, :for => StatsRenderer
+  class Generator
 
     include Dcov::StatsRenderer::Helpers
 
@@ -24,8 +23,7 @@ module Dcov
 
     def build_stats_header
       # Little CSS, a little HTML...
-      output = ""
-      output << """<h2>Dcov results</h2>\n\n<p><a href='http://dcov.rubyforge.org' target='_blank'>Dcov</a> is a documentation coverage analyzer for ruby.</p>"""
+      output = "<h2>Dcov results</h2>\n\n<p><a href='http://dcov.rubyforge.org' target='_blank'>Dcov</a> is a documentation coverage analyzer for ruby.</p>"
     end
 
     # find some word in log and return its corresponding value
@@ -40,14 +38,8 @@ module Dcov
     # <b>module_coverage</b>:: modules coverage
     # <b>method_coverage</b>:: methods coverage
     def build_summary(global_coverage, class_coverage, module_coverage, method_coverage)
-      output = ""
-      output << Utils.heading_for_builder("Global coverage percentage : #{global_coverage.to_i}%", global_coverage.to_i)
-      output << "<h3>Summary</h3><p>\n"
-      output << "<table class='bodyTable' style='width: 200px;'><tr><th>Type</th><th>Coverage</th></tr>"
-      output << "<tr class='a'><td><b>Class</b></td><td style='text-align: right;'>#{class_coverage}%</td></tr>\n"
-      output << "<tr class='b'><td><b>Module</b></td><td style='text-align: right;'>#{module_coverage}%</td></tr>\n"
-      output << "<tr class='a'><td><b>Method</b></td><td style='text-align: right;'>#{method_coverage}%</td></tr></table>\n"
-      output << "</p>\n\n"
+      output = Utils.heading_for_builder("Global coverage percentage : #{global_coverage.to_i}%", global_coverage.to_i)
+      output << "<h3>Summary</h3><p>\n<table class='bodyTable' style='width: 200px;'><tr><th>Type</th><th>Coverage</th></tr><tr class='a'><td><b>Class</b></td><td style='text-align: right;'>#{class_coverage}%</td></tr>\n<tr class='b'><td><b>Module</b></td><td style='text-align: right;'>#{module_coverage}%</td></tr>\n<tr class='a'><td><b>Method</b></td><td style='text-align: right;'>#{method_coverage}%</td></tr></table>\n</p>\n\n"
     end
 
     # builds a class error HTML column
@@ -70,6 +62,30 @@ module Dcov
       ((itm.comment.nil? || itm.comment == '') ? "<li><b>#{itm.name}</b> in <a href='xdoclet/#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, '').gsub(/\//,'_')}.html##{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1').split(/:/)[1]}' target='_blank'>#{itm.token_stream.first.text.sub(/^# File /, '').sub(/, line (\d+)$/, ':\1')}</a></b></li>" : "")
     end
 
+    # determines if a documentation value contains a class error
+    # <b>value</b>:: documentation value
+    def class_error_present?(value)
+      (value.comment.nil? or value.comment == '') unless value.is_a?(Dcov::TopLevel)
+    end
+
+    # determines if an error is present in the parameters
+    # <b>class_error_presence</b>:: wether a class error is present or not
+    # <b>method_error_presence</b>:: wether a method error is present or not
+    # <b>value</b>:: an hypotetical documentation error
+    def error_present_in?(class_error_presence, method_error_presence, value)
+      class_error_presence == true or method_error_presence == true and !value.in_files.first.nil?
+    end
+
+    # builds the method errors list
+    # <b>method_errors</b>:: method errors array
+    def build_error_methods_list(method_errors)
+      output = "<td><ol>"
+      method_errors.each do |itm|
+        output << build_alternate_method_error_column(itm)
+      end
+      output << "</ol></td>"
+    end
+
     def build_stats_body
       num_classes = find_in_rdoc_log("Classes")
       num_modules = find_in_rdoc_log("Modules")
@@ -83,7 +99,7 @@ module Dcov
       indice = 0
       nbtr = 0
       data[:structured].each do |key,value|
-        class_error_presence = (value[0].comment.nil? or value[0].comment == '') unless value[0].is_a?(Dcov::TopLevel)
+        class_error_presence = class_error_present?(value[0])
         method_error_presence = false
         count_method_error_presence = 0
         value[1].each do |itm|
@@ -93,7 +109,7 @@ module Dcov
         if class_error_presence == true or method_error_presence == true
           nbtr += 1
           output << "<tr class='#{indice % 2 == 0 ? 'a' : 'b'}'>"
-          if class_error_presence == true or method_error_presence == true and !value[0].in_files.first.nil?
+          if error_present_in?(class_error_presence, method_error_presence, value[0])
             output << build_class_error_column(class_error_presence, key, value)
           else
             output << "<td>&#160;</td>"
@@ -103,11 +119,7 @@ module Dcov
               output << build_method_error_column(itm)
             end
           elsif count_method_error_presence > 1
-            output << "<td><ol>"
-            value[1].each do |itm|
-              output << build_alternate_method_error_column(itm)
-            end
-            output << "</ol></td>"
+            output << build_error_methods_list(value[1])
           else
             output << "<td>&#160;</td>"
           end
@@ -121,7 +133,6 @@ module Dcov
         output << "<tr class='a'><td colspan='2'>There is no undocumented Ruby code.</td></tr>"
       end
       output << "</table>"
-      output
     end
 
     def build_stats_footer
