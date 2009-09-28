@@ -34,7 +34,7 @@ def run_dcov(project_name)
   dcov_builder = DcovBuilder.new
   dcov_builder.build('project_name', false, nil)
   percentage = dcov_builder.quality_percentage
-  run("notify-send -t 20000 --icon=#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
+  Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
 end
 
 # --------------------------------------------------
