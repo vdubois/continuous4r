@@ -11,5 +11,10 @@ namespace :continuous4r do
   task :build do
     Continuous4r.generate_site
   end
+
+  desc 'Automatically build metrics on source changes'
+  task :autometrics do
+    Utils.run_command("watchr #{File.dirname(__FILE__)}/../continuous4r.watchr.rb")
+  end
 end
 

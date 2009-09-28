@@ -151,7 +151,7 @@ module Dcov
       print "done.\n"
 
       print "Writing report..."
-      FileUtils.mkdir("#{Continuous4r::WORK_DIR}/dcov")
+      FileUtils.mkdir_p("#{Continuous4r::WORK_DIR}/dcov")
       if (!File.exists?("#{Continuous4r::WORK_DIR}/dcov/coverage.html")) || (File.writable?("#{Continuous4r::WORK_DIR}/dcov/coverage.html"))
         output_file = File.open("#{Continuous4r::WORK_DIR}/dcov/coverage.html", "w")
         output_file.write report

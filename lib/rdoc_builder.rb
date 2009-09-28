@@ -21,20 +21,20 @@ class RdocBuilder
       end
     end
     File.delete("rdoc.log") if File.exist?("rdoc.log")
-    rake_doc_task = "doc:app" if ENV["RAILS_ROOT"].present?
+    rake_doc_task = "doc:app" if !ENV["RAILS_ROOT"].nil?
     rake_doc_task ||= "docs"
     rdoc_pass = system("rake #{rake_doc_task} > rdoc.log")
     if !rdoc_pass
       raise " Execution of rdoc failed with command 'rake doc:reapp'.\n BUILD FAILED."
     end
     # On recupere la documentation et le fichier de log generes
-    Dir.mkdir "#{Continuous4r::WORK_DIR}/rdoc"
+    FileUtils.mkdir_p "#{Continuous4r::WORK_DIR}/rdoc"
     if File.exists?("app/controllers/")
-      FileUtils.mv("doc/app/", "#{Continuous4r::WORK_DIR}/rdoc/")
+      FileUtils.mv("doc/app/", "#{Continuous4r::WORK_DIR}/rdoc/", :force => true)
     else
-      FileUtils.mv("doc/", "#{Continuous4r::WORK_DIR}/rdoc/")
+      FileUtils.mv("doc/", "#{Continuous4r::WORK_DIR}/rdoc/", :force => true)
     end
-    FileUtils.mv("rdoc.log", "#{Continuous4r::WORK_DIR}/rdoc/")
+    FileUtils.mv("rdoc.log", "#{Continuous4r::WORK_DIR}/rdoc/", :force => true)
   end
 end
 
