@@ -5,6 +5,8 @@
 # --------------------------------------------------
 # Convenience Methods
 # --------------------------------------------------
+WORK_DIR = "tmp/continuous4r"
+
 def all_test_files
   Dir['test/**/test_*.rb'] - ['test/test_helper.rb']
 end
@@ -19,6 +21,22 @@ def run_all_tests
   run(cmd)
 end
 
+# run continuous rdoc task (needed by dcov)
+def run_rdoc(project_name)
+  require 'rdoc_builder.rb'
+  rdoc_builder = RdocBuilder.new
+  rdoc_builder.build(project_name, false, nil)
+end
+
+# run continuous dcov task
+def run_dcov(project_name)
+  require 'dcov_builder.rb'
+  dcov_builder = DcovBuilder.new
+  dcov_builder.build('project_name', false, nil)
+  percentage = dcov_builder.quality_percentage
+  run("notify-send -t 20000 --icon=#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
+end
+
 # --------------------------------------------------
 # Watchr Rules
 # --------------------------------------------------
@@ -27,17 +45,11 @@ watch( '^lib/(.*)\.rb'         )   { |m| run( "ruby -rubygems test/test_%s.rb" %
 watch( '^lib/.*/(.*)\.rb'      )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
 watch( '^test/test_helper\.rb' )   { run_all_tests }
 # flog source files
-require 'lib/continuous4r.rb'
+require 'continuous4r.rb'
 
-watch( '^lib/(.*)\.rb' ) do |source|
-  require 'lib/rdoc_builder.rb'
-  rdoc_builder = RdocBuilder.new
-  rdoc_builder.build('project_name', false, nil)
-  require 'lib/dcov_builder.rb'
-  dcov_builder = DcovBuilder.new
-  dcov_builder.build('project_name', false, nil)
-  percentage = dcov_builder.quality_percentage
-  run("notify-send 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
+watch( '^app/(.*)\.rb' ) do |source|
+  run_rdoc('project_name')
+  run_dcov('project_name')
 end
 
 # --------------------------------------------------

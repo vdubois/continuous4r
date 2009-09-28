@@ -16,6 +16,7 @@ lib/rspec_formatter.rb
 lib/subversion_extractor.rb
 lib/tests_formatter.rb
 lib/zen_test_formatter.rb
+lib/notification/dcov.png
 lib/site/charts/charts.swf
 lib/site/build.xml.erb
 lib/site/charts/AC_RunActiveContent.js

@@ -21,7 +21,7 @@ class RdocBuilder
       end
     end
     File.delete("rdoc.log") if File.exist?("rdoc.log")
-    rake_doc_task = "doc:app" if !ENV["RAILS_ROOT"].nil?
+    rake_doc_task = "doc:reapp" if File.exist?("#{project_root}/app/controllers/")
     rake_doc_task ||= "docs"
     rdoc_pass = system("rake #{rake_doc_task} > rdoc.log")
     if !rdoc_pass

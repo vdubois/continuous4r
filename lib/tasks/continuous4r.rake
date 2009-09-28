@@ -14,6 +14,7 @@ namespace :continuous4r do
 
   desc 'Automatically build metrics on source changes'
   task :autometrics do
+    FileUtils.cp_r("#{File.dirname(__FILE__)}/../notification/", "#{Continuous4r::WORK_DIR}/")
     Utils.run_command("watchr #{File.dirname(__FILE__)}/../continuous4r.watchr.rb")
   end
 end
