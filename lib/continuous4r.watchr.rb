@@ -28,13 +28,28 @@ def run_rdoc(project_name)
   rdoc_builder.build(project_name, false, nil)
 end
 
+class DcovFileAnalyzer
+  attr_accessor :file
+
+  def initialize(file)
+    @file = file
+  end
+
+  def perform
+    log = Utils.run_command("dcov #{@file}")
+    puts "LOG : #{log}"
+  end
+end
+
 # run continuous dcov task
-def run_dcov(project_name)
-  require 'dcov_builder.rb'
-  dcov_builder = DcovBuilder.new
-  dcov_builder.build('project_name', false, nil)
-  percentage = dcov_builder.quality_percentage
-  Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
+def run_dcov(project_name, file)
+  #require 'dcov_builder.rb'
+  #dcov_builder = DcovBuilder.new
+  #dcov_builder.build('project_name', false, nil)
+  #percentage = dcov_builder.quality_percentage
+  #Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
+  analyzer = DcovFileAnalyzer.new(file)
+  analyzer.perform
 end
 
 # --------------------------------------------------
@@ -48,8 +63,8 @@ watch( '^test/test_helper\.rb' )   { run_all_tests }
 require 'continuous4r.rb'
 
 watch( '^app/(.*)\.rb' ) do |source|
-  run_rdoc('project_name')
-  run_dcov('project_name')
+  #run_rdoc('project_name')
+  run_dcov('project_name', source[0])
 end
 
 # --------------------------------------------------
