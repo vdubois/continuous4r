@@ -1,6 +1,7 @@
 # Projet par defaut du systeme
 # Author:: Vincent Dubois
 # Date : 08 aout 2009 - version 0.0.5
+require 'continuous4r_configuration.rb'
 class Continuous4rProject
   attr_accessor :tasks, :name, :description
   attr_accessor :auto_install_gems, :auto_install_tools, :ignore_test_failures
@@ -20,12 +21,10 @@ class Continuous4rProject
     @gems = []
   end
 
-  def self.configure(&block)
+  def self.configure
+    configuration = Continuous4rConfiguration.new
+    yield configuration
   end
 
-  def method_missing(method_name, *args, &block)
-    possible_method_names = ['all', 'notify', 'flog', 'flay', 'dcov', 'rcov', 'reek', 'roodi', 'saikuro', 'tests', 'zentests']
-    raise "You must specify a method name within #{possible_method_names} in order to configure your project" unless possible_method_names.include?(method_name)
-  end
 end
 

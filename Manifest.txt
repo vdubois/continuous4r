@@ -6,6 +6,7 @@ Rakefile
 lib/code_statistics.rb
 lib/continuous4r.rb
 lib/continuous4r.watchr.rb
+lib/continuous4r_configuration.rb
 lib/continuous4r_project.rb
 lib/company.rb
 lib/bugtracker.rb
