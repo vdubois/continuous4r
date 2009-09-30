@@ -28,19 +28,19 @@ Continuous integration tool which regroups in one place tests, quality and analy
 
 Here is a typical configuration example you might code within you Rakefile :
 
-Continuous4rProject.configure do |config|
-  config.notify :system => 'libnotify' # libnotify (linux), console
-  config.all :detailed => true, :files => ['^app/(.*)\.rb', '^lib/(.*)\.rb'] # apply these options to all tasks
-  config.flog
-  config.dcov :required => 90 # notify only if documentation coverage is under 90%
-  config.flay :mass => 40 # notify only if duplication mass is above 40
-  config.rcov :required => 80 # notify only if test coverage is under 80%
-  config.reek
-  config.roodi
-  config.saikuro :warning => 5, :error => 7 # notify with warning if a cyclomatic complexity with 5 value is detected and with an error if 7 is detected
-  config.tests :rspec => false # executes test::unit tests or rspec tests
-  config.zentest
-end
+  Continuous4rProject.configure do |config|
+    config.notify :system => 'libnotify' # libnotify (linux), console
+    config.all :detailed => true, :files => ['^app/(.*)\.rb', '^lib/(.*)\.rb'] # apply these options to all tasks
+    config.flog
+    config.dcov :required => 90 # notify only if documentation coverage is under 90%
+    config.flay :mass => 40 # notify only if duplication mass is above 40
+    config.rcov :required => 80 # notify only if test coverage is under 80%
+    config.reek
+    config.roodi
+    config.saikuro :warning => 5, :error => 7 # notify with warning if a cyclomatic complexity with 5 value is detected and with an error if 7 is detected
+    config.tests :rspec => false # executes test::unit tests or rspec tests
+    config.zentest
+  end
 
 == REQUIREMENTS:
 
