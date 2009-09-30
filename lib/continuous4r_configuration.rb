@@ -3,50 +3,69 @@
 # Date : 30 septembre 2009 - version 0.0.5
 class Continuous4rConfiguration
 
-  def all(options = {})
-    puts "notify this"
+  # constructor
+  def initialize
+    @options = {}
   end
 
-  def notify(options = {})
-    puts "notify this"
+  # defining all default options
+  def all(options = {:activated => true, :detailed => true, :files => ['^app/(.*)\.rb', '^lib/(.*)\.rb']})
+    @options.each do |option|
+      option << options
+    end
   end
 
-  def flog(options = {})
-    puts "notify this"
+  # defining notifications
+  def notify(options = {:activated => true, :system => 'libnotify'})
+    @options[:notify] = options
   end
 
-  def flay(options = {})
-    puts "notify this"
+  # defining flogging options
+  def flog(options = {:activated => true})
+    @options[:flog] = options
   end
 
-  def dcov(options = {})
-    puts "notify this"
+  # defining flay options
+  def flay(options = {:activated => true, :mass => 40})
+    @options[:flay] = options
   end
 
-  def rcov(options = {})
-    puts "notify this"
+  # defining dcov options
+  def dcov(options = {:activated => true, :required => 90})
+    @options[:dcov] = options
   end
 
-  def saikuro(options = {})
-    puts "notify this"
+  # defining rcov options
+  def rcov(options = {:activated => true, :required => 90})
+    @options[:rcov] = options
   end
 
-  def reek(options = {})
-    puts "notify this"
+  # defining saikuro options
+  def saikuro(options = {:activated => true, :warning => 5, :error => 7})
+    @options[:saikuro] = options
   end
 
-  def roodi(options = {})
-    puts "notify this"
+  # defining reek options
+  def reek(options = {:activated => true})
+    @options[:reek] = options
   end
 
-  def tests(options = {})
-    puts "notify this"
+  # defining roodi options
+  def roodi(options = {:activated => true})
+    @options[:roodi] = options
   end
 
-  def zentest(options = {})
-    puts "notify this"
+  # defining unit tests options
+  def tests(options = {:activated => true, :rspec => false})
+    @options[:tests] = options
   end
 
+  # defining ZenTest options
+  def zentest(options = {:activated => true})
+    @options[:zentest] = options
+  end
+
+  # catching all unknown method calls
   def method_missing(method_name, *args, &block)
     possible_method_names = ['all', 'notify', 'flog', 'flay', 'dcov', 'rcov', 'reek', 'roodi', 'saikuro', 'tests', 'zentests']
     raise "You must specify a method name within [#{possible_method_names.join(', ')}] in order to configure your project" unless possible_method_names.include?(method_name)

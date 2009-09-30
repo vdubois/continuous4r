@@ -55,6 +55,9 @@ end
 # --------------------------------------------------
 # Watchr Rules
 # --------------------------------------------------
+
+# TODO deserialisation YAML de la configuration
+
 watch( '^test.*/test_.*\.rb'   )   { |m| run( "ruby -rubygems %s"              % m[0] ) }
 watch( '^lib/(.*)\.rb'         )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
 watch( '^lib/.*/(.*)\.rb'      )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
