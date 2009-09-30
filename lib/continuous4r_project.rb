@@ -19,5 +19,13 @@ class Continuous4rProject
     @bugtracker = nil
     @gems = []
   end
+
+  def self.configure(&block)
+  end
+
+  def method_missing(method_name, *args, &block)
+    possible_method_names = ['all', 'notify', 'flog', 'flay', 'dcov', 'rcov', 'reek', 'roodi', 'saikuro', 'tests', 'zentests']
+    raise "You must specify a method name within #{possible_method_names} in order to configure your project" unless possible_method_names.include?(method_name)
+  end
 end
 

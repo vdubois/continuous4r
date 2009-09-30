@@ -10,6 +10,7 @@ Continuous integration tool which regroups in one place tests, quality and analy
 
 == TODO:
 * Make continuous4r like autotest
+* Add Growl notification system
 * Make Roodi produce an indicator
 
 == FEATURES/PROBLEMS:
