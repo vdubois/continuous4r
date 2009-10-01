@@ -56,7 +56,9 @@ end
 # Watchr Rules
 # --------------------------------------------------
 
-# TODO deserialisation YAML de la configuration
+require 'yaml'
+require 'continuous4r_configuration.rb'
+configuration = YAML.load_file("#{FileUtils.pwd}/configuration.yml")
 
 watch( '^test.*/test_.*\.rb'   )   { |m| run( "ruby -rubygems %s"              % m[0] ) }
 watch( '^lib/(.*)\.rb'         )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
@@ -65,7 +67,7 @@ watch( '^test/test_helper\.rb' )   { run_all_tests }
 # flog source files
 require 'continuous4r.rb'
 
-watch( '^app/(.*)\.rb' ) do |source|
+watch(configuration.options[:dcov][:files][0]) do |source|
   #run_rdoc('project_name')
   run_dcov('project_name', source[0])
 end

@@ -27,7 +27,10 @@ class Continuous4rProject
   def configure
     @configuration = Continuous4rConfiguration.new
     yield @configuration
-    # TODO serialisation en YAML
+    require 'yaml'
+    File.open("configuration.yml", "wb") do |file|
+      file.write(@configuration.to_yaml)
+    end
   end
 
   # get the configuration

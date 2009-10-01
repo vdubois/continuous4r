@@ -8,9 +8,15 @@ class Continuous4rConfiguration
     @options = {}
   end
 
+  # getting options
+  def options
+    @options
+  end
+
   # defining all default options
   def all(options = {:activated => true, :detailed => true, :files => ['^app/(.*)\.rb', '^lib/(.*)\.rb']})
     @options.each do |option|
+      option ||= {}
       option << options
     end
   end
@@ -68,7 +74,7 @@ class Continuous4rConfiguration
   # catching all unknown method calls
   def method_missing(method_name, *args, &block)
     possible_method_names = ['all', 'notify', 'flog', 'flay', 'dcov', 'rcov', 'reek', 'roodi', 'saikuro', 'tests', 'zentests']
-    raise "You must specify a method name within [#{possible_method_names.join(', ')}] in order to configure your project" unless possible_method_names.include?(method_name)
+    raise "You must specify a method name within [#{possible_method_names.join(', ')}] in order to configure your project, you specified #{method_name} #{("with #{args.join(", ")} arguments" if args.length > 0)}" unless possible_method_names.include?(method_name)
   end
 end
 
