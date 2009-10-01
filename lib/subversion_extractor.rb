@@ -49,9 +49,9 @@ module SubversionExtractor
     rev_files = extract_revision_files(rev)
     rev_log_result = Utils.run_command("svn log -r #{rev}")
     rev_log_result_lines = rev_log_result.split(/$/)
-    next if rev_log_result_lines[1].nil?
+    #next if rev_log_result_lines[1].nil?
     rev_line = rev_log_result_lines[1].split(/ \| /)
-    next if rev_line[2].nil?
+    #next if rev_line[2].nil?
     html << "<tr class='#{ i % 2 == 0 ? 'a' : 'b'}'><td><strong>#{rev_line[0][2..(rev_line[0].length-1)]}</strong></td><td>#{rev_line[2][0..18]}</td><td>#{rev_line[1]}</td><td>"
     rev_files.each do |rev_file|
       html << rev_file + "<br/>"
