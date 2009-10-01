@@ -25,9 +25,9 @@ require File.dirname(__FILE__) + '/lib/continuous4r'
 #  p.rsync_args = '-av --delete --ignore-errors'
 #end
 
-require 'newgem/tasks' # load /tasks/*.rake
+#require 'newgem/tasks' # load /tasks/*.rake
 
-Dir['tasks/**/*.rake'].each { |t| load t }
+#Dir['tasks/**/*.rake'].each { |t| load t }
 
 # TODO - want other tests/tasks run by default? Add them to the list
 # task :default => [:spec, :features]
