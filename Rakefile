@@ -3,15 +3,15 @@ require File.dirname(__FILE__) + '/lib/continuous4r'
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-#$hoe = Hoe.spec(Continuous4r::VERSION) do |p|
-  #p.developer('Vincent Dubois', 'duboisv@hotmail.com')
-#  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-#  p.post_install_message = 'PostInstall.txt'
-#  p.rubyforge_name       = p.name
-#  p.name                 = "continuous4r"
-#  p.summary		         = "Continuous integration for Ruby on Rails"
-#  p.description          = "Continuous integration site generation for Ruby on Rails"
-#  p.url             = "http://continuous4r.rubyforge.org"
+$hoe = Hoe.spec(Continuous4r::VERSION) do |p|
+  p.developer('Vincent Dubois', 'duboisv@hotmail.com')
+  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
+  p.post_install_message = 'PostInstall.txt'
+  p.rubyforge_name       = p.name
+  p.name                 = "continuous4r"
+  p.summary		         = "Continuous integration for Ruby on Rails"
+  p.description          = "Continuous integration site generation for Ruby on Rails"
+  p.url             = "http://continuous4r.rubyforge.org"
   # p.extra_deps         = [
   #   ['activesupport','>= 2.0.2'],
   # ]
@@ -19,11 +19,11 @@ require File.dirname(__FILE__) + '/lib/continuous4r'
 #    ['newgem', ">= #{::Newgem::VERSION}"]
 #  ]
 
-#  p.clean_globs |= %w[**/.DS_Store tmp *.log]
-#  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
-#  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
-#  p.rsync_args = '-av --delete --ignore-errors'
-#end
+  p.clean_globs |= %w[**/.DS_Store tmp *.log]
+  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
+  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
+  p.rsync_args = '-av --delete --ignore-errors'
+end
 
 #require 'newgem/tasks' # load /tasks/*.rake
 
