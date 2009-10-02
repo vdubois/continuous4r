@@ -16,10 +16,11 @@ class FlogAnalyzer
   # traitement sur fichier a analyser
   def perform
     Utils.run_command("flog #{@file} >> flog.log")
-    flog_extracted_lines = File.read(@file).split(/$/)
+    flog_extracted_lines = File.read("flog.log").split(/$/)
     flog_extracted_lines.each do |line|
       extract_content(line)
     end
+    File.delete("flog.log")
   end
 
   # getting average score
@@ -38,17 +39,22 @@ class FlogAnalyzer
   end
 
   private
-  
-  # extracting content logic from flog log file 
+
+  # extracting content logic from flog log file
   def extract_content(str)
     str_splitted = str.split(/: /)
     if str_splitted.include?("flog total")
       @total = str_splitted[0]
-    else if str_splitted.include?("flog/method average")
+    elsif str_splitted.include?("flog/method average")
       @average = str_splitted[0]
     else
-      extract_method_content()
+      extract_method_content(str_splitted)
     end
+  end
+
+  # extracting content from method detail
+  def extract_method_content(str_array)
+    @flogged_methods << [str_array[1], str_array[0]]
   end
 end
 

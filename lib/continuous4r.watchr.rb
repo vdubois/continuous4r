@@ -28,13 +28,16 @@ def run_rdoc(project_name)
   rdoc_builder.build(project_name, false, nil)
 end
 
-def run_flog(file)
+def run_flog(file, configuration)
   analyzer = FlogAnalyzer.new(file)
   analyzer.perform
+  #if analyzer.average_score > configuration.options[:flog][:required]
+    Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The average score from #{file} is #{analyzer.average_score}'")
+  #end
 end
 
 # run continuous dcov task
-def run_dcov(file)
+def run_dcov(file, configuration)
   #require 'dcov_builder.rb'
   #dcov_builder = DcovBuilder.new
   #dcov_builder.build('project_name', false, nil)
@@ -58,10 +61,10 @@ configuration = YAML.load_file("#{FileUtils.pwd}/configuration.yml")
 #watch( '^lib/.*/(.*)\.rb'      )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
 #watch( '^test/test_helper\.rb' )   { run_all_tests }
 
-def watch_and_send(watch_regexp, analyzer)
+def watch_and_send(configuration, watch_regexp, analyzer)
   if !watch_regexp.nil?
     watch(watch_regexp) do |source|
-      self.send("run_#{analyzer}", source[0])
+      self.send("run_#{analyzer}", source[0], configuration)
     end
   end
 end
@@ -70,10 +73,10 @@ configuration.options.each_key do |key|
   require "#{key}_analyzer.rb" unless [:all, :notify].include?(key)
   if configuration.options[key][:files].is_a?(Array)
     configuration.options[key][:files].each do |files_regexp|
-      watch_and_send(files_regexp, key)
+      watch_and_send(configuration, files_regexp, key)
     end
   else
-    watch_and_send(configuration.options[key][:files], key)
+    watch_and_send(configuration, configuration.options[key][:files], key)
   end
 end
 
