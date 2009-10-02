@@ -7,6 +7,15 @@ lib/code_statistics.rb
 lib/continuous4r.rb
 lib/continuous4r.watchr.rb
 lib/continuous4r_configuration.rb
+lib/flog_analyzer.rb
+lib/dcov_analyzer.rb
+lib/flay_analyzer.rb
+lib/rcov_analyzer.rb
+lib/reek_analyzer.rb
+lib/roodi_analyzer.rb
+lib/saikuro_analyzer.rb
+lib/tests_analyzer.rb
+lib/zentest_analyzer.rb
 lib/continuous4r_project.rb
 lib/company.rb
 lib/bugtracker.rb

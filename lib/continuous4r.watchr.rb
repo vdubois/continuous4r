@@ -28,27 +28,19 @@ def run_rdoc(project_name)
   rdoc_builder.build(project_name, false, nil)
 end
 
-class DcovFileAnalyzer
-  attr_accessor :file
-
-  def initialize(file)
-    @file = file
-  end
-
-  def perform
-    log = Utils.run_command("dcov #{@file}")
-    puts "LOG : #{log}"
-  end
+def run_flog(file)
+  analyzer = FlogAnalyzer.new(file)
+  analyzer.perform
 end
 
 # run continuous dcov task
-def run_dcov(project_name, file)
+def run_dcov(file)
   #require 'dcov_builder.rb'
   #dcov_builder = DcovBuilder.new
   #dcov_builder.build('project_name', false, nil)
   #percentage = dcov_builder.quality_percentage
   #Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/dcov.png 'Ruby documentation warning' 'Only #{percentage}% of your code is documented'")
-  analyzer = DcovFileAnalyzer.new(file)
+  analyzer = DcovAnalyzer.new(file)
   analyzer.perform
 end
 
@@ -58,18 +50,31 @@ end
 
 require 'yaml'
 require 'continuous4r_configuration.rb'
+# deserializing configuration
 configuration = YAML.load_file("#{FileUtils.pwd}/configuration.yml")
 
-watch( '^test.*/test_.*\.rb'   )   { |m| run( "ruby -rubygems %s"              % m[0] ) }
-watch( '^lib/(.*)\.rb'         )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
-watch( '^lib/.*/(.*)\.rb'      )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
-watch( '^test/test_helper\.rb' )   { run_all_tests }
-# flog source files
-require 'continuous4r.rb'
+#watch( '^test.*/test_.*\.rb'   )   { |m| run( "ruby -rubygems %s"              % m[0] ) }
+#watch( '^lib/(.*)\.rb'         )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
+#watch( '^lib/.*/(.*)\.rb'      )   { |m| run( "ruby -rubygems test/test_%s.rb" % m[1] ) }
+#watch( '^test/test_helper\.rb' )   { run_all_tests }
 
-watch(configuration.options[:dcov][:files][0]) do |source|
-  #run_rdoc('project_name')
-  run_dcov('project_name', source[0])
+def watch_and_send(watch_regexp, analyzer)
+  if !watch_regexp.nil?
+    watch(watch_regexp) do |source|
+      self.send("run_#{analyzer}", source[0])
+    end
+  end
+end
+
+configuration.options.each_key do |key|
+  require "#{key}_analyzer.rb" unless [:all, :notify].include?(key)
+  if configuration.options[key][:files].is_a?(Array)
+    configuration.options[key][:files].each do |files_regexp|
+      watch_and_send(files_regexp, key)
+    end
+  else
+    watch_and_send(configuration.options[key][:files], key)
+  end
 end
 
 # --------------------------------------------------
