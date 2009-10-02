@@ -8,11 +8,18 @@ class FlogAnalyzer
   # constructeur
   def initialize(file)
     @file = file
+    @average = 0
+    @total = 0
   end
 
   # traitement sur fichier a analyser
   def perform
-    log = Utils.run_command("flog #{@file} > flog.log")
+    File.open("flog.log", "wb+") do |file|
+      file.write("@file\n")
+    end
+    Utils.run_command("flog #{@file} >> flog.log")
   end
+
+  def 
 end
 
