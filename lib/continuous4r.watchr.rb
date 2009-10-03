@@ -31,9 +31,15 @@ end
 def run_flog(file, configuration)
   analyzer = FlogAnalyzer.new(file)
   analyzer.perform
-  #if analyzer.average_score > configuration.options[:flog][:required]
-    Utils.run_command("notify-send -t 25000 --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The average score from #{file} is #{analyzer.average_score}'")
-  #end
+  if analyzer.average_score > configuration.options[:flog][:required]
+    Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The average score for #{file} is #{analyzer.average_score}'")
+    if configuration.options[:flog][:detailed]
+      Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The total score for #{file} is #{analyzer.total_score}'")
+      analyzer.flogged_methods.each do |fm|
+        Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'Score for #{fm[0]} : #{fm[1]}'")
+      end
+    end
+  end
 end
 
 # run continuous dcov task

@@ -18,7 +18,7 @@ class FlogAnalyzer
     Utils.run_command("flog #{@file} >> flog.log")
     flog_extracted_lines = File.read("flog.log").split(/$/)
     flog_extracted_lines.each do |line|
-      extract_content(line)
+      extract_content(line) unless line.strip.empty?
     end
     File.delete("flog.log")
   end
@@ -44,9 +44,9 @@ class FlogAnalyzer
   def extract_content(str)
     str_splitted = str.split(/: /)
     if str_splitted.include?("flog total")
-      @total = str_splitted[0]
+      @total = str_splitted[0].to_f
     elsif str_splitted.include?("flog/method average")
-      @average = str_splitted[0]
+      @average = str_splitted[0].to_f
     else
       extract_method_content(str_splitted)
     end
@@ -54,7 +54,7 @@ class FlogAnalyzer
 
   # extracting content from method detail
   def extract_method_content(str_array)
-    @flogged_methods << [str_array[1], str_array[0]]
+    @flogged_methods << [str_array[1], str_array[0].strip.to_f]
   end
 end
 
