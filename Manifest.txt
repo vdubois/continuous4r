@@ -16,6 +16,7 @@ lib/roodi_analyzer.rb
 lib/saikuro_analyzer.rb
 lib/tests_analyzer.rb
 lib/zentest_analyzer.rb
+lib/libnotify_notifier.rb
 lib/continuous4r_project.rb
 lib/company.rb
 lib/bugtracker.rb
@@ -28,6 +29,7 @@ lib/tests_formatter.rb
 lib/zen_test_formatter.rb
 lib/notification/dcov.png
 lib/notification/seattle_rb.png
+lib/notification/reek.jpeg
 lib/site/charts/charts.swf
 lib/site/build.xml.erb
 lib/site/charts/AC_RunActiveContent.js

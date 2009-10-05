@@ -1,5 +1,5 @@
 require 'utils.rb'
-# Analyseur de qualite de code Ruby
+# Analyseur de complexite de code Ruby
 # Author:: Vincent Dubois
 # Date : 02 octobre 2009 - version 0.0.5
 class FlogAnalyzer

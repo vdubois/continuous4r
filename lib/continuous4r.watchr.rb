@@ -6,6 +6,8 @@
 # Convenience Methods
 # --------------------------------------------------
 WORK_DIR = "tmp/continuous4r"
+FLOG_ICON = "seattle_rb.png"
+REEK_ICON = "reek.jpeg"
 
 def all_test_files
   Dir['test/**/test_*.rb'] - ['test/test_helper.rb']
@@ -28,16 +30,39 @@ def run_rdoc(project_name)
   rdoc_builder.build(project_name, false, nil)
 end
 
+# instanciating notifier class
+def generate_notifier_class(configuration)
+  notifier_type = configuration.options[:notify][:system]
+  require "#{notifier_type}_notifier.rb"
+  notifier_class = Object.const_get("#{notifier_type.capitalize}Notifier")
+end
+
+# flogging a ruby file
 def run_flog(file, configuration)
+  notifier_class = generate_notifier_class(configuration)
   analyzer = FlogAnalyzer.new(file)
   analyzer.perform
   if analyzer.average_score > configuration.options[:flog][:required]
-    Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The average score for #{file} is #{analyzer.average_score}'")
+    notifier_class.new("FLOG WARNING", "The average score for #{file} is #{analyzer.average_score}", FLOG_ICON).notify
     if configuration.options[:flog][:detailed]
-      Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'The total score for #{file} is #{analyzer.total_score}'")
+      notifier_class.new("FLOG WARNING", "The total score for #{file} is #{analyzer.total_score}", FLOG_ICON).notify
       analyzer.flogged_methods.each do |fm|
-        Utils.run_command("notify-send --icon=#{FileUtils.pwd}/#{WORK_DIR}/notification/seattle_rb.png 'FLOG WARNING' 'Score for #{fm[0]} : #{fm[1]}'")
+        notifier_class.new("FLOG WARNING", "Score for #{fm[0]} : #{fm[1]}", FLOG_ICON).notify
       end
+    end
+  end
+end
+
+# flogging a ruby file
+def run_reek(file, configuration)
+  notifier_class = generate_notifier_class(configuration)
+  analyzer = ReekAnalyzer.new(file)
+  analyzer.perform
+  if analyzer.code_smells.length > 0
+    notifier_class.new("REEK WARNING", "There are code smells in #{file}", REEK_ICON).notify
+    #if configuration.options[:flog][:detailed]
+    (0..2).to_a.each do |index|
+      notifier_class.new("REEK WARNING", "#{analyzer.code_smells[index]}", REEK_ICON).notify
     end
   end
 end
