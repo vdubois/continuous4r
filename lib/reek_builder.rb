@@ -6,19 +6,23 @@
 class ReekBuilder
 
   # Implementation de la construction de la tache
-  def build(project_name, auto_install, proxy_option)
+  def build(project_name, auto_install, proxy_option, file = nil)
     # On verifie la presence de reek
     Utils.verify_gem_presence("reek", auto_install, proxy_option)
     # On lance la generation
     puts " Building reek report..."
     files = Array.new
-    files << Dir.glob("app/controllers/*.rb")
-    files << Dir.glob("app/helpers/*.rb")
-    files << Dir.glob("app/models/*.rb")
-    files << Dir.glob("lib/**/*.rb")
-    files << Dir.glob("test/**/*.rb")
-    files << Dir.glob("spec/**/*.rb")
-    files.flatten!
+    if file.nil?
+      files << Dir.glob("app/controllers/*.rb")
+      files << Dir.glob("app/helpers/*.rb")
+      files << Dir.glob("app/models/*.rb")
+      files << Dir.glob("lib/**/*.rb")
+      files << Dir.glob("test/**/*.rb")
+      files << Dir.glob("spec/**/*.rb")
+      files.flatten!
+    else
+      files << file
+    end
     reek_command = "reek"
     files.each do |file|
       reek_command += " '#{file}'"

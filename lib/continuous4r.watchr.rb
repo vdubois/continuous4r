@@ -64,6 +64,8 @@ def run_reek(file, configuration)
     (0..2).to_a.each do |index|
       notifier_class.new("REEK WARNING", "#{analyzer.code_smells[index]}", REEK_ICON).notify
     end
+    analyzer.to_html
+    Utils.run_command("firefox #{Utils::WORK_DIR}/reek.html")
   end
 end
 

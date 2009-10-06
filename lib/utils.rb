@@ -1,6 +1,8 @@
 # Module de fonctions utilitaires necessaire a la construction
 module Utils
 
+  WORK_DIR = "tmp/continuous4r"
+
   # Methode qui permet de construire une page avec eruby, et de lever une exception au besoin
   def self.erb_run page, is_a_task = true
     page_file = File.open("#{Continuous4r::WORK_DIR}/#{page}.html", "w")
