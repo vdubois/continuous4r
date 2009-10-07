@@ -30,6 +30,17 @@ module Utils
     end
   end
 
+  def self.begin_html_document(title)
+    html = doctype
+    html << "<head>"
+    html << header(title)
+    html << "<body class='composite'>"
+  end
+
+  def self.end_html_document
+    "</body></html>"
+  end
+
   # Methode de verification de la presence d'un gem, avec installation au besoin
   def self.verify_gem_presence(gem, auto_install, proxy_option)
     gem_version = run_command("gem list #{gem}")
@@ -129,6 +140,23 @@ module Utils
       style += "background-color: red; color: black; text-decoration: blink; padding-left: 35px; background-image: url('images/exclamation.png'); background-repeat: no-repeat; background-position: 10px 50%;\" title='Someone please think of the children'"
     end
     return style
+  end
+
+  private
+
+  def self.doctype
+    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+  end
+
+  def self.header(title)
+    html = "<head>"
+    html << "<meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>"
+    html << "<title>#{title}</title>"
+    html << "<style type='text/css' media='all'>\n"
+    html << "@import url('./style/maven-base.css');\n"
+    html << "@import url('./style/maven-theme.css');\n"
+    html << "</style>"
+    html << "</head>"
   end
 end
 

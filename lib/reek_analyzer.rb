@@ -25,6 +25,7 @@ class ReekAnalyzer
   # extracting HTML for reek
   def to_html
     File.open("#{Utils::WORK_DIR}/reek.html", "wb") do |file|
+      file.write(Utils.begin_html_document("Reek Results for #{@file}"))
       file.write("<div id='bodyColumn'><div class='contentBox'>")
       file.write("<div class='section'><a name='reek'></a><h2>Reek Results for #{@file}</h2>")
       file.write("<p><a href='http://reek.rubyforge.org/' target='_blank'>Reek</a> detects common code smells in ruby code.</p>")
@@ -34,6 +35,7 @@ class ReekAnalyzer
         file.write("<tr class='#{index % 2 == 0 ? 'a' : 'b'}'><td>#{code_smell}</td></tr>")
       end
       file.write("</table><p>Generated on #{Time.now.localtime}</p></div></div></div>")
+      file.write(Utils.end_html_document)
     end
   end
 

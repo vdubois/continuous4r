@@ -59,11 +59,11 @@ def run_reek(file, configuration)
   analyzer = ReekAnalyzer.new(file)
   analyzer.perform
   if analyzer.code_smells.length > 0
-    notifier_class.new("REEK WARNING", "There are code smells in #{file}", REEK_ICON).notify
+    notifier_class.new("REEK WARNING", "There are #{analyzer.code_smells.length} code smells in #{file}", REEK_ICON).notify
     #if configuration.options[:flog][:detailed]
-    (0..2).to_a.each do |index|
-      notifier_class.new("REEK WARNING", "#{analyzer.code_smells[index]}", REEK_ICON).notify
-    end
+    #(0..2).to_a.each do |index|
+    #  notifier_class.new("REEK WARNING", "#{analyzer.code_smells[index]}", REEK_ICON).notify
+    #end
     analyzer.to_html
     Utils.run_command("firefox #{Utils::WORK_DIR}/reek.html")
   end
